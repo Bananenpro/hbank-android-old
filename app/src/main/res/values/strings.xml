@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">H-Bank</string>
+    <string name="login_lbl">Login</string>
+    <string name="name_hint">Name…</string>
+    <string name="password_hint">Password…</string>
+    <string name="login_btn">login</string>
+    <string name="login_register_separator">--or--</string>
+    <string name="register_btn">register</string>
+    <string name="register_lbl">Register</string>
+    <string name="repeat_password_hint">Repeat password...</string>
+    <string name="is_parent_switch">Parent</string>
+    <string name="password_length_error_part_2">characters long!</string>
+    <string name="password_length_error_part_1">The password must be at least</string>
+    <string name="name_too_short">The name is too short!</string>
+    <string name="offline">You are offline!</string>
+    <string name="passwords_dont_match">The passwords don\'t match!</string>
+    <string name="empty_fields">Please fill out all fields!</string>
+    <string name="wrong_credentials">Wrong password or username!</string>
+    <string name="user_already_exists">This user does already exist!</string>
+    <string name="loading">loading...</string>
+    <string name="title_activity_main">H-Bank</string>
+    <string name="title_home">Home</string>
+    <string name="title_user_list">User List</string>
+    <string name="title_log">Log</string>
+</resources>
