@@ -23,4 +23,9 @@
     <string name="title_home">Übersicht</string>
     <string name="title_user_list">Benutzerliste</string>
     <string name="title_log">Verlauf</string>
+    <string name="balance">Kontostand:</string>
+    <string name="logout">Du wurdest abgemeldet!</string>
+    <string name="currency">€</string>
+    <string name="wait">Einen Moment bitte...</string>
+    <string name="error_file_does_not_exist">Error: Datei existiert nicht!</string>
 </resources>

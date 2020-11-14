@@ -22,4 +22,9 @@
     <string name="title_home">Home</string>
     <string name="title_user_list">User List</string>
     <string name="title_log">Log</string>
+    <string name="balance">Balance:</string>
+    <string name="logout">You were signed out!</string>
+    <string name="currency">$</string>
+    <string name="wait">one moment please...</string>
+    <string name="error_file_does_not_exist">error: File does not exist!</string>
 </resources>
