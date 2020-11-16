@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TransferMoneyActivity">
+
+    <TextView
+        android:id="@+id/transfer_money_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:textAlignment="center"
+        android:textColor="@color/red"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@id/transfer_money_lbl"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@id/transfer_money_lbl"
+        app:layout_constraintTop_toBottomOf="@id/transfer_money_lbl" />
+
+    <TextView
+        android:id="@+id/transfer_money_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="5dp"
+        android:ellipsize="end"
+        android:text="@string/title_activity_transfer_money"
+        android:textAlignment="center"
+        android:textSize="42sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="300dp"
+        android:layout_height="137dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transfer_money_error"
+        app:layout_constraintVertical_bias="0.08">
+
+        <EditText
+            android:id="@+id/create_payment_plan_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints="amount"
+            android:backgroundTint="@color/edit_text"
+            android:ems="10"
+            android:hint="@string/amount_hint"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/create_payment_plan_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints="description"
+            android:backgroundTint="@color/edit_text"
+            android:ems="10"
+            android:hint="@string/description_hint"
+            android:inputType="textShortMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_amount" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/currency"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_amount"
+            app:layout_constraintEnd_toEndOf="@+id/create_payment_plan_amount"
+            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_amount" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/transfer_money_submit_btn"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:onClick="transferMoney"
+        android:text="@string/transfer_money_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

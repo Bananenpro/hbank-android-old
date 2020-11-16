@@ -1,12 +1,17 @@
 package de.julianhofmann.h_bank.api;
 
+import java.util.List;
+
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
+import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.api.models.RegisterModel;
 import de.julianhofmann.h_bank.api.models.RegisterResponseModel;
+import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -17,10 +22,27 @@ public interface HBankApi {
     @GET("user/{name}")
     Call<UserModel> getUser(@Path("name") String name, @Header("Authorization") String authorization);
 
+    @GET("user")
+    Call<List<UserModel>> getUsers();
+
     @POST("register")
     Call<RegisterResponseModel> register(@Body RegisterModel model);
 
     @POST("login")
     Call<LoginResponseModel> login(@Body LoginModel model);
 
+    @POST("transaction")
+    Call<Void> transferMoney(@Body TransferMoneyModel model, @Header("Authorization") String authorization);
+
+    @GET("payment_plans/{name}")
+    Call<List<PaymentPlanModel>> getPaymentPlans(@Path("name") String name, @Header("Authorization") String authorization);
+
+    @POST("payment_plan")
+    Call<Void> createPaymentPlan(@Body PaymentPlanModel model, @Header("Authorization") String authorization);
+
+    @GET("payment_plan/{id}")
+    Call<PaymentPlanModel> getPaymentPlan(@Path("id") int id, @Header("Authorization") String authorization);
+
+    @DELETE("payment_plan/{id}")
+    Call<Void> deletePaymentPlan(@Path("id") int id, @Header("Authorization") String authorization);
 }

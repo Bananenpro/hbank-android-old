@@ -122,4 +122,11 @@ public class RegisterActivity extends AppCompatActivity {
             error_text.setText(getString(R.string.empty_fields));
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        finish();
+        return true;
+    }
 }

@@ -1,19 +1,14 @@
 package de.julianhofmann.h_bank;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +21,6 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,12 +30,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.ui.user_list.UserListItem;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -147,9 +141,10 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0,0);
     }
 
-    private void switchToLoginActivity() {
+    private void switchToLoginActivity(String name) {
         Intent i = new Intent(this, LoginActivity.class);
         i.putExtra("logout", true);
+        i.putExtra("name", name);
         startActivity(i);
     }
 
@@ -158,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         if (!newProfilePicture) newProfilePicture = v != null;
 
         Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.name, RetrofitService.getAuthorization());
-        TextView balance = findViewById(R.id.balance_lbl);
+        TextView balance = findViewById(R.id.user_balance_lbl);
 
         call.enqueue(new Callback<UserModel>() {
             @Override
@@ -167,10 +162,11 @@ public class MainActivity extends AppCompatActivity {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
                         balance.setText(newBalance);
+                        BalanceCache.update(response.body().getBalance());
                     } else {
-                        RetrofitService.name = null;
-                        RetrofitService.token = null;
-                        switchToLoginActivity();
+                        String name = RetrofitService.name;
+                        RetrofitService.logout();
+                        switchToLoginActivity(name);
                     }
                 }
             }
@@ -178,10 +174,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+                String balanceFromCache = BalanceCache.getBalance();
+                if (balanceFromCache != null) {
+                    String newBalance = getString(R.string.balance) + " " + balanceFromCache + getString(R.string.currency);
+                    balance.setText(newBalance);
+                }
             }
         });
 
-        ImageView profilePicture = findViewById(R.id.profile_picture);
+        ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
 
         if(newProfilePicture) {
@@ -229,5 +230,57 @@ public class MainActivity extends AppCompatActivity {
             }
             imagePicker.submit(data);
         }
+    }
+
+
+    public void loadUsers() {
+        Call<List<UserModel>> call = RetrofitService.getHbankApi().getUsers();
+
+        call.enqueue(new Callback<List<UserModel>>() {
+            @Override
+            public void onResponse(Call<List<UserModel>> call, Response<List<UserModel>> response) {
+                if (response.isSuccessful()) {
+                    LinearLayout layout = findViewById(R.id.user_list_layout);
+
+                    for (UserModel user : response.body()) {
+                        if (!user.getName().equals(RetrofitService.name)) {
+                            addUserListItem(layout, user.getName());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserModel>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void addUserListItem(LinearLayout layout, String name) {
+
+        UserListItem userListItem = new UserListItem(this);
+
+        userListItem.getNameButton().setText(name);
+        userListItem.getNameButton().setOnClickListener(v -> {
+            Button button = (Button) v;
+            goToUser(button.getText().toString());
+        });
+
+        Picasso.get()
+                .load(RetrofitService.URL + "profile_picture/" + name)
+                .placeholder(R.mipmap.empty_profile_picture)
+                .error(R.mipmap.empty_profile_picture)
+                .fit()
+                .centerCrop()
+                .into(userListItem.getProfilePictureImageView());
+
+        layout.addView(userListItem);
+    }
+
+    public void goToUser(String name) {
+        Intent i = new Intent(this, UserInfoActivity.class);
+        i.putExtra("name", name);
+        startActivity(i);
     }
 }

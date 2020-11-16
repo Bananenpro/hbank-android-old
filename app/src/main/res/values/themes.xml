@@ -4,15 +4,24 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/blue</item>
-        <item name="colorOnPrimary">@color/foreground</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
-        <item name="colorOnSecondary">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/foreground</item>
 
     </style>
+
+    <style name="Theme.HBank.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.HBank.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.HBank.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

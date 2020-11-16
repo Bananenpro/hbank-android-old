@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:autofillHints="password"
-            android:backgroundTint="@color/blue"
+            android:backgroundTint="@color/edit_text"
             android:ems="10"
             android:hint="@string/repeat_password_hint"
             android:inputType="textPassword"
@@ -75,7 +75,7 @@
 
     <Button
         android:id="@+id/register_btn"
-        android:layout_width="161dp"
+        android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"
         android:onClick="register"

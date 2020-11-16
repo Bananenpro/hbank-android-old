@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PaymentPlanInfoActivity">
+
+    <TextView
+        android:id="@+id/payment_plan_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/title_activity_create_payment_plan"
+        android:textAlignment="center"
+        android:textSize="42sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="126dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".5">
+
+        <TextView
+            android:id="@+id/payment_plan_amount_lbl_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_lbl"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/payment_plan_schedule_lbl_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/schedule_lbl"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_plan_amount_lbl_lbl" />
+
+        <TextView
+            android:id="@+id/payment_plan_next_lbl_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/next_lbl"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_plan_schedule_lbl_lbl" />
+
+        <TextView
+            android:id="@+id/payment_plan_amount_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="@color/green"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/payment_plan_amount_lbl_lbl"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/payment_plan_schedule_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/payment_plan_schedule_lbl_lbl"
+            app:layout_constraintTop_toBottomOf="@+id/payment_plan_amount_lbl" />
+
+        <TextView
+            android:id="@+id/payment_plan_next_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/payment_plan_next_lbl_lbl"
+            app:layout_constraintTop_toBottomOf="@+id/payment_plan_schedule_lbl" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/delete_payment_plan"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/red"
+        android:onClick="deletePaymentPlan"
+        android:text="@string/delete"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

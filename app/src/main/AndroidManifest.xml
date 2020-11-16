@@ -3,27 +3,58 @@
     package="de.julianhofmann.h_bank">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.HBank"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".PaymentPlanInfoActivity"
+            android:label="@string/title_activity_create_payment_plan"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".PaymentPlanActivity"/>
+        <activity
+            android:name=".CreatePaymentPlanActivity"
+            android:label="@string/title_activity_create_payment_plan"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PaymentPlanActivity"
+            android:label="@string/title_activity_payment_plan"
+            android:parentActivityName=".UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TransferMoneyActivity"
+            android:label="@string/title_activity_transfer_money"
+            android:parentActivityName=".UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserInfoActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
             android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

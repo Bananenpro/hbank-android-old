@@ -5,11 +5,11 @@
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/background</item>
         <item name="colorPrimaryVariant">@color/blue</item>
-        <item name="colorOnPrimary">@color/foreground</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
-        <item name="colorOnSecondary">@color/foreground</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
         <!-- Customize your theme here. -->
@@ -17,6 +17,7 @@
         <item name="android:actionBarItemBackground">@color/background</item>
         <item name="android:textColor">@color/foreground</item>
         <item name="actionBarStyle">@style/Theme.HBank.ActionBar</item>
+        <item name="alertDialogTheme">@style/Theme.HBank.Dialog</item>
     </style>
 
 
@@ -24,5 +25,9 @@
         parent="Theme.HBank">
         <item name="background">@color/background</item>
         <item name="displayOptions">showTitle</item>
+    </style>
+
+    <style name="Theme.HBank.Dialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/blue4</item>
     </style>
 </resources>
