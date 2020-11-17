@@ -80,11 +80,16 @@ public class MainActivity extends AppCompatActivity {
             public void onImagesChosen(List<ChosenImage> list) {
                 ChosenImage image = list.get(0);
                 uploadImage(Util.getCompressed(getApplicationContext(), image.getOriginalPath(), 500));
+                new File(image.getTempFile()).delete();
+                new File(image.getThumbnailPath()).delete();
+                new File(image.getThumbnailSmallPath()).delete();
+                new File(image.getOriginalPath()).delete();
+                new File(image.getOriginalPath()).getParentFile().delete();
+                new File(image.getOriginalPath()).getParentFile().getParentFile().delete();
             }
 
             @Override
             public void onError(String s) {
-
             }
         };
     }
@@ -135,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e("error", "error");
                 }
             });
         } catch (Exception e) {

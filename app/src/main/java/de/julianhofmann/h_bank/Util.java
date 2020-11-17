@@ -22,9 +22,8 @@ public class Util {
         try {
             if (context == null)
                 throw new NullPointerException("Context must not be null.");
-            File cacheDir = context.getExternalCacheDir();
-            if (cacheDir == null)
-                cacheDir = context.getCacheDir();
+
+            File cacheDir = context.getCacheDir();
 
             String rootDir = cacheDir.getAbsolutePath() + "/ImageCompressor";
             File root = new File(rootDir);
