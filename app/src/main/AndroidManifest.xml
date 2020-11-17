@@ -20,10 +20,15 @@
         android:theme="@style/Theme.HBank"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LogItemInfoActivity"
+            android:label="@string/title_fragment_log"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".PaymentPlanInfoActivity"
             android:label="@string/title_activity_create_payment_plan"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".PaymentPlanActivity"/>
+            android:parentActivityName=".PaymentPlanActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CreatePaymentPlanActivity"
             android:label="@string/title_activity_create_payment_plan"

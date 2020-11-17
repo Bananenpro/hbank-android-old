@@ -2,6 +2,7 @@ package de.julianhofmann.h_bank.api;
 
 import java.util.List;
 
+import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
@@ -45,4 +46,10 @@ public interface HBankApi {
 
     @DELETE("payment_plan/{id}")
     Call<Void> deletePaymentPlan(@Path("id") int id, @Header("Authorization") String authorization);
+
+    @GET("log/{page}")
+    Call<List<LogModel>> getLog(@Path("page") int page, @Header("Authorization") String authorization);
+
+    @GET("log/item/{id}")
+    Call<LogModel> getLogItem(@Path("id") int id, @Header("Authorization") String authorization);
 }

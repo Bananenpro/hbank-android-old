@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PaymentPlanInfoActivity">
+    tools:context=".LogItemInfoActivity">
 
     <TextView
-        android:id="@+id/payment_plan_lbl"
+        android:id="@+id/log_item_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -15,7 +15,7 @@
         android:layout_marginEnd="5dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="@string/title_activity_create_payment_plan"
+        android:text="@string/title_fragment_log"
         android:textAlignment="center"
         android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
-        android:layout_height="126dp"
+        android:layout_height="191dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".5"
@@ -44,11 +44,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/log_item_time_lbl_lbl"
+            android:id="@+id/log_item_new_balance_lbl_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/schedule_lbl"
+            android:text="@string/new_balance_lbl"
             android:textAlignment="textStart"
             android:textSize="24sp"
             android:visibility="visible"
@@ -56,11 +56,23 @@
             app:layout_constraintTop_toBottomOf="@+id/log_item_amount_lbl_lbl" />
 
         <TextView
+            android:id="@+id/log_item_time_lbl_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/time_lbl"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_item_new_balance_lbl_lbl" />
+
+        <TextView
             android:id="@+id/log_item_user_lbl_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/next_lbl"
+            android:text="@string/user_lbl"
             android:textAlignment="textStart"
             android:textSize="24sp"
             android:visibility="visible"
@@ -75,49 +87,52 @@
             android:textColor="@color/green"
             android:textSize="24sp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_amount_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/log_item_amount_lbl_lbl"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/log_item_amount_lbl_lbl" />
+
+        <TextView
+            android:id="@+id/log_item_new_balance_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_new_balance_lbl_lbl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/log_item_new_balance_lbl_lbl"
+            app:layout_constraintTop_toTopOf="@+id/log_item_new_balance_lbl_lbl"
+            app:layout_constraintVertical_bias=".5" />
 
         <TextView
             android:id="@+id/log_item_time_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textAlignment="textStart"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_time_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/log_item_time_lbl_lbl"
-            app:layout_constraintTop_toBottomOf="@+id/log_item_amount_lbl" />
+            app:layout_constraintTop_toTopOf="@+id/log_item_time_lbl_lbl" />
 
         <TextView
             android:id="@+id/log_item_user_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:textAlignment="textStart"
             android:textSize="24sp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_user_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/log_item_user_lbl_lbl"
-            app:layout_constraintTop_toBottomOf="@+id/log_item_time_lbl" />
+            app:layout_constraintTop_toTopOf="@+id/log_item_user_lbl_lbl" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/delete_payment_plan"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="50dp"
-        android:backgroundTint="@color/red"
-        android:onClick="deletePaymentPlan"
-        android:text="@string/delete"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

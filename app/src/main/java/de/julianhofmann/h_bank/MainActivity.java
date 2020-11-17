@@ -34,7 +34,9 @@ import java.io.IOException;
 import java.util.List;
 
 import de.julianhofmann.h_bank.api.RetrofitService;
+import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.ui.log.LogListItem;
 import de.julianhofmann.h_bank.ui.user_list.UserListItem;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private ImagePicker imagePicker;
     private ImagePickerCallback imagePickerCallback;
     private boolean newProfilePicture;
+    private int logPage = 0;
+    private boolean allLogPages = false;
+    private boolean loadingLog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    public void resetLogPages() {
+        logPage = 0;
+        allLogPages = false;
+        loadingLog = false;
+        LinearLayout layout = findViewById(R.id.log_list_layout);
+        layout.removeAllViews();
     }
 
     private void uploadImage(String path) {
@@ -281,6 +294,68 @@ public class MainActivity extends AppCompatActivity {
     public void goToUser(String name) {
         Intent i = new Intent(this, UserInfoActivity.class);
         i.putExtra("name", name);
+        startActivity(i);
+    }
+
+    public void loadLog() {
+        if (!allLogPages && !loadingLog) {
+            loadingLog = true;
+            Call<List<LogModel>> call = RetrofitService.getHbankApi().getLog(logPage, RetrofitService.getAuthorization());
+            logPage++;
+            call.enqueue(new Callback<List<LogModel>>() {
+                @Override
+                public void onResponse(Call<List<LogModel>> call, Response<List<LogModel>> response) {
+
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        if (response.body().size() == 0) {
+                            allLogPages = true;
+                            return;
+                        }
+
+                        LinearLayout layout = findViewById(R.id.log_list_layout);
+
+                        for (LogModel item : response.body()) {
+                            addLogItem(layout, item);
+                        }
+
+                    } else if (response.code() == 403) {
+                        String name = RetrofitService.name;
+                        RetrofitService.logout();
+                        switchToLoginActivity(name);
+                    }
+
+                    loadingLog = false;
+                }
+
+                @Override
+                public void onFailure(Call<List<LogModel>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+                    logPage--;
+                    loadingLog = false;
+                }
+            });
+        }
+    }
+
+    public void addLogItem(LinearLayout layout, LogModel model) {
+        LogListItem item = new LogListItem(this);
+        item.getDate().setText(model.getDate());
+        item.getDescription().setText(model.getDescription());
+
+        item.getAmount().setText(model.getAmount()+getString(R.string.currency));
+        if (model.getAmount().startsWith("-")) {
+            item.getAmount().setTextColor(getColor(R.color.red));
+        }
+
+        item.getButton().setOnClickListener(v -> goToLogItemInfo(model.getId()));
+
+        layout.addView(item);
+    }
+
+    private void goToLogItemInfo(int id) {
+        Intent i = new Intent(this, LogItemInfoActivity.class);
+        i.putExtra("id", id);
         startActivity(i);
     }
 }

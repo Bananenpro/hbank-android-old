@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +21,6 @@ import retrofit2.Response;
 
 public class PaymentPlanInfoActivity extends AppCompatActivity {
 
-    private String name;
     private int id;
 
     @Override
@@ -30,7 +30,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        name = i.getStringExtra("name");
+        String name = i.getStringExtra("name");
         id = i.getIntExtra("id", -1);
 
         if (id == -1 || name == null) {
@@ -45,9 +45,9 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
 
 
         TextView title = findViewById(R.id.payment_plan_lbl);
-        TextView amount = findViewById(R.id.payment_plan_amount_lbl);
-        TextView schedule = findViewById(R.id.payment_plan_schedule_lbl);
-        TextView next = findViewById(R.id.payment_plan_next_lbl);
+        TextView amount = findViewById(R.id.log_item_amount_lbl);
+        TextView schedule = findViewById(R.id.log_item_time_lbl);
+        TextView next = findViewById(R.id.log_item_user_lbl);
         Button delete = findViewById(R.id.delete_payment_plan);
 
         Call<PaymentPlanModel> call = RetrofitService.getHbankApi().getPaymentPlan(id, RetrofitService.getAuthorization());

@@ -58,4 +58,7 @@
     <string name="amount_lbl">Betrag:</string>
     <string name="schedule_lbl">Zeitplan:</string>
     <string name="next_lbl">Nächstes:</string>
+    <string name="time_lbl">Zeitpunkt:</string>
+    <string name="user_lbl">Benutzer:</string>
+    <string name="new_balance_lbl">Neuer Kontostand:</string>
 </resources>
