@@ -33,6 +33,7 @@ public class LogItemInfoActivity extends AppCompatActivity {
             return;
         }
 
+        TextView title = findViewById(R.id.log_item_lbl);
         TextView amount = findViewById(R.id.log_item_amount_lbl);
         TextView newBalance = findViewById(R.id.log_item_new_balance_lbl);
         TextView time = findViewById(R.id.log_item_time_lbl);
@@ -43,14 +44,22 @@ public class LogItemInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LogModel> call, Response<LogModel> response) {
                 if (response.isSuccessful()) {
+
+                    if (title != null)
+                    title.setText(response.body().getDescription());
+
+                    if (amount != null)
                     amount.setText(response.body().getAmount() + getString(R.string.currency));
 
                     if (response.body().getAmount().startsWith("-")) {
                         amount.setTextColor(getColor(R.color.red));
                     }
 
+                    if (newBalance != null)
                     newBalance.setText(response.body().getNewBalance() + getString(R.string.currency));
+                    if (time != null)
                     time.setText(response.body().getDate());
+                    if (user != null)
                     user.setText(response.body().getUsername());
                 } else if (response.code() == 403) {
                     String name = RetrofitService.name;

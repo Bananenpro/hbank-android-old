@@ -55,12 +55,18 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PaymentPlanModel> call, Response<PaymentPlanModel> response) {
                 if (response.isSuccessful()) {
+                    if (title != null)
                     title.setText(response.body().getDescription());
+                    if (amount != null)
                     amount.setText(response.body().getAmount() + getString(R.string.currency));
+                    if (schedule != null)
                     schedule.setText(response.body().getSchedule() + " " + getString(R.string.days));
+                    if (next != null)
                     next.setText("" + response.body().getDaysLeft() + " " + getString(R.string.days));
                     if (response.body().getAmount().startsWith("-")) {
+                        if (delete != null)
                         delete.setVisibility(Button.VISIBLE);
+                        if (amount != null)
                         amount.setTextColor(getColor(R.color.red));
                     }
                 } else if (response.code() == 403) {

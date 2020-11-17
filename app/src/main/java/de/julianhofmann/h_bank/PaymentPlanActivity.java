@@ -67,6 +67,7 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     private void addPaymentPlanListItem(LinearLayout layout, PaymentPlanModel p) {
+        if (layout == null) return;
         PaymentPlanListItem item = new PaymentPlanListItem(this);
 
         item.getDescription().setText(p.getDescription());

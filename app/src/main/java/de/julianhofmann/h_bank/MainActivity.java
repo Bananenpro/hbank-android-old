@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
+                        if (balance != null)
                         balance.setText(newBalance);
                         BalanceCache.update(response.body().getBalance());
                     } else {
@@ -272,6 +273,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addUserListItem(LinearLayout layout, String name) {
 
+        if (layout == null) return;
+
         UserListItem userListItem = new UserListItem(this);
 
         userListItem.getNameButton().setText(name);
@@ -339,6 +342,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addLogItem(LinearLayout layout, LogModel model) {
+        if (layout == null) return;
+
         LogListItem item = new LogListItem(this);
         item.getDate().setText(model.getDate());
         item.getDescription().setText(model.getDescription());

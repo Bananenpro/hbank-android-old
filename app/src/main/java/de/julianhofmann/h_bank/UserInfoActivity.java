@@ -59,8 +59,10 @@ public class UserInfoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                        balance.setText(newBalance);
-                        balance.setVisibility(View.VISIBLE);
+                        if (balance != null) {
+                            balance.setText(newBalance);
+                            balance.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
