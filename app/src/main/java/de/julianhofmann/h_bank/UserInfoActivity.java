@@ -54,16 +54,18 @@ public class UserInfoActivity extends AppCompatActivity {
         Call<UserModel> call = RetrofitService.getHbankApi().getUser(name, RetrofitService.getAuthorization());
         TextView balance = findViewById(R.id.user_balance_lbl);
 
+        String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(name) + getString(R.string.currency);
+        balance.setText(newBalance);
+
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                        if (balance != null) {
-                            balance.setText(newBalance);
-                            balance.setVisibility(View.VISIBLE);
-                        }
+                        balance.setText(newBalance);
+                        balance.setVisibility(View.VISIBLE);
+                        BalanceCache.update(name, response.body().getBalance());
                     }
                 }
             }

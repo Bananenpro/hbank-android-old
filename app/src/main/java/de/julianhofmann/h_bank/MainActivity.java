@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
             public void onError(String s) {
             }
         };
+
+
     }
 
     public void resetLogPages() {
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void uploadImage(String path) {
 
-        Toast.makeText(getApplicationContext(), getString(R.string.wait), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.wait), Toast.LENGTH_SHORT).show();
 
         File sourceFile = new File(path);
 
@@ -166,11 +168,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadUserInfo(View v) {
-
         if (!newProfilePicture) newProfilePicture = v != null;
 
         Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.name, RetrofitService.getAuthorization());
         TextView balance = findViewById(R.id.user_balance_lbl);
+
+        String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.name) + getString(R.string.currency);
+        balance.setText(newBalance);
 
         call.enqueue(new Callback<UserModel>() {
             @Override
@@ -180,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
                         if (balance != null)
                         balance.setText(newBalance);
-                        BalanceCache.update(response.body().getBalance());
+                        BalanceCache.update(RetrofitService.name, response.body().getBalance());
                     } else {
                         String name = RetrofitService.name;
                         RetrofitService.logout();
@@ -192,11 +196,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
-                String balanceFromCache = BalanceCache.getBalance();
-                if (balanceFromCache != null) {
-                    String newBalance = getString(R.string.balance) + " " + balanceFromCache + getString(R.string.currency);
-                    balance.setText(newBalance);
-                }
             }
         });
 
@@ -210,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
                     .load(RetrofitService.URL + "profile_picture/" + RetrofitService.name)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .placeholder(R.mipmap.empty_profile_picture)
-                    .error(R.mipmap.empty_profile_picture)
+                    .placeholder(profilePicture.getDrawable())
+                    .error(profilePicture.getDrawable())
                     .fit()
                     .centerCrop()
                     .into(profilePicture);
@@ -219,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Picasso.get()
                     .load(RetrofitService.URL + "profile_picture/" + RetrofitService.name)
-                    .placeholder(R.mipmap.empty_profile_picture)
-                    .error(R.mipmap.empty_profile_picture)
+                    .placeholder(profilePicture.getDrawable())
+                    .error(profilePicture.getDrawable())
                     .fit()
                     .centerCrop()
                     .into(profilePicture);
