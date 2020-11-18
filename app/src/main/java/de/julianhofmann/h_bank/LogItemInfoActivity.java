@@ -38,6 +38,7 @@ public class LogItemInfoActivity extends AppCompatActivity {
         TextView newBalance = findViewById(R.id.log_item_new_balance_lbl);
         TextView time = findViewById(R.id.log_item_time_lbl);
         TextView user = findViewById(R.id.log_item_user_lbl);
+        TextView userLbl = findViewById(R.id.log_item_user_lbl_lbl);
 
         Call<LogModel> call = RetrofitService.getHbankApi().getLogItem(id, RetrofitService.getAuthorization());
         call.enqueue(new Callback<LogModel>() {
@@ -53,6 +54,7 @@ public class LogItemInfoActivity extends AppCompatActivity {
 
                     if (response.body().getAmount().startsWith("-")) {
                         amount.setTextColor(getColor(R.color.red));
+                        userLbl.setText(R.string.receiver_lbl);
                     }
 
                     if (newBalance != null)

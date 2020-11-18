@@ -60,6 +60,8 @@
     <string name="time_lbl">Time:</string>
     <string name="user_lbl">User:</string>
     <string name="new_balance_lbl">New Balance:</string>
+    <string name="sender_lbl">Sender:</string>
+    <string name="receiver_lbl">Receiver:</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>
