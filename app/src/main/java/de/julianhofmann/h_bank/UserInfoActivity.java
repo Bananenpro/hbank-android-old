@@ -80,8 +80,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 .load(RetrofitService.URL + "profile_picture/" + name)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
-                .placeholder(R.mipmap.empty_profile_picture)
-                .error(R.mipmap.empty_profile_picture)
+                .placeholder(profilePicture.getDrawable())
+                .error(profilePicture.getDrawable())
                 .fit()
                 .centerCrop()
                 .into(profilePicture);

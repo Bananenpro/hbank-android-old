@@ -288,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
 
         Picasso.get()
                 .load(RetrofitService.URL + "profile_picture/" + name)
-                .placeholder(R.mipmap.empty_profile_picture)
-                .error(R.mipmap.empty_profile_picture)
+                .placeholder(userListItem.getProfilePictureImageView().getDrawable())
+                .error(userListItem.getProfilePictureImageView().getDrawable())
                 .fit()
                 .centerCrop()
                 .into(userListItem.getProfilePictureImageView());
