@@ -22,6 +22,7 @@ import retrofit2.Response;
 public class UserInfoActivity extends AppCompatActivity {
 
     private String name;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,5 +102,20 @@ public class UserInfoActivity extends AppCompatActivity {
         onBackPressed();
         finish();
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (paused) {
+            loadUserInfo();
+            paused = false;
+        }
     }
 }

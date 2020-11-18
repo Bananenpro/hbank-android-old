@@ -260,9 +260,12 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     LinearLayout layout = findViewById(R.id.user_list_layout);
 
-                    for (UserModel user : response.body()) {
-                        if (!user.getName().equals(RetrofitService.name)) {
-                            addUserListItem(layout, user.getName());
+                    if (layout != null) {
+                        layout.removeAllViews();
+                        for (UserModel user : response.body()) {
+                            if (!user.getName().equals(RetrofitService.name)) {
+                                addUserListItem(layout, user.getName());
+                            }
                         }
                     }
                 }
@@ -276,9 +279,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addUserListItem(LinearLayout layout, String name) {
-
-        if (layout == null) return;
-
         UserListItem userListItem = new UserListItem(this);
 
         userListItem.getNameButton().setText(name);

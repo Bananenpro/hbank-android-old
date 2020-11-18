@@ -22,6 +22,7 @@ import retrofit2.Response;
 public class PaymentPlanActivity extends AppCompatActivity {
 
     private String name;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class PaymentPlanActivity extends AppCompatActivity {
             actionBar.setTitle(getString(R.string.title_activity_payment_plan) + " | " + name);
         }
 
+        loadPaymentPlans();
+    }
+
+    private void loadPaymentPlans() {
         Call<List<PaymentPlanModel>> call = RetrofitService.getHbankApi().getPaymentPlans(name, RetrofitService.getAuthorization());
         call.enqueue(new Callback<List<PaymentPlanModel>>() {
             @Override
@@ -49,8 +54,11 @@ public class PaymentPlanActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     List<PaymentPlanModel> paymentPlans = response.body();
                     LinearLayout layout = findViewById(R.id.payment_plan_list_layout);
-                    for (PaymentPlanModel p : paymentPlans) {
-                        addPaymentPlanListItem(layout, p);
+                    if (layout != null) {
+                        layout.removeAllViews();
+                        for (PaymentPlanModel p : paymentPlans) {
+                            addPaymentPlanListItem(layout, p);
+                        }
                     }
                 } else if (response.code() == 403) {
                     String name = RetrofitService.name;
@@ -67,7 +75,6 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     private void addPaymentPlanListItem(LinearLayout layout, PaymentPlanModel p) {
-        if (layout == null) return;
         PaymentPlanListItem item = new PaymentPlanListItem(this);
 
         item.getDescription().setText(p.getDescription());
@@ -120,5 +127,20 @@ public class PaymentPlanActivity extends AppCompatActivity {
         onBackPressed();
         finish();
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (paused) {
+            loadPaymentPlans();
+            paused = false;
+        }
     }
 }
