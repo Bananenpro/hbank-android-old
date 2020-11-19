@@ -21,7 +21,10 @@ import android.widget.TextView;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -181,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         edit.putString("name", RetrofitService.name);
                         edit.putString("token", RetrofitService.token);
+
 
                         edit.apply();
 

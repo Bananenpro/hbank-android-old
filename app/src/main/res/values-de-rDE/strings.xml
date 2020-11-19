@@ -63,4 +63,8 @@
     <string name="new_balance_lbl">Neuer Kontostand:</string>
     <string name="sender_lbl">Sender:</string>
     <string name="receiver_lbl">Empfänger:</string>
+    <string name="update_available">Eine Aktualisierung ist verfügbar!</string>
+    <string name="update_question">Möchtest du jetzt aktualisieren?</string>
+    <string name="update">Aktualisierung</string>
+    <string name="downloading">Herunterladen...</string>
 </resources>

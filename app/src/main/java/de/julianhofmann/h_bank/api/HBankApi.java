@@ -10,6 +10,7 @@ import de.julianhofmann.h_bank.api.models.RegisterModel;
 import de.julianhofmann.h_bank.api.models.RegisterResponseModel;
 import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.api.models.VersionModel;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -52,4 +53,7 @@ public interface HBankApi {
 
     @GET("log/item/{id}")
     Call<LogModel> getLogItem(@Path("id") int id, @Header("Authorization") String authorization);
+
+    @GET("version/android")
+    Call<VersionModel> getVersion();
 }

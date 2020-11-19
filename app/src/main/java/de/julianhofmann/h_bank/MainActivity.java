@@ -93,7 +93,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
+        if (!Util.askedForUpdate) {
+            update();
+            Util.askedForUpdate = true;
+        }
     }
 
     public void resetLogPages() {
@@ -224,6 +227,15 @@ public class MainActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(profilePicture);
         }
+    }
+
+
+    private void update() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        }
+
+        Util.update(this);
     }
 
     public void changeProfilePicture(View v) {

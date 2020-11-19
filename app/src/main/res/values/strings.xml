@@ -62,6 +62,10 @@
     <string name="new_balance_lbl">New Balance:</string>
     <string name="sender_lbl">Sender:</string>
     <string name="receiver_lbl">Receiver:</string>
+    <string name="update_available">There is an update available!</string>
+    <string name="update_question">Do you want to update now?</string>
+    <string name="update">Update</string>
+    <string name="downloading">Downloading...</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>
