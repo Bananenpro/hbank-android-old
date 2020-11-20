@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<RegisterResponseModel> call, Response<RegisterResponseModel> response) {
                         if (response.isSuccessful()) {
+                            RetrofitService.logout();
                             switchToLoginActivity();
                         } else if (response.code() == 500) {
 

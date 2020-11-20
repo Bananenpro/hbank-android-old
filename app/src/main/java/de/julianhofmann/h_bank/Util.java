@@ -222,5 +222,12 @@ public class Util {
 
         return null;
     }
+
+    public static void clearPassword(SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove("salt");
+        edit.remove("password_hash");
+        edit.apply();
+    }
 }
 

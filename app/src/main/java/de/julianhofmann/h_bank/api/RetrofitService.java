@@ -57,10 +57,10 @@ public class RetrofitService {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove("name");
         edit.remove("token");
-        edit.remove("salt");
-        edit.remove("password_hash");
+
         edit.apply();
 
+        Util.clearPassword(sharedPreferences);
         BalanceCache.clear();
     }
 
