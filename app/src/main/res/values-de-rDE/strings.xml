@@ -67,4 +67,5 @@
     <string name="update_question">Möchtest du jetzt aktualisieren?</string>
     <string name="update">Aktualisierung</string>
     <string name="downloading">Herunterladen...</string>
+    <string name="no_money">Kein Geld</string>
 </resources>

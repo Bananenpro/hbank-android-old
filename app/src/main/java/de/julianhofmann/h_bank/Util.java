@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,11 +29,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.VersionModel;
+import kotlin.text.Charsets;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -161,6 +171,56 @@ public class Util {
         context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         downloadManager.enqueue(request);
+    }
+
+    public static void storePassword(String password, SharedPreferences sp) {
+        try {
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            SecureRandom secureRandom = new SecureRandom();
+            byte[] salt = new byte[32];
+
+            secureRandom.nextBytes(salt);
+
+            KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256);
+            SecretKey secretKey = keyFactory.generateSecret(keySpec);
+
+            SharedPreferences.Editor edit = sp.edit();
+            edit.putString("salt", new String(salt, Charsets.ISO_8859_1));
+            edit.putString("password_hash", new String(secretKey.getEncoded(), Charsets.ISO_8859_1));
+            edit.apply();
+        } catch (InvalidKeySpecException e) {
+            Log.e("ERROR", "Cannot generate password hash: Invalid key spec!");
+        } catch (NoSuchAlgorithmException ignored) {}
+    }
+
+    public static String checkPassword(String name, String password, SharedPreferences sp) {
+
+        if (!sp.getString("name", "").equals(name)) return null;
+
+        try {
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            SecureRandom secureRandom = new SecureRandom();
+            String saltStr = sp.getString("salt", null);
+
+            if (saltStr != null) {
+
+                byte[] salt = saltStr.getBytes(Charsets.ISO_8859_1);
+
+                KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256);
+                SecretKey secretKey = keyFactory.generateSecret(keySpec);
+
+                String passwordHash = sp.getString("password_hash", null);
+
+                if (passwordHash != null && new String(secretKey.getEncoded(), Charsets.ISO_8859_1).equals(passwordHash)) {
+                    return sp.getString("token", null);
+
+                }
+            }
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException ignored) { }
+
+        return null;
     }
 }
 

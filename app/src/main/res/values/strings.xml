@@ -66,6 +66,7 @@
     <string name="update_question">Do you want to update now?</string>
     <string name="update">Update</string>
     <string name="downloading">Downloading...</string>
+    <string name="no_money">No Money</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>

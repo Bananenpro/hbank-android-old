@@ -13,6 +13,7 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SharedPreferences sp = getSharedPreferences("de.julianhofmann.h-bank", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
 
         RetrofitService.init(sp);
         BalanceCache.init(sp);
@@ -162,6 +163,14 @@ public class LoginActivity extends AppCompatActivity {
         error_text.setText("");
 
         if (name.getText().length() > 0 && password.getText().length() > 0) {
+
+            SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
+            String token = Util.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
+            if (token != null) {
+                RetrofitService.login(name.getText().toString(), token);
+                switchToMainActivity();
+            }
+
             LoginModel model = new LoginModel(name.getText().toString(), password.getText().toString());
 
             Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(model);
@@ -174,19 +183,9 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
                     if (response.isSuccessful()) {
-                        RetrofitService.token = response.body().getToken();
-                        RetrofitService.name = name.getText().toString();
+                        RetrofitService.login(name.getText().toString(), response.body().getToken());
 
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("de.julianhofmann.h-bank", MODE_PRIVATE);
-
-                        SharedPreferences.Editor edit = sharedPreferences.edit();
-
-                        edit.putString("name", RetrofitService.name);
-                        edit.putString("token", RetrofitService.token);
-
-
-                        edit.apply();
+                        Util.storePassword(password.getText().toString(), sharedPreferences);
 
                         switchToMainActivity();
                     } else {

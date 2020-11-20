@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import de.julianhofmann.h_bank.BalanceCache;
+import de.julianhofmann.h_bank.Util;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,8 +13,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class RetrofitService {
     public static final String URL = "http://192.168.0.200:5000/";
-    public static String name;
-    public static String token;
+    public static String name = null;
+    public static String token = null;
 
     private static SharedPreferences sharedPreferences;
 
@@ -37,6 +38,17 @@ public class RetrofitService {
         }
     }
 
+    public static void login(String loginName, String loginToken) {
+        name = loginName;
+        token = loginToken;
+
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString("name", RetrofitService.name);
+        edit.putString("token", RetrofitService.token);
+
+        edit.apply();
+    }
 
     public static void logout() {
         name = null;
@@ -45,6 +57,8 @@ public class RetrofitService {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove("name");
         edit.remove("token");
+        edit.remove("salt");
+        edit.remove("password_hash");
         edit.apply();
 
         BalanceCache.clear();

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,13 +57,23 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
             public void onResponse(Call<PaymentPlanModel> call, Response<PaymentPlanModel> response) {
                 if (response.isSuccessful()) {
                     if (title != null)
-                    title.setText(response.body().getDescription());
+                        title.setText(response.body().getDescription());
+                    if (Double.parseDouble(BalanceCache.getBalance(RetrofitService.name)) < Double.parseDouble(response.body().getAmount()) && response.body().getDaysLeft() <= 0) {
+                        delete.setText(R.string.no_money);
+                        delete.setEnabled(false);
+                    } else {
+                        delete.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
+                    }
                     if (amount != null)
-                    amount.setText(response.body().getAmount() + getString(R.string.currency));
+                        amount.setText(response.body().getAmount() + getString(R.string.currency));
                     if (schedule != null)
                     schedule.setText(response.body().getSchedule() + " " + getString(R.string.days));
-                    if (next != null)
-                    next.setText("" + response.body().getDaysLeft() + " " + getString(R.string.days));
+                    if (next != null) {
+                        next.setText("" + response.body().getDaysLeft() + " " + getString(R.string.days));
+                        if (response.body().getDaysLeft() <= 0) {
+                            next.setTextColor(getColor(R.color.red));
+                        }
+                    }
                     if (response.body().getAmount().startsWith("-")) {
                         if (delete != null)
                         delete.setVisibility(Button.VISIBLE);
