@@ -58,7 +58,13 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (title != null)
                         title.setText(response.body().getDescription());
-                    if (Double.parseDouble(BalanceCache.getBalance(RetrofitService.name)) < Double.parseDouble(response.body().getAmount()) && response.body().getDaysLeft() <= 0) {
+
+                    double balance = Double.parseDouble(BalanceCache.getBalance(RetrofitService.name));
+                    int missingPayments = (int)Math.floor((response.body().getSchedule() - (double)response.body().getDaysLeft()) / (double)response.body().getSchedule());
+
+                    Log.e("missing", ""+missingPayments);
+
+                    if (missingPayments > 0 && balance < Math.abs(Double.parseDouble(response.body().getAmount())) * missingPayments) {
                         delete.setText(R.string.no_money);
                         delete.setEnabled(false);
                     } else {

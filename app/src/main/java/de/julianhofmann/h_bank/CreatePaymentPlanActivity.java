@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,6 +67,7 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 error.setTextColor(getColor(R.color.green));
                                 error.setText(R.string.create_success);
+                                new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
                             } else if (response.code() == 403) {
                                 String name = RetrofitService.name;
                                 RetrofitService.logout();

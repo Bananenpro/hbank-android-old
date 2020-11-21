@@ -201,7 +201,6 @@ public class Util {
         try {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
-            SecureRandom secureRandom = new SecureRandom();
             String saltStr = sp.getString("salt", null);
 
             if (saltStr != null) {

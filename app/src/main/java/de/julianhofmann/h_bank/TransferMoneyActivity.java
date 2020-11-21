@@ -2,6 +2,7 @@ package de.julianhofmann.h_bank;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +60,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             error.setText(R.string.transaction_complete);
                             error.setTextColor(getColor(R.color.green));
+                            new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
                         } else if (response.code() == 400){
                             error.setText(R.string.not_enough_money);
                         } else if (response.code() == 403){
