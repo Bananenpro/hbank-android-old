@@ -67,6 +67,7 @@
     <string name="update">Update</string>
     <string name="downloading">Downloading...</string>
     <string name="no_money">No Money</string>
+    <string name="online">You are online!</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>

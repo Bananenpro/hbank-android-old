@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean allLogPages = false;
     private boolean loadingLog = false;
     private boolean paused = false;
+    private boolean offline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
+                    offline();
                 }
             });
         } catch (Exception e) {
@@ -183,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                online();
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
@@ -199,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserModel> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+                offline();
             }
         });
 
@@ -249,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<UserModel>> call, Response<List<UserModel>> response) {
                 if (response.isSuccessful()) {
+                    online();
                     LinearLayout layout = findViewById(R.id.user_list_layout);
 
                     if (layout != null) {
@@ -264,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<UserModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+                offline();
             }
         });
     }
@@ -297,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<List<LogModel>>() {
                 @Override
                 public void onResponse(Call<List<LogModel>> call, Response<List<LogModel>> response) {
-
+                    online();
                     if (response.isSuccessful() && response.body() != null) {
 
                         if (response.body().size() == 0) {
@@ -322,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<LogModel>> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+                    offline();
                     logPage--;
                     loadingLog = false;
                 }
@@ -369,5 +374,33 @@ public class MainActivity extends AppCompatActivity {
             }
             paused = false;
         }
+    }
+
+    private void offline() {
+        FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
+        if (editProfilePicture != null) {
+            editProfilePicture.setVisibility(View.INVISIBLE);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setIcon(R.drawable.ic_baseline_wifi_off_24);
+        } else if (!offline){
+            Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_SHORT).show();
+        }
+        offline = true;
+    }
+
+    private void online() {
+        FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
+        if (editProfilePicture != null) {
+            editProfilePicture.setVisibility(View.VISIBLE);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setIcon(null);
+        } else if (offline){
+            Toast.makeText(getApplicationContext(), R.string.online, Toast.LENGTH_SHORT).show();
+        }
+        offline = false;
     }
 }

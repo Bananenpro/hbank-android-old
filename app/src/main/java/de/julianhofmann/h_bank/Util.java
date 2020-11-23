@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -140,7 +139,6 @@ public class Util {
 
             @Override
             public void onFailure(Call<VersionModel> call, Throwable t) {
-                Toast.makeText(context, R.string.offline, Toast.LENGTH_SHORT).show();
             }
         });
     }
