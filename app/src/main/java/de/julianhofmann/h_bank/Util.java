@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -176,6 +177,7 @@ public class Util {
         };
         context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+        Toast.makeText(context, R.string.downloading, Toast.LENGTH_SHORT).show();
         downloadManager.enqueue(request);
     }
 
