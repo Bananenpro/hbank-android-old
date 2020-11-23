@@ -12,18 +12,25 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,6 +48,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import de.julianhofmann.h_bank.api.RetrofitService;
+import de.julianhofmann.h_bank.api.models.IntIdModel;
 import de.julianhofmann.h_bank.api.models.VersionModel;
 import kotlin.text.Charsets;
 import retrofit2.Call;
@@ -227,6 +235,48 @@ public class Util {
         edit.remove("salt");
         edit.remove("password_hash");
         edit.apply();
+    }
+
+    public static void loadProfilePicture(String name, ImageView imageView, Drawable placeholder, SharedPreferences sharedPreferences) {
+        Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
+                .placeholder(placeholder)
+                .error(placeholder)
+                .fit()
+                .centerCrop()
+                .into(imageView);
+        Call<IntIdModel> call = RetrofitService.getHbankApi().getProfilePictureId(name);
+        call.enqueue(new Callback<IntIdModel>() {
+            @Override
+            public void onResponse(Call<IntIdModel> call, Response<IntIdModel> response) {
+                int cachedId = getProfilePictureId(name, sharedPreferences);
+                if (!response.isSuccessful() || (cachedId != -1 && response.body().getId() != cachedId)) {
+                    if (response.body() != null) updateProfilePictureId(name, response.body().getId(), sharedPreferences);
+                    Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + name);
+
+                    Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .placeholder(placeholder)
+                            .error(placeholder)
+                            .fit()
+                            .centerCrop()
+                            .into(imageView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IntIdModel> call, Throwable t) {
+            }
+        });
+    }
+
+    private static void updateProfilePictureId(String name, int id, SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putInt(name + "_profile_picture_id", id);
+        edit.apply();
+    }
+
+    private static int getProfilePictureId(String name, SharedPreferences sharedPreferences) {
+        return sharedPreferences.getInt(name+"_profile_picture_id", -1);
     }
 }
 

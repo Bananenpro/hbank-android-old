@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,28 +206,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
 
-        if(newProfilePicture) {
-            Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + RetrofitService.name);
-
-            Picasso.get()
-                    .load(RetrofitService.URL + "profile_picture/" + RetrofitService.name)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .placeholder(profilePicture.getDrawable())
-                    .error(profilePicture.getDrawable())
-                    .fit()
-                    .centerCrop()
-                    .into(profilePicture);
-            newProfilePicture = false;
-        } else {
-            Picasso.get()
-                    .load(RetrofitService.URL + "profile_picture/" + RetrofitService.name)
-                    .placeholder(profilePicture.getDrawable())
-                    .error(profilePicture.getDrawable())
-                    .fit()
-                    .centerCrop()
-                    .into(profilePicture);
-        }
+        Util.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
     }
 
 
@@ -298,13 +278,7 @@ public class MainActivity extends AppCompatActivity {
             goToUser(button.getText().toString());
         });
 
-        Picasso.get()
-                .load(RetrofitService.URL + "profile_picture/" + name)
-                .placeholder(userListItem.getProfilePictureImageView().getDrawable())
-                .error(userListItem.getProfilePictureImageView().getDrawable())
-                .fit()
-                .centerCrop()
-                .into(userListItem.getProfilePictureImageView());
+        Util.loadProfilePicture(name, userListItem.getProfilePictureImageView(), userListItem.getProfilePictureImageView().getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
 
         layout.addView(userListItem);
     }
@@ -377,5 +351,23 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, LogItemInfoActivity.class);
         i.putExtra("id", id);
         startActivity(i);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (paused) {
+            if (!Util.askedForUpdate) {
+                update();
+                Util.askedForUpdate = true;
+            }
+            paused = false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package de.julianhofmann.h_bank.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import de.julianhofmann.h_bank.api.RetrofitService;
 
 public class HomeFragment extends Fragment {
 
+    private boolean paused = false;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -28,5 +31,20 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((MainActivity)getActivity()).loadUserInfo(null);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (paused) {
+            ((MainActivity)getActivity()).loadUserInfo(null);
+            paused = false;
+        }
     }
 }

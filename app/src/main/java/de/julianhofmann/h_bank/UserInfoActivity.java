@@ -75,16 +75,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + name);
-        Picasso.get()
-                .load(RetrofitService.URL + "profile_picture/" + name)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .placeholder(profilePicture.getDrawable())
-                .error(profilePicture.getDrawable())
-                .fit()
-                .centerCrop()
-                .into(profilePicture);
+        Util.loadProfilePicture(name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
     }
 
     public void transferMoney(View v) {
