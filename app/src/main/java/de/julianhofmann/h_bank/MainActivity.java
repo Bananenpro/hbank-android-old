@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +27,8 @@ import com.squareup.picasso.Picasso;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -53,20 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
     private ImagePicker imagePicker;
     private ImagePickerCallback imagePickerCallback;
-    private boolean newProfilePicture;
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
     private boolean paused = false;
     private boolean offline = false;
+    private boolean spinning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_user_list, R.id.navigation_log)
                 .build();
@@ -75,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         Intent i = getIntent();
-
-        newProfilePicture = i.getBooleanExtra("newProfilePicture", false);
 
         imagePickerCallback = new ImagePickerCallback() {
             @Override
@@ -175,42 +175,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadUserInfo(View v) {
-        if (!newProfilePicture) newProfilePicture = v != null;
+        if (!spinning) {
+            FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
+            AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+            if (v != null) {
+                spinning = true;
+                ViewCompat.animate(refreshBtn).
+                        rotation(720).
+                        withLayer().
+                        setDuration(2250).
+                        setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationStart(View view) {
+                    }
 
-        Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.name, RetrofitService.getAuthorization());
-        TextView balance = findViewById(R.id.user_balance_lbl);
+                    @Override
+                    public void onAnimationEnd(View view) {
+                        view.setRotation(0);
+                        spinning = false;
+                    }
 
-        String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.name) + getString(R.string.currency);
-        balance.setText(newBalance);
+                    @Override
+                    public void onAnimationCancel(View view) {
+                        view.setRotation(0);
+                        spinning = false;
+                    }
+                }).
+                        start();
+            }
+            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.name, RetrofitService.getAuthorization());
+            TextView balance = findViewById(R.id.user_balance_lbl);
 
-        call.enqueue(new Callback<UserModel>() {
-            @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                online();
-                if (response.isSuccessful()) {
-                    if (response.body() != null && response.body().getBalance() != null) {
-                        String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                        if (balance != null)
-                        balance.setText(newBalance);
-                        BalanceCache.update(RetrofitService.name, response.body().getBalance());
-                    } else {
-                        String name = RetrofitService.name;
-                        RetrofitService.logout();
-                        switchToLoginActivity(name);
+            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.name) + getString(R.string.currency);
+            balance.setText(newBalance);
+
+            call.enqueue(new Callback<UserModel>() {
+                @Override
+                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                    online();
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && response.body().getBalance() != null) {
+                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
+                            if (balance != null)
+                                balance.setText(newBalance);
+                            BalanceCache.update(RetrofitService.name, response.body().getBalance());
+                        } else {
+                            String name = RetrofitService.name;
+                            RetrofitService.logout();
+                            switchToLoginActivity(name);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
-                offline();
-            }
-        });
+                @Override
+                public void onFailure(Call<UserModel> call, Throwable t) {
+                    offline();
+                }
+            });
 
-        ImageView profilePicture = findViewById(R.id.user_profile_picture);
+            ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
 
-        Util.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+            Util.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+        }
     }
 
 

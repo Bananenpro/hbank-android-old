@@ -121,8 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
-                    RetrofitService.name = name;
-                    RetrofitService.token = token;
+                    RetrofitService.login(name, token);
                     switchToMainActivity();
                 }
 
