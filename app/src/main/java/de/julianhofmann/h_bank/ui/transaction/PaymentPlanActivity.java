@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.transaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
+import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.ui.transaction.CreatePaymentPlanActivity;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanInfoActivity;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanListItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

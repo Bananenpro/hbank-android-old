@@ -1,7 +1,6 @@
-package de.julianhofmann.h_bank.ui.user_list;
+package de.julianhofmann.h_bank.ui.main.user_list;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import de.julianhofmann.h_bank.MainActivity;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.R;
 
 public class UserListFragment extends Fragment {

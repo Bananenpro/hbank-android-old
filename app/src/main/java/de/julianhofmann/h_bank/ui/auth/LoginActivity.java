@@ -1,19 +1,16 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.KeyguardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.biometrics.BiometricPrompt;
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.os.CancellationSignal;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,15 +19,14 @@ import android.widget.TextView;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.SecretKeySpec;
-
+import de.julianhofmann.h_bank.util.PasswordCache;
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.BuildConfig;
+import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -164,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
         if (name.getText().length() > 0 && password.getText().length() > 0) {
 
             SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
-            String token = Util.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
+            String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
             if (token != null) {
                 RetrofitService.login(name.getText().toString(), token);
                 switchToMainActivity();
@@ -184,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         RetrofitService.login(name.getText().toString(), response.body().getToken());
 
-                        Util.storePassword(password.getText().toString(), sharedPreferences);
+                        PasswordCache.storePassword(password.getText().toString(), sharedPreferences);
 
                         switchToMainActivity();
                     } else {

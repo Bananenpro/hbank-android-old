@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.transaction;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -14,8 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
+import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

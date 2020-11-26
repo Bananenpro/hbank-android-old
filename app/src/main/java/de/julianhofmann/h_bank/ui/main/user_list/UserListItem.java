@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank.ui.user_list;
+package de.julianhofmann.h_bank.ui.main.user_list;
 
 import android.content.Context;
 import android.util.AttributeSet;

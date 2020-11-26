@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.transaction;
 
 import android.content.Context;
 import android.util.AttributeSet;

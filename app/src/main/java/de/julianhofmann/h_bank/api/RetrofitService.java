@@ -1,15 +1,11 @@
 package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import de.julianhofmann.h_bank.BalanceCache;
-import de.julianhofmann.h_bank.Util;
-import okhttp3.Request;
+import de.julianhofmann.h_bank.util.PasswordCache;
+import de.julianhofmann.h_bank.util.BalanceCache;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class RetrofitService {
     public static final String URL = "http://192.168.0.200:5000/";
@@ -60,7 +56,7 @@ public class RetrofitService {
 
         edit.apply();
 
-        Util.clearPassword(sharedPreferences);
+        PasswordCache.clearPassword(sharedPreferences);
         BalanceCache.clear();
     }
 

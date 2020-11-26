@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.main;
 
 import android.Manifest;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +19,6 @@ import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -38,11 +34,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.BuildConfig;
+import de.julianhofmann.h_bank.ui.main.log.LogItemInfoActivity;
+import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.main.user_list.UserInfoActivity;
+import de.julianhofmann.h_bank.util.ImageUtils;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
-import de.julianhofmann.h_bank.ui.log.LogListItem;
-import de.julianhofmann.h_bank.ui.user_list.UserListItem;
+import de.julianhofmann.h_bank.ui.main.log.LogListItem;
+import de.julianhofmann.h_bank.ui.main.user_list.UserListItem;
+import de.julianhofmann.h_bank.util.UpdateService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onImagesChosen(List<ChosenImage> list) {
                 ChosenImage image = list.get(0);
-                uploadImage(Util.getCompressed(getApplicationContext(), image.getOriginalPath(), 500));
+                uploadImage(ImageUtils.getCompressed(getApplicationContext(), image.getOriginalPath(), 500));
                 new File(image.getTempFile()).delete();
                 new File(image.getThumbnailPath()).delete();
                 new File(image.getThumbnailSmallPath()).delete();
@@ -96,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (!Util.askedForUpdate) {
+        if (!ImageUtils.askedForUpdate) {
             update();
-            Util.askedForUpdate = true;
+            ImageUtils.askedForUpdate = true;
         }
     }
 
@@ -236,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
 
-            Util.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+            ImageUtils.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
         }
     }
 
@@ -246,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
 
-        Util.update(this);
+        UpdateService.update(this);
     }
 
     public void changeProfilePicture(View v) {
@@ -310,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
             goToUser(button.getText().toString());
         });
 
-        Util.loadProfilePicture(name, userListItem.getProfilePictureImageView(), userListItem.getProfilePictureImageView().getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+        ImageUtils.loadProfilePicture(name, userListItem.getProfilePictureImageView(), userListItem.getProfilePictureImageView().getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
 
         layout.addView(userListItem);
     }
@@ -395,9 +399,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (paused) {
-            if (!Util.askedForUpdate) {
+            if (!ImageUtils.askedForUpdate) {
                 update();
-                Util.askedForUpdate = true;
+                ImageUtils.askedForUpdate = true;
             }
             paused = false;
         }
@@ -410,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.drawable.ic_baseline_wifi_off_24);
+            getSupportActionBar().setIcon(R.drawable.no_connection_icon);
         } else if (!offline){
             Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_SHORT).show();
         }

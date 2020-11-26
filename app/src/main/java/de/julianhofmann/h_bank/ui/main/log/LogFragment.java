@@ -1,21 +1,16 @@
-package de.julianhofmann.h_bank.ui.log;
+package de.julianhofmann.h_bank.ui.main.log;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import de.julianhofmann.h_bank.MainActivity;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.R;
 
 public class LogFragment extends Fragment {

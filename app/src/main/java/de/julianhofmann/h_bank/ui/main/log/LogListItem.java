@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank.ui.log;
+package de.julianhofmann.h_bank.ui.main.log;
 
 import android.content.Context;
 import android.util.AttributeSet;

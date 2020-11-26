@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePaymentPlanActivity">
+    tools:context=".ui.transaction.CreatePaymentPlanActivity">
 
     <TextView
         android:id="@+id/create_payment_plan_error"

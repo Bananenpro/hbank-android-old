@@ -22,45 +22,45 @@
         android:theme="@style/Theme.HBank"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".LogItemInfoActivity"
+            android:name=".ui.main.log.LogItemInfoActivity"
             android:label="@string/title_fragment_log"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".PaymentPlanInfoActivity"
+            android:name=".ui.transaction.PaymentPlanInfoActivity"
             android:label="@string/title_activity_create_payment_plan"
-            android:parentActivityName=".PaymentPlanActivity"
+            android:parentActivityName=".ui.transaction.PaymentPlanActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CreatePaymentPlanActivity"
+            android:name=".ui.transaction.CreatePaymentPlanActivity"
             android:label="@string/title_activity_create_payment_plan"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PaymentPlanActivity"
+            android:name=".ui.transaction.PaymentPlanActivity"
             android:label="@string/title_activity_payment_plan"
-            android:parentActivityName=".UserInfoActivity"
+            android:parentActivityName=".ui.main.user_list.UserInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TransferMoneyActivity"
+            android:name=".ui.transaction.TransferMoneyActivity"
             android:label="@string/title_activity_transfer_money"
-            android:parentActivityName=".UserInfoActivity"
+            android:parentActivityName=".ui.main.user_list.UserInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UserInfoActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".ui.main.user_list.UserInfoActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.auth.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".LoginActivity"
+            android:parentActivityName=".ui.auth.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait">
             <intent-filter>

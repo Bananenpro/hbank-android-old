@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.ui.main.user_list;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.BuildConfig;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
+import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.transaction.TransferMoneyActivity;
+import de.julianhofmann.h_bank.util.ImageUtils;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.UserModel;
 import retrofit2.Call;
@@ -75,7 +77,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        Util.loadProfilePicture(name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+        ImageUtils.loadProfilePicture(name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
     }
 
     public void transferMoney(View v) {

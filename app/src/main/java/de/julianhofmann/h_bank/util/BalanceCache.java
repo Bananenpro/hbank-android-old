@@ -1,4 +1,4 @@
-package de.julianhofmann.h_bank;
+package de.julianhofmann.h_bank.util;
 
 import android.content.SharedPreferences;
 

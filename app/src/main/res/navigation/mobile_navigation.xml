@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="de.julianhofmann.h_bank.ui.home.HomeFragment"
+        android:name="de.julianhofmann.h_bank.ui.main.home.HomeFragment"
         android:label="@string/title_fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/navigation_user_list"
-        android:name="de.julianhofmann.h_bank.ui.user_list.UserListFragment"
+        android:name="de.julianhofmann.h_bank.ui.main.user_list.UserListFragment"
         android:label="@string/title_fragment_user_list"
         tools:layout="@layout/fragment_user_list_">
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/navigation_log"
-        android:name="de.julianhofmann.h_bank.ui.log.LogFragment"
+        android:name="de.julianhofmann.h_bank.ui.main.log.LogFragment"
         android:label="@string/title_fragment_log"
         tools:layout="@layout/fragment_log">
         <action
