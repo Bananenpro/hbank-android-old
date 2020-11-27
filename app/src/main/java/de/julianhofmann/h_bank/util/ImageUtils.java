@@ -126,7 +126,7 @@ public class ImageUtils {
         Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
                 .placeholder(placeholder)
                 .error(placeholder)
-                .fit()
+                .resize(500, 500)
                 .centerCrop()
                 .into(imageView);
         Call<IntIdModel> call = RetrofitService.getHbankApi().getProfilePictureId(name);
@@ -142,8 +142,8 @@ public class ImageUtils {
                             .networkPolicy(NetworkPolicy.NO_CACHE)
                             .placeholder(placeholder)
                             .error(placeholder)
-                            .fit()
                             .centerCrop()
+                            .resize(500, 500)
                             .into(imageView);
                 }
             }
