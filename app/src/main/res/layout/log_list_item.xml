@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge tool:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools">
+    tool:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <Button
-        android:id="@+id/button2"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="65dp"
@@ -30,7 +29,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"

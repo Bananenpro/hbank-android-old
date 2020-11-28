@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 import de.julianhofmann.h_bank.BuildConfig;
@@ -28,7 +30,7 @@ public class UpdateService {
         Call<VersionModel> call = RetrofitService.getHbankApi().getVersion();
         call.enqueue(new Callback<VersionModel>() {
             @Override
-            public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
+            public void onResponse(@NotNull Call<VersionModel> call, @NotNull Response<VersionModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().getVersion() > BuildConfig.VERSION_CODE) {
                         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
@@ -43,11 +45,12 @@ public class UpdateService {
             }
 
             @Override
-            public void onFailure(Call<VersionModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<VersionModel> call, @NotNull Throwable t) {
             }
         });
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void installUpdate(Context context) {
         String destination = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/apk/h-bank.apk";
 

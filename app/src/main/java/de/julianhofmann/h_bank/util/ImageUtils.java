@@ -1,67 +1,40 @@
 package de.julianhofmann.h_bank.util;
 
-import android.Manifest;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
-import de.julianhofmann.h_bank.BuildConfig;
-import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.IntIdModel;
-import de.julianhofmann.h_bank.api.models.VersionModel;
-import kotlin.text.Charsets;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ImageUtils {
 
+    @SuppressLint("ConstantLocale")
     public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
     public static boolean askedForUpdate = false;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static String getCompressed(Context context, String path, double targetSize) {
 
         try {
@@ -82,7 +55,7 @@ public class ImageUtils {
             double width = image.getWidth();
             double height = image.getHeight();
 
-            double factor = 1;
+            double factor;
 
             if (width > height) factor = height / targetSize;
             else factor = width / targetSize;
@@ -132,24 +105,27 @@ public class ImageUtils {
         Call<IntIdModel> call = RetrofitService.getHbankApi().getProfilePictureId(name);
         call.enqueue(new Callback<IntIdModel>() {
             @Override
-            public void onResponse(Call<IntIdModel> call, Response<IntIdModel> response) {
+            public void onResponse(@NotNull Call<IntIdModel> call, @NotNull Response<IntIdModel> response) {
                 int cachedId = getProfilePictureId(name, sharedPreferences);
-                if (!response.isSuccessful() || (cachedId != -1 && response.body().getId() != cachedId)) {
-                    if (response.body() != null) updateProfilePictureId(name, response.body().getId(), sharedPreferences);
-                    Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + name);
+                if (response.body() != null) {
+                    if (response.isSuccessful() && response.body().getId() != cachedId) {
+                        if (response.body() != null)
+                            updateProfilePictureId(name, response.body().getId(), sharedPreferences);
+                        Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + name);
 
-                    Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .placeholder(placeholder)
-                            .error(placeholder)
-                            .centerCrop()
-                            .resize(500, 500)
-                            .into(imageView);
+                        Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
+                                .networkPolicy(NetworkPolicy.NO_CACHE)
+                                .placeholder(placeholder)
+                                .error(placeholder)
+                                .centerCrop()
+                                .resize(500, 500)
+                                .into(imageView);
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<IntIdModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<IntIdModel> call, @NotNull Throwable t) {
             }
         });
     }
@@ -161,7 +137,7 @@ public class ImageUtils {
     }
 
     private static int getProfilePictureId(String name, SharedPreferences sharedPreferences) {
-        return sharedPreferences.getInt(name+"_profile_picture_id", -1);
+        return sharedPreferences.getInt(name + "_profile_picture_id", -1);
     }
 }
 

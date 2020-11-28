@@ -17,14 +17,14 @@ public class BalanceCache {
     public static String getBalance(String name) {
         if (lastBalance != null) return lastBalance;
         else {
-            return sharedPreferences.getString(name+"_balance", "");
+            return sharedPreferences.getString(name + "_balance", "");
         }
     }
 
     public static void update(String name, String newBalance) {
         if (lastBalance == null || !lastBalance.equals(newBalance)) {
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putString(name+"_balance", newBalance);
+            edit.putString(name + "_balance", newBalance);
 
             Set<String> names = sharedPreferences.getStringSet("names", new HashSet<>());
             names.add(name);

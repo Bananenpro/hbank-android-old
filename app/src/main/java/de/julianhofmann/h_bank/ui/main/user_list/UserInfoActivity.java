@@ -1,22 +1,24 @@
 package de.julianhofmann.h_bank.ui.main.user_list;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import de.julianhofmann.h_bank.util.BalanceCache;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.BuildConfig;
-import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
 import de.julianhofmann.h_bank.R;
-import de.julianhofmann.h_bank.ui.transaction.TransferMoneyActivity;
-import de.julianhofmann.h_bank.util.ImageUtils;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
+import de.julianhofmann.h_bank.ui.transaction.TransferMoneyActivity;
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.util.ImageUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +37,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         name = i.getStringExtra("name");
 
-        if(name == null) {
+        if (name == null) {
             onSupportNavigateUp();
         }
 
@@ -61,7 +63,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<UserModel>() {
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+            public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
@@ -73,7 +75,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
             }
         });
 

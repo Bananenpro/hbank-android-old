@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".ui.transaction.CreatePaymentPlanActivity">
 
     <TextView
@@ -36,9 +37,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
         android:layout_width="300dp"
-        android:layout_height="198dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -77,22 +77,22 @@
             app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_amount" />
 
         <EditText
-            android:id="@+id/create_payment_plan_description"
+            android:id="@+id/create_payment_plan_receiver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:autofillHints="description"
             android:backgroundTint="@color/edit_text"
             android:ems="10"
-            android:hint="@string/description_hint"
+            android:hint="@string/receiver_hint"
             android:inputType="textPersonName"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_schedule" />
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -103,7 +103,6 @@
             app:layout_constraintTop_toTopOf="@+id/create_payment_plan_amount" />
 
         <TextView
-            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -112,6 +111,20 @@
             app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_schedule"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/create_payment_plan_schedule" />
+
+        <EditText
+            android:id="@+id/create_payment_plan_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints="description"
+            android:backgroundTint="@color/edit_text"
+            android:ems="10"
+            android:hint="@string/description_hint"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_receiver" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -124,4 +137,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

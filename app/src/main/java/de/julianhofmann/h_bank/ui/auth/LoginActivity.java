@@ -1,8 +1,5 @@
 package de.julianhofmann.h_bank.ui.auth;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.KeyguardManager;
 import android.content.Intent;
@@ -16,17 +13,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import de.julianhofmann.h_bank.util.PasswordCache;
-import de.julianhofmann.h_bank.util.BalanceCache;
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.util.PasswordCache;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,30 +102,16 @@ public class LoginActivity extends AppCompatActivity {
                     .setTitle(getString(R.string.app_name))
                     .setSubtitle(getString(R.string.authentication_required))
                     .setDescription(getString(R.string.biometric_description))
-                    .setNegativeButton(getString(R.string.cancel), this.getMainExecutor(), (dialogInterface, i) -> { })
+                    .setNegativeButton(getString(R.string.cancel), this.getMainExecutor(), (dialogInterface, i) -> {
+                    })
                     .build();
 
             biometricPrompt.authenticate(new CancellationSignal(), getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
-                @Override
-                public void onAuthenticationError(int errorCode, CharSequence errString) {
-                    super.onAuthenticationError(errorCode, errString);
-                }
-
-                @Override
-                public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
-                    super.onAuthenticationHelp(helpCode, helpString);
-                }
-
                 @Override
                 public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
                     RetrofitService.login(name, token);
                     switchToMainActivity();
-                }
-
-                @Override
-                public void onAuthenticationFailed() {
-                    super.onAuthenticationFailed();
                 }
             });
         }
@@ -176,8 +164,8 @@ public class LoginActivity extends AppCompatActivity {
 
             call.enqueue(new Callback<LoginResponseModel>() {
                 @Override
-                public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
-                    if (response.isSuccessful()) {
+                public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
                         RetrofitService.login(name.getText().toString(), response.body().getToken());
 
                         PasswordCache.storePassword(password.getText().toString(), sharedPreferences);
@@ -192,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<LoginResponseModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
                     error_text.setText(getString(R.string.offline));
                     loginButton.setEnabled(true);
                     registerButton.setEnabled(true);

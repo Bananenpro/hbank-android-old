@@ -4,12 +4,10 @@
     <color name="blue2">#3C4DF3</color>
     <color name="blue3">#1525BD</color>
     <color name="blue4">#66A9F1</color>
-    <color name="black">#000000</color>
     <color name="white">#E0E0E0</color>
     <color name="foreground">#000000</color>
     <color name="red">#FF0000</color>
     <color name="green">#00CC00</color>
     <color name="background">#FFFFFF</color>
     <color name="dark_gray">#8A8A8A</color>
-    <color name="red_button">#80FF0000</color>
 </resources>

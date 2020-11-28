@@ -21,8 +21,7 @@
     </style>
 
 
-    <style name="Theme.HBank.ActionBar"
-        parent="Theme.HBank">
+    <style name="Theme.HBank.ActionBar" parent="Theme.HBank">
         <item name="background">@color/background</item>
         <item name="displayOptions">showTitle</item>
     </style>

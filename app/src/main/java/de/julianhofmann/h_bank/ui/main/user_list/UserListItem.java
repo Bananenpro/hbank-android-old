@@ -37,6 +37,6 @@ public class UserListItem extends ConstraintLayout {
     }
 
     public ImageView getProfilePictureImageView() {
-        return (ImageView)((CardView) getChildAt(1)).getChildAt(0);
+        return (ImageView) ((CardView) getChildAt(1)).getChildAt(0);
     }
 }

@@ -16,6 +16,7 @@ public class PaymentPlanModel {
     private int id;
     @SerializedName("days_left")
     private int daysLeft;
+    private String user;
 
     public PaymentPlanModel(String receiver, String amount, int schedule, String description) {
         this.receiver = receiver;
@@ -70,5 +71,13 @@ public class PaymentPlanModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

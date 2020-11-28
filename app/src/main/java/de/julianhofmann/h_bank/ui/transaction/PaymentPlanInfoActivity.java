@@ -1,24 +1,26 @@
 package de.julianhofmann.h_bank.ui.transaction;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.julianhofmann.h_bank.util.BalanceCache;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.util.BalanceCache;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,35 +39,38 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
         String name = i.getStringExtra("name");
         id = i.getIntExtra("id", -1);
 
-        if (id == -1 || name == null) {
+        if (id == -1) {
             onSupportNavigateUp();
             return;
         }
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null && name != null) {
             actionBar.setTitle(getString(R.string.title_activity_create_payment_plan) + " | " + name);
+        } else if (name == null) {
+            actionBar.setTitle(R.string.title_activity_create_payment_plan);
         }
 
 
         TextView title = findViewById(R.id.payment_plan_lbl);
         TextView amount = findViewById(R.id.log_item_amount_lbl);
         TextView schedule = findViewById(R.id.log_item_time_lbl);
-        TextView next = findViewById(R.id.log_item_user_lbl);
+        TextView next = findViewById(R.id.log_item_next_lbl);
+        TextView user = findViewById(R.id.log_item_user_lbl);
+        TextView userLbl = findViewById(R.id.log_item_user_lbl_lbl);
         Button delete = findViewById(R.id.delete_payment_plan);
 
         Call<PaymentPlanModel> call = RetrofitService.getHbankApi().getPaymentPlan(id, RetrofitService.getAuthorization());
         call.enqueue(new Callback<PaymentPlanModel>() {
+            @SuppressLint("DefaultLocale")
             @Override
-            public void onResponse(Call<PaymentPlanModel> call, Response<PaymentPlanModel> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(@NotNull Call<PaymentPlanModel> call, @NotNull Response<PaymentPlanModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     if (title != null)
                         title.setText(response.body().getDescription());
 
                     double balance = Double.parseDouble(BalanceCache.getBalance(RetrofitService.name));
-                    int missingPayments = (int)Math.floor((response.body().getSchedule() - (double)response.body().getDaysLeft()) / (double)response.body().getSchedule());
-
-                    Log.e("missing", ""+missingPayments);
+                    int missingPayments = (int) Math.floor((response.body().getSchedule() - (double) response.body().getDaysLeft()) / (double) response.body().getSchedule());
 
                     if (missingPayments > 0 && balance < Math.abs(Double.parseDouble(response.body().getAmount())) * missingPayments) {
                         delete.setText(R.string.no_money);
@@ -74,20 +79,27 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                         delete.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                     }
                     if (amount != null)
-                        amount.setText(response.body().getAmount() + getString(R.string.currency));
+                        amount.setText(String.format("%s%s", response.body().getAmount(), getString(R.string.currency)));
                     if (schedule != null)
-                    schedule.setText(response.body().getSchedule() + " " + getString(R.string.days));
+                        schedule.setText(String.format("%d %s", response.body().getSchedule(), getString(R.string.days)));
                     if (next != null) {
-                        next.setText("" + response.body().getDaysLeft() + " " + getString(R.string.days));
+                        next.setText(String.format("%d %s", response.body().getDaysLeft(), getString(R.string.days)));
                         if (response.body().getDaysLeft() <= 0) {
                             next.setTextColor(getColor(R.color.red));
                         }
                     }
+                    if (user != null && userLbl != null) {
+                        if (response.body().getAmount().startsWith("-")) {
+                            userLbl.setText(R.string.receiver_lbl);
+                        } else {
+                            userLbl.setText(R.string.sender_lbl);
+                        }
+                        user.setText(response.body().getUser());
+                    }
                     if (response.body().getAmount().startsWith("-")) {
-                        if (delete != null)
                         delete.setVisibility(Button.VISIBLE);
                         if (amount != null)
-                        amount.setTextColor(getColor(R.color.red));
+                            amount.setTextColor(getColor(R.color.red));
                     }
                 } else if (response.code() == 403) {
                     String name = RetrofitService.name;
@@ -97,7 +109,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PaymentPlanModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<PaymentPlanModel> call, @NotNull Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
             }
         });
@@ -112,7 +124,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                 button.setText(R.string.loading);
                 call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                         if (response.isSuccessful()) {
                             onSupportNavigateUp();
                         } else if (response.code() == 403) {
@@ -125,7 +137,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
                         Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
                         button.setText(R.string.delete);
                         button.setEnabled(true);

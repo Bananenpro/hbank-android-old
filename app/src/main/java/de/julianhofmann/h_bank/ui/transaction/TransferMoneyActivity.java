@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
@@ -32,7 +34,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
 
         name = i.getStringExtra("name");
 
-        if(name == null) {
+        if (name == null) {
             onSupportNavigateUp();
             return;
         }
@@ -58,14 +60,14 @@ public class TransferMoneyActivity extends AppCompatActivity {
                 submit.setText(R.string.loading);
                 call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                         if (response.isSuccessful()) {
                             error.setText(R.string.transaction_complete);
                             error.setTextColor(getColor(R.color.green));
                             new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
-                        } else if (response.code() == 400){
+                        } else if (response.code() == 400) {
                             error.setText(R.string.not_enough_money);
-                        } else if (response.code() == 403){
+                        } else if (response.code() == 403) {
                             String name = RetrofitService.name;
                             RetrofitService.logout();
                             switchToLoginActivity(name);
@@ -75,7 +77,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
                         error.setText(R.string.offline);
                         submit.setEnabled(true);
                         submit.setText(R.string.transfer_money_btn);

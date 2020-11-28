@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainActivity)getActivity()).loadUserInfo(null);
+        ((MainActivity) requireActivity()).loadUserInfo(null);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (paused) {
-            ((MainActivity)getActivity()).loadUserInfo(null);
+            ((MainActivity) requireActivity()).loadUserInfo(null);
             paused = false;
         }
     }

@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 
 public class UserListFragment extends Fragment {
 
@@ -24,7 +24,7 @@ public class UserListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity)getActivity()).loadUsers();
+        ((MainActivity) requireActivity()).loadUsers();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (paused) {
-            ((MainActivity)getActivity()).loadUsers();
+            ((MainActivity) requireActivity()).loadUsers();
             paused = false;
         }
     }

@@ -2,14 +2,16 @@ package de.julianhofmann.h_bank.ui.transaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,9 +19,6 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
-import de.julianhofmann.h_bank.ui.transaction.CreatePaymentPlanActivity;
-import de.julianhofmann.h_bank.ui.transaction.PaymentPlanInfoActivity;
-import de.julianhofmann.h_bank.ui.transaction.PaymentPlanListItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,30 +36,38 @@ public class PaymentPlanActivity extends AppCompatActivity {
         Intent i = getIntent();
 
         name = i.getStringExtra("name");
-
-        if(name == null) {
-            onSupportNavigateUp();
-            return;
-        }
+        if (name == null) name = "";
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(getString(R.string.title_activity_payment_plan) + " | " + name);
+        if (actionBar != null) {
+            if (!name.equals(""))
+                actionBar.setTitle(getString(R.string.title_activity_payment_plan) + " | " + name);
+            else
+                actionBar.setTitle(getString(R.string.title_activity_my_payment_plans));
         }
 
         loadPaymentPlans();
     }
 
     private void loadPaymentPlans() {
+        TextView emptyLbl = findViewById(R.id.no_payment_plans_lbl);
+        emptyLbl.setVisibility(View.VISIBLE);
+        emptyLbl.setText(R.string.loading);
         Call<List<PaymentPlanModel>> call = RetrofitService.getHbankApi().getPaymentPlans(name, RetrofitService.getAuthorization());
         call.enqueue(new Callback<List<PaymentPlanModel>>() {
             @Override
-            public void onResponse(Call<List<PaymentPlanModel>> call, Response<List<PaymentPlanModel>> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Response<List<PaymentPlanModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     List<PaymentPlanModel> paymentPlans = response.body();
                     LinearLayout layout = findViewById(R.id.payment_plan_list_layout);
                     if (layout != null) {
                         layout.removeAllViews();
+                        if (paymentPlans.size() > 0) {
+                            emptyLbl.setVisibility(View.GONE);
+                        } else {
+                            emptyLbl.setVisibility(View.VISIBLE);
+                            emptyLbl.setText(R.string.no_payment_plans);
+                        }
                         for (PaymentPlanModel p : paymentPlans) {
                             addPaymentPlanListItem(layout, p);
                         }
@@ -73,8 +80,9 @@ public class PaymentPlanActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<PaymentPlanModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), getString(R.string.offline), Toast.LENGTH_LONG).show();
+            public void onFailure(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Throwable t) {
+                emptyLbl.setVisibility(View.VISIBLE);
+                emptyLbl.setText(R.string.offline);
             }
         });
     }
@@ -90,14 +98,9 @@ public class PaymentPlanActivity extends AppCompatActivity {
         String amount = p.getAmount() + getString(R.string.currency);
         item.getAmount().setText(amount);
 
-        item.getButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPaymentPlan(p.getId());
-            }
-        });
+        item.getButton().setOnClickListener(v -> showPaymentPlan(p.getId()));
 
-        if(p.getAmount().startsWith("+")) {
+        if (p.getAmount().startsWith("+")) {
             item.getAmount().setTextColor(getColor(R.color.green));
         } else {
             item.getAmount().setTextColor(getColor(R.color.red));
@@ -107,15 +110,22 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     public void showPaymentPlan(int id) {
-        Intent i = new Intent(this, PaymentPlanInfoActivity.class);
-        i.putExtra("name", name);
+        Intent i;
+        if (!name.equals("")) {
+            i = new Intent(this, PaymentPlanInfoActivity.class);
+            i.putExtra("name", name);
+        } else {
+            i = new Intent(this, PaymentPlanInfoActivity.class);
+        }
         i.putExtra("id", id);
         startActivity(i);
     }
 
     public void createPaymentPlan(View v) {
         Intent i = new Intent(this, CreatePaymentPlanActivity.class);
-        i.putExtra("name", name);
+        if (!name.equals("")) {
+            i.putExtra("name", name);
+        }
         startActivity(i);
     }
 

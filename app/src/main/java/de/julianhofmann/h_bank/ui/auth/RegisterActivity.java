@@ -1,8 +1,5 @@
 package de.julianhofmann.h_bank.ui.auth;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -65,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextView error_text = findViewById(R.id.register_error_text);
         error_text.setText("");
 
-        if(name.getText().length() > 0 && password.getText().length() > 0) {
+        if (name.getText().length() > 0 && password.getText().length() > 0) {
             if (password.getText().toString().equals(repeatPassword.getText().toString())) {
                 RegisterModel model = new RegisterModel(name.getText().toString(), password.getText().toString(), switchCompat.isChecked());
 
@@ -76,26 +78,27 @@ public class RegisterActivity extends AppCompatActivity {
 
                 call.enqueue(new Callback<RegisterResponseModel>() {
                     @Override
-                    public void onResponse(Call<RegisterResponseModel> call, Response<RegisterResponseModel> response) {
+                    public void onResponse(@NotNull Call<RegisterResponseModel> call, @NotNull Response<RegisterResponseModel> response) {
                         if (response.isSuccessful()) {
                             RetrofitService.logout();
                             switchToLoginActivity();
-                        } else if (response.code() == 500) {
-
+                        } else if (response.code() == 500 && response.errorBody() != null) {
                             try {
-                                Converter<ResponseBody, RegisterResponseModel> converter =  RetrofitService.getRetrofit().responseBodyConverter(RegisterResponseModel.class, new Annotation[0]);
+                                Converter<ResponseBody, RegisterResponseModel> converter = RetrofitService.getRetrofit().responseBodyConverter(RegisterResponseModel.class, new Annotation[0]);
                                 RegisterResponseModel body = converter.convert(response.errorBody());
-                                if (!body.getNameLength()) {
-                                    String newText = error_text.getText().toString() + "\n" + getString(R.string.name_too_short);
-                                    error_text.setText(newText);
-                                }
-                                if (!body.getPasswordLength()) {
-                                    String newText = error_text.getText().toString() + "\n" + getString(R.string.password_length_error_part_1) + " " + body.getRequiredPasswordLength() + " " + getString(R.string.password_length_error_part_2);
-                                    error_text.setText(newText);
-                                }
-                                if (body.getAlreadyExists()) {
-                                    String newText = error_text.getText().toString() + "\n" + getString(R.string.user_already_exists);
-                                    error_text.setText(newText);
+                                if (body != null) {
+                                    if (!body.getNameLength()) {
+                                        String newText = error_text.getText().toString() + "\n" + getString(R.string.name_too_short);
+                                        error_text.setText(newText);
+                                    }
+                                    if (!body.getPasswordLength()) {
+                                        String newText = error_text.getText().toString() + "\n" + getString(R.string.password_length_error_part_1) + " " + body.getRequiredPasswordLength() + " " + getString(R.string.password_length_error_part_2);
+                                        error_text.setText(newText);
+                                    }
+                                    if (body.getAlreadyExists()) {
+                                        String newText = error_text.getText().toString() + "\n" + getString(R.string.user_already_exists);
+                                        error_text.setText(newText);
+                                    }
                                 }
                             } catch (IOException e) {
                                 Log.e("ERROR", e.getMessage());
@@ -107,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<RegisterResponseModel> call, Throwable t) {
+                    public void onFailure(@NotNull Call<RegisterResponseModel> call, @NotNull Throwable t) {
                         TextView text = findViewById(R.id.register_error_text);
                         text.setText(getString(R.string.offline));
 

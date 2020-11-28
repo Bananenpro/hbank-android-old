@@ -24,7 +24,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
-        android:layout_height="191dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".5"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/log_item_new_balance_lbl_lbl" />
 
         <TextView
-            android:id="@+id/log_item_user_lbl_lbl"
+            android:id="@+id/log_item_next_lbl_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -121,7 +121,7 @@
             app:layout_constraintTop_toTopOf="@+id/log_item_time_lbl_lbl" />
 
         <TextView
-            android:id="@+id/log_item_user_lbl"
+            android:id="@+id/log_item_next_lbl"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
@@ -129,10 +129,10 @@
             android:textAlignment="textStart"
             android:textSize="24sp"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/log_item_user_lbl_lbl"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_next_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/log_item_user_lbl_lbl"
-            app:layout_constraintTop_toTopOf="@+id/log_item_user_lbl_lbl" />
+            app:layout_constraintStart_toEndOf="@+id/log_item_next_lbl_lbl"
+            app:layout_constraintTop_toTopOf="@+id/log_item_next_lbl_lbl" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

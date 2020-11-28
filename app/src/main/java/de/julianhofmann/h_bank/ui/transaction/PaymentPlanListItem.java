@@ -12,11 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import de.julianhofmann.h_bank.R;
-import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 
 public class PaymentPlanListItem extends ConstraintLayout {
-
-    private int paymentId;
 
     public PaymentPlanListItem(@NonNull Context context) {
         super(context);

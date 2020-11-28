@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.main.MainActivity;
 
 public class LogFragment extends Fragment {
 
@@ -25,11 +25,11 @@ public class LogFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MainActivity activity = (MainActivity) getActivity();
+        MainActivity activity = (MainActivity) requireActivity();
         activity.resetLogPages();
         activity.loadLog();
 
-        ScrollView scrollView = getView().findViewById(R.id.log_scroll);
+        ScrollView scrollView = requireView().findViewById(R.id.log_scroll);
 
 
         if (scrollView.getChildAt(0).getBottom() <= (scrollView.getHeight() + scrollView.getScrollY() + 50)) {
@@ -54,8 +54,8 @@ public class LogFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(paused) {
-            MainActivity activity = (MainActivity) getActivity();
+        if (paused) {
+            MainActivity activity = (MainActivity) requireActivity();
             activity.resetLogPages();
             activity.loadLog();
             paused = false;

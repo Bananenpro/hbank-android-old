@@ -16,12 +16,4 @@
 
     </style>
 
-    <style name="Theme.HBank.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.HBank.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.HBank.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

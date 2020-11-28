@@ -2,13 +2,13 @@ package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
 
-import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.util.PasswordCache;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
-    public static final String URL = "http://192.168.0.200:5000/";
+    public static final String URL = "http://192.168.0.200:8080/";
     public static String name = null;
     public static String token = null;
 

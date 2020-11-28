@@ -13,13 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.kbeanie.multipicker.api.ImagePicker;
-import com.kbeanie.multipicker.api.Picker;
-import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
-import com.kbeanie.multipicker.api.entity.ChosenImage;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -30,22 +23,33 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kbeanie.multipicker.api.ImagePicker;
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.BuildConfig;
-import de.julianhofmann.h_bank.ui.main.log.LogItemInfoActivity;
-import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.R;
-import de.julianhofmann.h_bank.ui.main.user_list.UserInfoActivity;
-import de.julianhofmann.h_bank.util.ImageUtils;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.ui.main.log.LogItemInfoActivity;
 import de.julianhofmann.h_bank.ui.main.log.LogListItem;
+import de.julianhofmann.h_bank.ui.main.user_list.UserInfoActivity;
 import de.julianhofmann.h_bank.ui.main.user_list.UserListItem;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
+import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.util.ImageUtils;
 import de.julianhofmann.h_bank.util.UpdateService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -80,10 +84,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        Intent i = getIntent();
-
         imagePickerCallback = new ImagePickerCallback() {
             @Override
+            @SuppressWarnings("ResultOfMethodCallIgnored")
             public void onImagesChosen(List<ChosenImage> list) {
                 ChosenImage image = list.get(0);
                 uploadImage(ImageUtils.getCompressed(getApplicationContext(), image.getOriginalPath(), 500));
@@ -91,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 new File(image.getThumbnailPath()).delete();
                 new File(image.getThumbnailSmallPath()).delete();
                 new File(image.getOriginalPath()).delete();
-                new File(image.getOriginalPath()).getParentFile().delete();
-                new File(image.getOriginalPath()).getParentFile().getParentFile().delete();
+                Objects.requireNonNull(new File(image.getOriginalPath()).getParentFile()).delete();
+                Objects.requireNonNull(Objects.requireNonNull(new File(image.getOriginalPath()).getParentFile()).getParentFile()).delete();
             }
 
             @Override
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(RetrofitService.URL+"profile_picture")
+                    .url(RetrofitService.URL + "profile_picture")
                     .post(requestBody)
                     .addHeader("Authorization", RetrofitService.getAuthorization())
                     .addHeader("Content-Type", "application/x-www-formurlencoded")
@@ -144,31 +147,28 @@ public class MainActivity extends AppCompatActivity {
 
             client.newCall(request).enqueue(new okhttp3.Callback() {
                 @Override
-                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
                     if (response.isSuccessful()) {
-                        reloadActivity(true);
+                        reloadActivity();
                     }
                 }
 
                 @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
+                public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
                     offline();
                 }
             });
         } catch (Exception e) {
             Log.e("error", e.getMessage());
         }
-
-
     }
 
-    private void reloadActivity(boolean newPicture) {
+    private void reloadActivity() {
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("newProfilePicture", newPicture);
         startActivity(i);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         finish();
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
     }
 
     private void switchToLoginActivity(String name) {
@@ -180,6 +180,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadUserInfo(View v) {
         if (!spinning) {
+
+            TextView username = findViewById(R.id.user_name_lbl);
+            username.setText(RetrofitService.name);
+
             FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
             AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
             if (v != null) {
@@ -215,13 +219,12 @@ public class MainActivity extends AppCompatActivity {
 
             call.enqueue(new Callback<UserModel>() {
                 @Override
-                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
                     online();
                     if (response.isSuccessful()) {
                         if (response.body() != null && response.body().getBalance() != null) {
                             String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                            if (balance != null)
-                                balance.setText(newBalance);
+                            balance.setText(newBalance);
                             BalanceCache.update(RetrofitService.name, response.body().getBalance());
                         } else {
                             String name = RetrofitService.name;
@@ -232,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<UserModel> call, Throwable t) {
+                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
                     offline();
                 }
             });
@@ -267,8 +270,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Picker.PICK_IMAGE_DEVICE) {
-            if(imagePicker == null) {
+        if (requestCode == Picker.PICK_IMAGE_DEVICE) {
+            if (imagePicker == null) {
                 imagePicker = new ImagePicker(this);
                 imagePicker.setImagePickerCallback(imagePickerCallback);
             }
@@ -280,15 +283,25 @@ public class MainActivity extends AppCompatActivity {
     public void loadUsers() {
         Call<List<UserModel>> call = RetrofitService.getHbankApi().getUsers();
 
+        TextView emptyLbl = findViewById(R.id.user_list_empty_lbl);
+        emptyLbl.setVisibility(View.VISIBLE);
+        emptyLbl.setText(R.string.loading);
+
         call.enqueue(new Callback<List<UserModel>>() {
             @Override
-            public void onResponse(Call<List<UserModel>> call, Response<List<UserModel>> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     online();
                     LinearLayout layout = findViewById(R.id.user_list_layout);
 
                     if (layout != null) {
                         layout.removeAllViews();
+                        if (response.body().size() > 0) {
+                            emptyLbl.setVisibility(View.GONE);
+                        } else {
+                            emptyLbl.setVisibility(View.VISIBLE);
+                            emptyLbl.setText(R.string.no_other_users);
+                        }
                         for (UserModel user : response.body()) {
                             if (!user.getName().equals(RetrofitService.name)) {
                                 addUserListItem(layout, user.getName());
@@ -299,8 +312,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<UserModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
                 offline();
+                emptyLbl.setVisibility(View.VISIBLE);
+                emptyLbl.setText(R.string.offline);
             }
         });
     }
@@ -329,12 +344,24 @@ public class MainActivity extends AppCompatActivity {
         if (!allLogPages && !loadingLog) {
             loadingLog = true;
             Call<List<LogModel>> call = RetrofitService.getHbankApi().getLog(logPage, RetrofitService.getAuthorization());
+            TextView emptyLbl = findViewById(R.id.log_empty_lbl);
+            if (logPage == 0) {
+                emptyLbl.setVisibility(View.VISIBLE);
+                emptyLbl.setText(R.string.loading);
+            }
             logPage++;
             call.enqueue(new Callback<List<LogModel>>() {
                 @Override
-                public void onResponse(Call<List<LogModel>> call, Response<List<LogModel>> response) {
+                public void onResponse(@NotNull Call<List<LogModel>> call, @NotNull Response<List<LogModel>> response) {
                     online();
                     if (response.isSuccessful() && response.body() != null) {
+
+                        if (response.body().size() == 0 && logPage == 1) {
+                            emptyLbl.setVisibility(View.VISIBLE);
+                            emptyLbl.setText(R.string.empty_log);
+                        } else {
+                            emptyLbl.setVisibility(View.GONE);
+                        }
 
                         if (response.body().size() == 0) {
                             allLogPages = true;
@@ -357,10 +384,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<List<LogModel>> call, Throwable t) {
+                public void onFailure(@NotNull Call<List<LogModel>> call, @NotNull Throwable t) {
                     offline();
                     logPage--;
                     loadingLog = false;
+                    if (logPage == 0) {
+                        emptyLbl.setVisibility(View.VISIBLE);
+                        emptyLbl.setText(R.string.offline);
+                    }
                 }
             });
         }
@@ -373,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
         item.getDate().setText(model.getDate());
         item.getDescription().setText(model.getDescription());
 
-        item.getAmount().setText(model.getAmount()+getString(R.string.currency));
+        item.getAmount().setText(String.format("%s%s", model.getAmount(), getString(R.string.currency)));
         if (model.getAmount().startsWith("-")) {
             item.getAmount().setTextColor(getColor(R.color.red));
         }
@@ -412,10 +443,16 @@ public class MainActivity extends AppCompatActivity {
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.INVISIBLE);
         }
+
+        Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
+        if (paymentPlansBtn != null) {
+            paymentPlansBtn.setVisibility(View.INVISIBLE);
+        }
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setIcon(R.drawable.no_connection_icon);
-        } else if (!offline){
+        } else if (!offline) {
             Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_SHORT).show();
         }
         offline = true;
@@ -426,12 +463,21 @@ public class MainActivity extends AppCompatActivity {
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
         }
+        Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
+        if (paymentPlansBtn != null) {
+            paymentPlansBtn.setVisibility(View.VISIBLE);
+        }
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(false);
             getSupportActionBar().setIcon(null);
-        } else if (offline){
+        } else if (offline) {
             Toast.makeText(getApplicationContext(), R.string.online, Toast.LENGTH_SHORT).show();
         }
         offline = false;
+    }
+
+    public void paymentPlans(View v) {
+        Intent i = new Intent(this, PaymentPlanActivity.class);
+        startActivity(i);
     }
 }

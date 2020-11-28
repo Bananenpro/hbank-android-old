@@ -18,19 +18,19 @@ public class LogListItem extends ConstraintLayout {
     public LogListItem(@NonNull Context context) {
         super(context);
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = mInflater.inflate(R.layout.log_list_item, this, true);
+        mInflater.inflate(R.layout.log_list_item, this, true);
     }
 
     public LogListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = mInflater.inflate(R.layout.log_list_item, this, true);
+        mInflater.inflate(R.layout.log_list_item, this, true);
     }
 
     public LogListItem(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = mInflater.inflate(R.layout.log_list_item, this, true);
+        mInflater.inflate(R.layout.log_list_item, this, true);
     }
 
     public Button getButton() {
