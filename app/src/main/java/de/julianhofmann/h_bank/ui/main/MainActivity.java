@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 ViewCompat.animate(refreshBtn).
                         rotation(720).
                         withLayer().
-                        setDuration(2250).
+                        setDuration(1125).
                         setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
                     @Override
                     public void onAnimationStart(View view) {
