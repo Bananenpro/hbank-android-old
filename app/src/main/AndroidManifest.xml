@@ -27,15 +27,20 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup">
         <activity
-            android:name=".ui.system.ServerInfoActivity"
-            android:label="@string/server_info"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ui.main.MainActivity"/>
+            android:name=".ui.system.DeleteUserActivity"
+            android:label="@string/delete_account"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.system.InfoActivity"
+            android:label="@string/info"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.system.SettingsActivity"
             android:label="@string/settings"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ui.main.MainActivity"/>
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.log.LogItemInfoActivity"
             android:label="@string/title_fragment_log"

@@ -12,7 +12,7 @@
             android:title="@string/Update" />
         <item
             android:id="@+id/options_server_info"
-            android:title="@string/server_info" />
+            android:title="@string/info" />
     </group>
     <group >
         <item

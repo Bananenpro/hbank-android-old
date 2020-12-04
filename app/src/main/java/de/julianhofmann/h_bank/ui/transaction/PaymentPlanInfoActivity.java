@@ -28,7 +28,7 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
-import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.UpdateService;
@@ -158,7 +158,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
     }
 

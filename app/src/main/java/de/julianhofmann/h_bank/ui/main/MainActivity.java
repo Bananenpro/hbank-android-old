@@ -44,7 +44,7 @@ import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
-import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
     }
 

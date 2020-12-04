@@ -19,12 +19,12 @@ import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
 
-public class ServerInfoActivity extends AppCompatActivity {
+public class InfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_server_info);
+        setContentView(R.layout.activity_info);
     }
 
 
@@ -62,7 +62,7 @@ public class ServerInfoActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
         overridePendingTransition(0, 0);
         finish();

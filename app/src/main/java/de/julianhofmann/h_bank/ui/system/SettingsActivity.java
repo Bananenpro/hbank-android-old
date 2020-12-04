@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
     }
 
@@ -100,6 +100,11 @@ public class SettingsActivity extends AppCompatActivity {
         i.putExtra("logout", true);
         startActivity(i);
         finishAffinity();
+    }
+
+    public void deleteUser(View v) {
+        Intent i = new Intent(this, DeleteUserActivity.class);
+        startActivity(i);
     }
 
     public void setOfflineLogin(View v) {

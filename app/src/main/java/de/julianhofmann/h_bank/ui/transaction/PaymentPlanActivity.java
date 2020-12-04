@@ -5,14 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -28,7 +26,7 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
-import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
@@ -95,7 +93,7 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
     }
 

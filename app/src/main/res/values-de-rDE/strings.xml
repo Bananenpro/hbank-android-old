@@ -76,7 +76,7 @@
     <string name="sender_cannot_be_the_receiver">Der Sender und der Empfänger sind identisch!</string>
     <string name="settings">Einstellungen</string>
     <string name="logout_btn">Abmelden</string>
-    <string name="server_info">Server Info</string>
+    <string name="info">Info</string>
     <string name="Update">Aktualisieren</string>
     <string name="up_to_date">Die App ist auf dem neuesten Stand!</string>
     <string name="ok">Ok</string>
@@ -84,4 +84,7 @@
     <string name="fingerprint_login">Mit Fingerabdruck entsperren</string>
     <string name="auto_login">Automatisch anmelden</string>
     <string name="check_for_updates">Nach Aktualisierungen suchen</string>
+    <string name="delete_account">Account löschen</string>
+    <string name="delete_info">Alle deine Daten werden gelöscht! Bitte gib dein Passwort ein, um zu bestätigen.</string>
+    <string name="wrong_password">Falsches Passwort!</string>
 </resources>

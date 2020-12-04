@@ -25,7 +25,7 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
-import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
@@ -89,7 +89,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
     }
 
     private void serverInfo() {
-        Intent i = new Intent(this, ServerInfoActivity.class);
+        Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
     }
 

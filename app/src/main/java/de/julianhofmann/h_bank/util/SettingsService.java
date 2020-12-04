@@ -20,6 +20,15 @@ public class SettingsService {
         checkForUpdates = sp.getBoolean(username + "_settings_check_for_updates", true);
     }
 
+    public static void deleteSettings(String username) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove(username+"_settings_offline_login");
+        edit.remove(username+"_settings_fingerprint_login");
+        edit.remove(username+"_settings_auto_login");
+        edit.remove(username+"_settings_check_for_updates");
+        edit.apply();
+    }
+
     public static boolean getOfflineLogin() {
         return offlineLogin;
     }

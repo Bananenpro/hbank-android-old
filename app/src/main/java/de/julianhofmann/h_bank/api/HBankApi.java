@@ -37,6 +37,9 @@ public interface HBankApi {
     @POST("logout")
     Call<Void> logout(@Header("Authorization") String authorization);
 
+    @DELETE("user/{name}")
+    Call<Void> delete(@Path("name") String name, @Header("Authorization") String authorization);
+
     @POST("transaction")
     Call<Void> transferMoney(@Body TransferMoneyModel model, @Header("Authorization") String authorization);
 
