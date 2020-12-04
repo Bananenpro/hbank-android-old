@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +31,7 @@ import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
+import de.julianhofmann.h_bank.util.SettingsService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         RetrofitService.init(sp);
         BalanceCache.init(sp);
 
-        if (RetrofitService.name != null && RetrofitService.token != null) {
+        if (RetrofitService.getName() != null && RetrofitService.getToken() != null) {
             switchToMainActivity();
             return;
         }
@@ -80,13 +83,27 @@ public class LoginActivity extends AppCompatActivity {
         String spToken = sp.getString("token", "");
 
         if (!spName.equals("")) {
+            SettingsService.init(getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE), spName);
             EditText nameEdit = findViewById(R.id.login_username);
             nameEdit.setText(spName);
         }
 
         if (!spName.equals("") && !spToken.equals("")) {
-            biometricAuthentication(spName, spToken);
+            if (SettingsService.getOfflineLogin()) {
+                if (SettingsService.getAutoLogin()) {
+                    new Handler().postDelayed(() -> autoLogin(spName, spToken), 500);
+                } else if (SettingsService.getFingerprintLogin()) {
+                    biometricAuthentication(spName, spToken);
+                }
+            } else {
+                RetrofitService.logout();
+            }
         }
+    }
+
+    public void autoLogin(String name, String token) {
+        RetrofitService.login(name, token);
+        switchToMainActivity();
     }
 
     public void biometricAuthentication(String name, String token) {
@@ -148,10 +165,15 @@ public class LoginActivity extends AppCompatActivity {
         if (name.getText().length() > 0 && password.getText().length() > 0) {
 
             SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
-            String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
-            if (token != null) {
-                RetrofitService.login(name.getText().toString(), token);
-                switchToMainActivity();
+            if (SettingsService.getOfflineLogin()) {
+                String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
+                if (token != null) {
+                    RetrofitService.login(name.getText().toString(), token);
+                    switchToMainActivity();
+                    return;
+                }
+            } else {
+                RetrofitService.logout();
             }
 
             LoginModel model = new LoginModel(name.getText().toString(), password.getText().toString());

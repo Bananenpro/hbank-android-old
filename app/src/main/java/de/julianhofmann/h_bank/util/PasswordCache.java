@@ -16,24 +16,26 @@ import kotlin.text.Charsets;
 
 public class PasswordCache {
     public static void storePassword(String password, SharedPreferences sp) {
-        try {
-            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        if (SettingsService.getOfflineLogin()) {
+            try {
+                SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
-            SecureRandom secureRandom = new SecureRandom();
-            byte[] salt = new byte[32];
+                SecureRandom secureRandom = new SecureRandom();
+                byte[] salt = new byte[32];
 
-            secureRandom.nextBytes(salt);
+                secureRandom.nextBytes(salt);
 
-            KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256);
-            SecretKey secretKey = keyFactory.generateSecret(keySpec);
+                KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256);
+                SecretKey secretKey = keyFactory.generateSecret(keySpec);
 
-            SharedPreferences.Editor edit = sp.edit();
-            edit.putString("salt", new String(salt, Charsets.ISO_8859_1));
-            edit.putString("password_hash", new String(secretKey.getEncoded(), Charsets.ISO_8859_1));
-            edit.apply();
-        } catch (InvalidKeySpecException e) {
-            Log.e("ERROR", "Cannot generate password hash: Invalid key spec!");
-        } catch (NoSuchAlgorithmException ignored) {
+                SharedPreferences.Editor edit = sp.edit();
+                edit.putString("salt", new String(salt, Charsets.ISO_8859_1));
+                edit.putString("password_hash", new String(secretKey.getEncoded(), Charsets.ISO_8859_1));
+                edit.apply();
+            } catch (InvalidKeySpecException e) {
+                Log.e("ERROR", "Cannot generate password hash: Invalid key spec!");
+            } catch (NoSuchAlgorithmException ignored) {
+            }
         }
     }
 

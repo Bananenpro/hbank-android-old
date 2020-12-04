@@ -1,18 +1,26 @@
 package de.julianhofmann.h_bank.ui.transaction;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +28,10 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
+import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,7 +80,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                     if (title != null)
                         title.setText(response.body().getDescription());
 
-                    double balance = Double.parseDouble(BalanceCache.getBalance(RetrofitService.name));
+                    double balance = Double.parseDouble(BalanceCache.getBalance(RetrofitService.getName()));
                     int missingPayments = (int) Math.floor((response.body().getSchedule() - (double) response.body().getDaysLeft()) / (double) response.body().getSchedule());
 
                     if (missingPayments > 0 && balance < Math.abs(Double.parseDouble(response.body().getAmount())) * missingPayments) {
@@ -102,9 +113,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                             amount.setTextColor(getColor(R.color.red));
                     }
                 } else if (response.code() == 403) {
-                    String name = RetrofitService.name;
-                    RetrofitService.logout();
-                    switchToLoginActivity(name);
+                    logout();
                 }
             }
 
@@ -113,6 +122,58 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.options_settings:
+                settings();
+                return true;
+            case R.id.options_server_info:
+                serverInfo();
+                return true;
+            case R.id.options_logout:
+                logout();
+                return true;
+            case R.id.options_check_for_updates:
+                update();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void settings() {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    private void serverInfo() {
+        Intent i = new Intent(this, ServerInfoActivity.class);
+        startActivity(i);
+    }
+
+    private void logout() {
+        String name = RetrofitService.getName();
+        RetrofitService.logout();
+        switchToLoginActivity(name);
+    }
+
+    private void update() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        }
+
+        UpdateService.update(this);
     }
 
     public void deletePaymentPlan(View v) {
@@ -128,7 +189,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             onSupportNavigateUp();
                         } else if (response.code() == 403) {
-                            String name = RetrofitService.name;
+                            String name = RetrofitService.getName();
                             RetrofitService.logout();
                             switchToLoginActivity(name);
                         }
@@ -154,7 +215,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
         i.putExtra("name", name);
         i.putExtra("logout", true);
         startActivity(i);
-        finish();
+        finishAffinity();
     }
 
     @Override

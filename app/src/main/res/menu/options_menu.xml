@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group >
+        <item
+            android:id="@+id/options_settings"
+            android:title="@string/settings" />
+    </group>
+    <group >
+        <item
+            android:id="@+id/options_check_for_updates"
+            android:title="@string/Update" />
+        <item
+            android:id="@+id/options_server_info"
+            android:title="@string/server_info" />
+    </group>
+    <group >
+        <item
+            android:id="@+id/options_logout"
+            android:title="@string/logout_btn" />
+    </group>
+</menu>

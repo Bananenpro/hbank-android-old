@@ -34,6 +34,9 @@ public interface HBankApi {
     @POST("login")
     Call<LoginResponseModel> login(@Body LoginModel model);
 
+    @POST("logout")
+    Call<Void> logout(@Header("Authorization") String authorization);
+
     @POST("transaction")
     Call<Void> transferMoney(@Body TransferMoneyModel model, @Header("Authorization") String authorization);
 

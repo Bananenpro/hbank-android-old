@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.system.SettingsActivity">
+
+    <Button
+        android:id="@+id/settings_delete_user_btn"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/red"
+        android:backgroundTintMode="add"
+        android:text="@string/delete"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/offline_login_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setOfflineLogin"
+        app:layout_constraintBottom_toBottomOf="@+id/offline_login_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/offline_login_lbl" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fingerprint_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setFingerprintLogin"
+        app:layout_constraintBottom_toBottomOf="@+id/fingerprint_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fingerprint_lbl" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/auto_login_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setAutoLogin"
+        app:layout_constraintBottom_toBottomOf="@+id/auto_login_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/auto_login_lbl" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/check_for_updates_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setCheckForUpdates"
+        app:layout_constraintBottom_toBottomOf="@+id/check_for_updates_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/check_for_updates_lbl" />
+
+    <TextView
+        android:id="@+id/offline_login_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/offline_login"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/offline_login_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fingerprint_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/fingerprint_login"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/fingerprint_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/offline_login_lbl" />
+
+    <TextView
+        android:id="@+id/auto_login_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/auto_login"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/fingerprint_switch"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fingerprint_lbl" />
+
+    <TextView
+        android:id="@+id/check_for_updates_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/check_for_updates"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/fingerprint_switch"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/auto_login_lbl" />
+</androidx.constraintlayout.widget.ConstraintLayout>

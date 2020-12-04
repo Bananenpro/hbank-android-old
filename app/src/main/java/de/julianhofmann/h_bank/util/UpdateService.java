@@ -26,7 +26,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UpdateService {
+
     public static void update(Context context) {
+        update(context, false);
+    }
+
+    public static void update(Context context, boolean autoUpdate) {
         Call<VersionModel> call = RetrofitService.getHbankApi().getVersion();
         call.enqueue(new Callback<VersionModel>() {
             @Override
@@ -40,12 +45,19 @@ public class UpdateService {
                         };
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                    } else if (!autoUpdate){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle(R.string.update).setMessage(R.string.up_to_date).setNeutralButton(context.getString(R.string.ok), null).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<VersionModel> call, @NotNull Throwable t) {
+                if (!autoUpdate) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.update).setMessage(R.string.offline).setNeutralButton(context.getString(R.string.ok), null).show();
+                }
             }
         });
     }

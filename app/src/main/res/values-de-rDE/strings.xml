@@ -74,4 +74,14 @@
     <string name="receiver_hint">Empfänger…</string>
     <string name="user_does_not_exist">Der Benutzer existiert nicht!</string>
     <string name="sender_cannot_be_the_receiver">Der Sender und der Empfänger sind identisch!</string>
+    <string name="settings">Einstellungen</string>
+    <string name="logout_btn">Abmelden</string>
+    <string name="server_info">Server Info</string>
+    <string name="Update">Aktualisieren</string>
+    <string name="up_to_date">Die App ist auf dem neuesten Stand!</string>
+    <string name="ok">Ok</string>
+    <string name="offline_login">Offline-Anmeldung</string>
+    <string name="fingerprint_login">Mit Fingerabdruck entsperren</string>
+    <string name="auto_login">Automatisch anmelden</string>
+    <string name="check_for_updates">Nach Aktualisierungen suchen</string>
 </resources>

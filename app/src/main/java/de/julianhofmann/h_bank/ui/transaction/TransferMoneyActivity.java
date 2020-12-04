@@ -1,14 +1,23 @@
 package de.julianhofmann.h_bank.ui.transaction;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +25,9 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
+import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.SettingsActivity;
+import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +55,58 @@ public class TransferMoneyActivity extends AppCompatActivity {
         title.setText(name);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.options_settings:
+                settings();
+                return true;
+            case R.id.options_server_info:
+                serverInfo();
+                return true;
+            case R.id.options_logout:
+                logout();
+                return true;
+            case R.id.options_check_for_updates:
+                update();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void settings() {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    private void serverInfo() {
+        Intent i = new Intent(this, ServerInfoActivity.class);
+        startActivity(i);
+    }
+
+    private void logout() {
+        String name = RetrofitService.getName();
+        RetrofitService.logout();
+        switchToLoginActivity(name);
+    }
+
+    private void update() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        }
+
+        UpdateService.update(this);
+    }
+
     public void transferMoney(View v) {
         EditText amount = findViewById(R.id.create_payment_plan_amount);
         EditText description = findViewById(R.id.create_payment_plan_description);
@@ -68,9 +132,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
                         } else if (response.code() == 400) {
                             error.setText(R.string.not_enough_money);
                         } else if (response.code() == 403) {
-                            String name = RetrofitService.name;
-                            RetrofitService.logout();
-                            switchToLoginActivity(name);
+                            logout();
                         }
                         submit.setEnabled(true);
                         submit.setText(R.string.transfer_money_btn);
@@ -97,7 +159,7 @@ public class TransferMoneyActivity extends AppCompatActivity {
         i.putExtra("name", name);
         i.putExtra("logout", true);
         startActivity(i);
-        finish();
+        finishAffinity();
     }
 
     @Override

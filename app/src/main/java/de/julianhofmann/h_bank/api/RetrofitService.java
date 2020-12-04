@@ -1,16 +1,24 @@
 package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
+import de.julianhofmann.h_bank.util.SettingsService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
     public static final String URL = "http://192.168.0.200:8080/";
-    public static String name = null;
-    public static String token = null;
+
+    private static String name = null;
+    private static String token = null;
 
     private static SharedPreferences sharedPreferences;
 
@@ -40,13 +48,31 @@ public class RetrofitService {
 
         SharedPreferences.Editor edit = sharedPreferences.edit();
 
-        edit.putString("name", RetrofitService.name);
-        edit.putString("token", RetrofitService.token);
+        edit.putString("name", RetrofitService.getName());
+        if (SettingsService.getOfflineLogin()) edit.putString("token", RetrofitService.token);
 
         edit.apply();
     }
 
+    public static void clearPreferences() {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.remove("token");
+        edit.apply();
+
+        PasswordCache.clearPassword(sharedPreferences);
+    }
+
     public static void logout() {
+
+        Call<Void> call = getHbankApi().logout(getAuthorization());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) { }
+
+            @Override
+            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) { }
+        });
+
         name = null;
         token = null;
 
@@ -73,5 +99,13 @@ public class RetrofitService {
 
     public static HBankApi getHbankApi() {
         return hBankApi;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static String getToken() {
+        return token;
     }
 }

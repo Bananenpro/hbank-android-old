@@ -1,10 +1,14 @@
 package de.julianhofmann.h_bank.ui.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -13,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -39,6 +44,8 @@ import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.system.ServerInfoActivity;
+import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
@@ -50,6 +57,7 @@ import de.julianhofmann.h_bank.ui.main.user_list.UserListItem;
 import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.ImageUtils;
+import de.julianhofmann.h_bank.util.SettingsService;
 import de.julianhofmann.h_bank.util.UpdateService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -84,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        SettingsService.init(getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE), RetrofitService.getName());
+
         imagePickerCallback = new ImagePickerCallback() {
             @Override
             @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -103,10 +113,54 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (!ImageUtils.askedForUpdate) {
-            update();
+        if (SettingsService.getCheckForUpdates() && !ImageUtils.askedForUpdate) {
+            update(true);
             ImageUtils.askedForUpdate = true;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.options_settings:
+                settings();
+                return true;
+            case R.id.options_server_info:
+                serverInfo();
+                return true;
+            case R.id.options_logout:
+                logout();
+                return true;
+            case R.id.options_check_for_updates:
+                update(false);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void settings() {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+    }
+
+    private void serverInfo() {
+        Intent i = new Intent(this, ServerInfoActivity.class);
+        startActivity(i);
+    }
+
+    private void logout() {
+        String name = RetrofitService.getName();
+        RetrofitService.logout();
+        switchToLoginActivity(name);
     }
 
     public void resetLogPages() {
@@ -176,13 +230,14 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("logout", true);
         i.putExtra("name", name);
         startActivity(i);
+        finishAffinity();
     }
 
     public void loadUserInfo(View v) {
         if (!spinning) {
 
             TextView username = findViewById(R.id.user_name_lbl);
-            username.setText(RetrofitService.name);
+            username.setText(RetrofitService.getName());
 
             FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
             AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
@@ -211,10 +266,10 @@ public class MainActivity extends AppCompatActivity {
                 }).
                         start();
             }
-            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.name, RetrofitService.getAuthorization());
+            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
 
-            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.name) + getString(R.string.currency);
+            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
             balance.setText(newBalance);
 
             call.enqueue(new Callback<UserModel>() {
@@ -225,11 +280,9 @@ public class MainActivity extends AppCompatActivity {
                         if (response.body() != null && response.body().getBalance() != null) {
                             String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
                             balance.setText(newBalance);
-                            BalanceCache.update(RetrofitService.name, response.body().getBalance());
+                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
                         } else {
-                            String name = RetrofitService.name;
-                            RetrofitService.logout();
-                            switchToLoginActivity(name);
+                            logout();
                         }
                     }
                 }
@@ -243,17 +296,17 @@ public class MainActivity extends AppCompatActivity {
             ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
 
-            ImageUtils.loadProfilePicture(RetrofitService.name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+            ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
         }
     }
 
 
-    private void update() {
+    private void update(boolean autoUpdate) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
 
-        UpdateService.update(this);
+        UpdateService.update(this, autoUpdate);
     }
 
     public void changeProfilePicture(View v) {
@@ -303,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                             emptyLbl.setText(R.string.no_other_users);
                         }
                         for (UserModel user : response.body()) {
-                            if (!user.getName().equals(RetrofitService.name)) {
+                            if (!user.getName().equals(RetrofitService.getName())) {
                                 addUserListItem(layout, user.getName());
                             }
                         }
@@ -375,9 +428,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     } else if (response.code() == 403) {
-                        String name = RetrofitService.name;
-                        RetrofitService.logout();
-                        switchToLoginActivity(name);
+                        logout();
                     }
 
                     loadingLog = false;
@@ -430,8 +481,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (paused) {
-            if (!ImageUtils.askedForUpdate) {
-                update();
+            if (SettingsService.getCheckForUpdates() && !ImageUtils.askedForUpdate) {
+                update(true);
                 ImageUtils.askedForUpdate = true;
             }
             paused = false;

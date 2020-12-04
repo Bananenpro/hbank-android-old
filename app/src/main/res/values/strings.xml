@@ -73,6 +73,16 @@
     <string name="receiver_hint">Receiver…</string>
     <string name="user_does_not_exist">The user doesn\'t exist!</string>
     <string name="sender_cannot_be_the_receiver">The sender and the receiver are equal!</string>
+    <string name="settings">Settings</string>
+    <string name="server_info">Server Info</string>
+    <string name="logout_btn">Sign Out</string>
+    <string name="Update">Update</string>
+    <string name="up_to_date">The app is up to date!</string>
+    <string name="ok">Ok</string>
+    <string name="offline_login">Offline-Sign-In</string>
+    <string name="fingerprint_login">Sign in with fingerprint</string>
+    <string name="auto_login">Auto-Sign-In</string>
+    <string name="check_for_updates">Check for updates</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>
