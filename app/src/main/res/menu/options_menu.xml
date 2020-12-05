@@ -9,7 +9,7 @@
     <group >
         <item
             android:id="@+id/options_check_for_updates"
-            android:title="@string/Update" />
+            android:title="@string/update_btn" />
         <item
             android:id="@+id/options_server_info"
             android:title="@string/info" />

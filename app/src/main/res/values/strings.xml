@@ -76,7 +76,7 @@
     <string name="settings">Settings</string>
     <string name="info">Info</string>
     <string name="logout_btn">Sign Out</string>
-    <string name="Update">Update</string>
+    <string name="update_btn">Update</string>
     <string name="up_to_date">The app is up to date!</string>
     <string name="ok">OK</string>
     <string name="offline_login">Offline-Sign-In</string>
@@ -87,4 +87,22 @@
     <string name="delete_info">All of your data will be gone! Please enter your password to confirm.</string>
     <string name="wrong_password">Wrong password!</string>
     <string name="confirm">Confirm</string>
+    <string name="developer" translatable="false">Julian Hofmann</string>
+    <string name="connected">connected</string>
+    <string name="not_connected">not connected</string>
+    <string name="active">active</string>
+    <string name="inactive">inactive</string>
+    <string name="dash" translatable="false">-</string>
+    <string name="developer_lbl">Developer:</string>
+    <string name="version_lbl">Version:</string>
+    <string name="app_lbl">App</string>
+    <string name="server_lbl">Server</string>
+    <string name="status_lbl">Status:</string>
+    <string name="payment_plans_lbl">Payment Plans:</string>
+    <string name="backups_lbl">Backups:</string>
+    <string name="cpu_lbl">CPU:</string>
+    <string name="ram_lbl">RAM:</string>
+    <string name="disk_lbl">Disk:</string>
+    <string name="temperature_lbl">Temperature:</string>
+    <string name="error">error</string>
 </resources>

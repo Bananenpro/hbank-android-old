@@ -13,11 +13,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
+import de.julianhofmann.h_bank.api.models.InfoModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -25,8 +33,90 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        loadInfo(null);
     }
 
+    public void loadInfo(View v) {
+        Button button = findViewById(R.id.info_refresh_btn);
+        TextView version = findViewById(R.id.info_version);
+        TextView status = findViewById(R.id.info_status);
+        TextView paymentPlans = findViewById(R.id.info_payment_plans);
+        TextView backups = findViewById(R.id.info_backups);
+        TextView cpu = findViewById(R.id.info_cpu);
+        TextView ram = findViewById(R.id.info_ram);
+        TextView disk = findViewById(R.id.info_disk);
+        TextView temperature = findViewById(R.id.info_temperature);
+
+        version.setText(BuildConfig.VERSION_NAME);
+
+        Call<InfoModel> call = RetrofitService.getHbankApi().getInfo();
+
+        button.setEnabled(false);
+        button.setText(R.string.loading);
+
+        call.enqueue(new Callback<InfoModel>() {
+            @Override
+            public void onResponse(Call<InfoModel> call, Response<InfoModel> response) {
+                if (status != null) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        status.setTextColor(getColor(R.color.green));
+                        status.setText(R.string.connected);
+                        if (response.body().isPaymentPlans()) {
+                            paymentPlans.setText(R.string.active);
+                            paymentPlans.setTextColor(getColor(R.color.green));
+                        } else {
+                            paymentPlans.setText(R.string.inactive);
+                            paymentPlans.setTextColor(getColor(R.color.red));
+                        }
+                        if (response.body().isBackups()) {
+                            backups.setText(R.string.active);
+                            backups.setTextColor(getColor(R.color.green));
+                        } else {
+                            backups.setText(R.string.inactive);
+                            backups.setTextColor(getColor(R.color.red));
+                        }
+
+                        cpu.setText(response.body().getCpu());
+                        ram.setText(response.body().getRam());
+                        disk.setText(response.body().getDisk());
+                        temperature.setText(response.body().getTemperature());
+                    } else {
+                        status.setTextColor(getColor(R.color.red));
+                        status.setText(R.string.error);
+                        paymentPlans.setText(R.string.dash);
+                        paymentPlans.setTextColor(getColor(R.color.foreground));
+                        backups.setText(R.string.dash);
+                        backups.setTextColor(getColor(R.color.foreground));
+                        cpu.setText(R.string.dash);
+                        ram.setText(R.string.dash);
+                        disk.setText(R.string.dash);
+                        temperature.setText(R.string.dash);
+                    }
+                    button.setEnabled(true);
+                    button.setText(R.string.update_btn);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<InfoModel> call, Throwable t) {
+                if (status != null) {
+                    status.setTextColor(getColor(R.color.red));
+                    status.setText(R.string.not_connected);
+                    paymentPlans.setText(R.string.dash);
+                    paymentPlans.setTextColor(getColor(R.color.foreground));
+                    backups.setText(R.string.dash);
+                    backups.setTextColor(getColor(R.color.foreground));
+                    cpu.setText(R.string.dash);
+                    ram.setText(R.string.dash);
+                    disk.setText(R.string.dash);
+                    temperature.setText(R.string.dash);
+                    button.setEnabled(true);
+                    button.setText(R.string.update_btn);
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

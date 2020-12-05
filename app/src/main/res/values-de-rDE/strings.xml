@@ -77,7 +77,7 @@
     <string name="settings">Einstellungen</string>
     <string name="logout_btn">Abmelden</string>
     <string name="info">Info</string>
-    <string name="Update">Aktualisieren</string>
+    <string name="update_btn">Aktualisieren</string>
     <string name="up_to_date">Die App ist auf dem neuesten Stand!</string>
     <string name="ok">Ok</string>
     <string name="offline_login">Offline-Anmeldung</string>
@@ -88,4 +88,20 @@
     <string name="delete_info">Alle deine Daten werden gelöscht! Bitte gib dein Passwort ein, um zu bestätigen.</string>
     <string name="wrong_password">Falsches Passwort!</string>
     <string name="confirm">Bestätigen</string>
+    <string name="connected">verbunden</string>
+    <string name="active">aktiv</string>
+    <string name="inactive">inaktiv</string>
+    <string name="not_connected">nicht verbunden</string>
+    <string name="developer_lbl">Entwickler:</string>
+    <string name="version_lbl">Version:</string>
+    <string name="app_lbl">App</string>
+    <string name="server_lbl">Server</string>
+    <string name="status_lbl">Status:</string>
+    <string name="payment_plans_lbl">Zahlungspläne:</string>
+    <string name="backups_lbl">Backups:</string>
+    <string name="cpu_lbl">CPU:</string>
+    <string name="ram_lbl">RAM:</string>
+    <string name="disk_lbl">Festplatte:</string>
+    <string name="temperature_lbl">Temperatur:</string>
+    <string name="error">Error</string>
 </resources>

@@ -6,13 +6,242 @@
     android:layout_height="match_parent"
     tools:context=".ui.system.InfoActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Server Info"
+    <Button
+        android:id="@+id/info_refresh_btn"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTintMode="add"
+        android:onClick="loadInfo"
+        android:text="@string/update_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/info_app_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/app_lbl"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/info_developer_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/developer_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_app_lbl" />
+
+    <TextView
+        android:id="@+id/info_status_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/status_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_version_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_server_lbl" />
+
+    <TextView
+        android:id="@+id/info_payment_plans_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/payment_plans_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_status_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_status_lbl" />
+
+    <TextView
+        android:id="@+id/info_backups_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/backups_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_payment_plans_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_payment_plans_lbl" />
+
+    <TextView
+        android:id="@+id/info_cpu_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/cpu_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_backups_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_backups_lbl" />
+
+    <TextView
+        android:id="@+id/info_ram_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/ram_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_cpu_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_cpu_lbl" />
+
+    <TextView
+        android:id="@+id/info_disk_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/disk_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_ram_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_ram_lbl" />
+
+    <TextView
+        android:id="@+id/info_temperature_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/temperature_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_disk_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_disk_lbl" />
+
+    <TextView
+        android:id="@+id/info_developer"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/developer"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_developer_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/info_developer_lbl" />
+
+    <TextView
+        android:id="@+id/info_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_connected"
+        android:textColor="@color/red"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_status_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_status_lbl" />
+
+    <TextView
+        android:id="@+id/info_payment_plans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_payment_plans_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_payment_plans_lbl"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/info_backups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_backups_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_backups_lbl"
+        app:layout_constraintVertical_bias=".5" />
+
+    <TextView
+        android:id="@+id/info_cpu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_cpu_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_cpu_lbl"
+        app:layout_constraintVertical_bias=".5" />
+
+    <TextView
+        android:id="@+id/info_ram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_ram_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_ram_lbl"
+        app:layout_constraintVertical_bias=".5" />
+
+    <TextView
+        android:id="@+id/info_disk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_disk_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_disk_lbl"
+        app:layout_constraintVertical_bias=".5" />
+
+    <TextView
+        android:id="@+id/info_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dash"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_temperature_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_temperature_lbl"
+        app:layout_constraintVertical_bias=".5" />
+
+    <TextView
+        android:id="@+id/info_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_version_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_version_lbl"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/info_version_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/version_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_developer_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_developer_lbl" />
+
+    <TextView
+        android:id="@+id/info_server_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/server_lbl"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_version_lbl" />
 </androidx.constraintlayout.widget.ConstraintLayout>

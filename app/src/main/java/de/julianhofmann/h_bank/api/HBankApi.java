@@ -2,6 +2,7 @@ package de.julianhofmann.h_bank.api;
 
 import java.util.List;
 
+import de.julianhofmann.h_bank.api.models.InfoModel;
 import de.julianhofmann.h_bank.api.models.IntIdModel;
 import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.api.models.LoginModel;
@@ -66,4 +67,7 @@ public interface HBankApi {
 
     @GET("profile_picture_id/{name}")
     Call<IntIdModel> getProfilePictureId(@Path("name") String name);
+
+    @GET("info")
+    Call<InfoModel> getInfo();
 }
