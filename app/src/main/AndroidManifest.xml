@@ -30,7 +30,7 @@
             android:name=".ui.system.DeleteUserActivity"
             android:label="@string/delete_account"
             android:parentActivityName=".ui.main.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.system.InfoActivity"
             android:label="@string/info"

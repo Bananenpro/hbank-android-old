@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -132,6 +133,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                Toast.makeText(UserInfoActivity.this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
             }
         });
 

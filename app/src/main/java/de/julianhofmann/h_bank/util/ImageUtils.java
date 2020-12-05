@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class ImageUtils {
     public static boolean askedForUpdate = false;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static String getCompressed(Context context, String path, double targetSize) {
+    public static String getCompressed(Context context, String path, double targetSize, int rotation) {
 
         try {
             if (context == null)
@@ -61,6 +62,10 @@ public class ImageUtils {
             else factor = width / targetSize;
 
             Bitmap bitmap = decodeImageFromFiles(path, (int) (width / factor), (int) (height / factor));
+
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotation);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
             File compressed = new File(root, SDF.format(new Date()) + ".jpg");
 

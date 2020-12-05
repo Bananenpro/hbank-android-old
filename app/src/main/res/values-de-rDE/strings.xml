@@ -87,4 +87,5 @@
     <string name="delete_account">Account löschen</string>
     <string name="delete_info">Alle deine Daten werden gelöscht! Bitte gib dein Passwort ein, um zu bestätigen.</string>
     <string name="wrong_password">Falsches Passwort!</string>
+    <string name="confirm">Bestätigen</string>
 </resources>

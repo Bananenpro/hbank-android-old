@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -99,7 +100,22 @@ public class MainActivity extends AppCompatActivity {
             @SuppressWarnings("ResultOfMethodCallIgnored")
             public void onImagesChosen(List<ChosenImage> list) {
                 ChosenImage image = list.get(0);
-                uploadImage(ImageUtils.getCompressed(getApplicationContext(), image.getOriginalPath(), 500));
+                int rotation;
+                switch (image.getOrientation()) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotation = 90;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotation = 180;
+                        break;
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotation = 270;
+                        break;
+                    default:
+                        rotation = 0;
+                        break;
+                }
+                uploadImage(ImageUtils.getCompressed(getApplicationContext(), image.getOriginalPath(), 500, rotation));
                 new File(image.getTempFile()).delete();
                 new File(image.getThumbnailPath()).delete();
                 new File(image.getThumbnailSmallPath()).delete();
@@ -310,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeProfilePicture(View v) {
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
