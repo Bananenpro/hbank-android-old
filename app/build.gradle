@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "de.julianhofmann.h_bank.beta"
+        applicationId "de.julianhofmann.h_bank"
         minSdkVersion 29
         targetSdkVersion 30
         versionCode 15

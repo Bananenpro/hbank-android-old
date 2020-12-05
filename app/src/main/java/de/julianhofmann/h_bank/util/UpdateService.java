@@ -27,6 +27,8 @@ import retrofit2.Response;
 
 public class UpdateService {
 
+    public static boolean askedForUpdate = false;
+
     public static void update(Context context) {
         update(context, false);
     }
@@ -41,6 +43,9 @@ public class UpdateService {
                         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                             if (which == dialog.BUTTON_POSITIVE) {
                                 installUpdate(context);
+                                askedForUpdate = true;
+                            } else if (which == dialog.BUTTON_NEGATIVE) {
+                                askedForUpdate = true;
                             }
                         };
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);

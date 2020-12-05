@@ -129,9 +129,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (SettingsService.getCheckForUpdates() && !ImageUtils.askedForUpdate) {
+        if (SettingsService.getCheckForUpdates() && !UpdateService.askedForUpdate) {
             update(true);
-            ImageUtils.askedForUpdate = true;
         }
     }
 
@@ -321,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
 
+
         UpdateService.update(this, autoUpdate);
     }
 
@@ -495,9 +495,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (paused) {
-            if (SettingsService.getCheckForUpdates() && !ImageUtils.askedForUpdate) {
+            if (SettingsService.getCheckForUpdates() && !UpdateService.askedForUpdate) {
                 update(true);
-                ImageUtils.askedForUpdate = true;
+                UpdateService.askedForUpdate = true;
             }
             paused = false;
         }

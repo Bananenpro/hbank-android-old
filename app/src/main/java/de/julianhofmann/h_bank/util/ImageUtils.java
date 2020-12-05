@@ -33,7 +33,6 @@ public class ImageUtils {
 
     @SuppressLint("ConstantLocale")
     public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
-    public static boolean askedForUpdate = false;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static String getCompressed(Context context, String path, double targetSize, int rotation) {
