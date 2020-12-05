@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (layout != null) {
                         layout.removeAllViews();
-                        if (response.body().size() > 0) {
+                        if (response.body().size() > 1) {
                             emptyLbl.setVisibility(View.GONE);
                         } else {
                             emptyLbl.setVisibility(View.VISIBLE);

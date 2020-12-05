@@ -54,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText name = findViewById(R.id.register_username);
         i.putExtra("name", name.getText().toString());
         startActivity(i);
+        finishAffinity();
     }
 
     public void register(View view) {
