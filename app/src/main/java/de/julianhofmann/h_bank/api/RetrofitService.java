@@ -62,16 +62,6 @@ public class RetrofitService {
     }
 
     public static void logout() {
-
-        Call<Void> call = getHbankApi().logout(getAuthorization());
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) { }
-
-            @Override
-            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) { }
-        });
-
         name = null;
         token = null;
 
