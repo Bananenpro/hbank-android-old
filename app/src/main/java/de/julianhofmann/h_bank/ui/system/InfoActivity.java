@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -57,7 +59,7 @@ public class InfoActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<InfoModel>() {
             @Override
-            public void onResponse(Call<InfoModel> call, Response<InfoModel> response) {
+            public void onResponse(@NotNull Call<InfoModel> call, @NotNull Response<InfoModel> response) {
                 if (status != null) {
                     if (response.isSuccessful() && response.body() != null) {
                         status.setTextColor(getColor(R.color.green));
@@ -99,7 +101,7 @@ public class InfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<InfoModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<InfoModel> call, @NotNull Throwable t) {
                 if (status != null) {
                     status.setTextColor(getColor(R.color.red));
                     status.setText(R.string.not_connected);

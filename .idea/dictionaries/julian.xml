@@ -2,10 +2,12 @@
   <dictionary name="julian">
     <words>
       <w>constraintlayout</w>
+      <w>doesn</w>
       <w>dont</w>
       <w>formurlencoded</w>
       <w>hbank</w>
       <w>hmac</w>
+      <w>hofmann</w>
       <w>julianhofmann</w>
       <w>pbkdf</w>
       <w>yyyymmddhhmmss</w>

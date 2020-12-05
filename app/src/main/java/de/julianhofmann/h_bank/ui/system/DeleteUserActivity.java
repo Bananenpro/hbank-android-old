@@ -19,17 +19,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
-import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.SettingsService;
 import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;

@@ -1,7 +1,6 @@
 package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 

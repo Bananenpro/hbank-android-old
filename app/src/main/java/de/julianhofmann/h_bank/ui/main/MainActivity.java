@@ -279,8 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         view.setRotation(0);
                         spinning = false;
                     }
-                }).
-                        start();
+                }).start();
             }
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);

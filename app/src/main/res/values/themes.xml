@@ -17,8 +17,4 @@
     </style>
 
 
-    <style name="Theme.Hbank.Switch" parent="Theme.HBank">
-        <item name="colorPrimary">@color/red</item>
-    </style>
-
 </resources>

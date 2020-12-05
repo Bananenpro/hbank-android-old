@@ -7,7 +7,6 @@
     tools:context=".ui.system.SettingsActivity">
 
     <Button
-        android:id="@+id/settings_delete_user_btn"
         android:layout_width="170dp"
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"

@@ -2,11 +2,12 @@ package de.julianhofmann.h_bank.api.models;
 
 import com.google.gson.annotations.Expose;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class LoginModel {
     @Expose
-    private String name;
+    private final String name;
     @Expose
-    private String password;
+    private final String password;
 
     public LoginModel(String name, String password) {
         this.name = name;
