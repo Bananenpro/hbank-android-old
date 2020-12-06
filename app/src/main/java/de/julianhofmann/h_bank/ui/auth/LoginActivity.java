@@ -147,8 +147,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void switchToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
-        finish();
         startActivity(i);
+        finishAffinity();
     }
 
     public void login(View v) {
