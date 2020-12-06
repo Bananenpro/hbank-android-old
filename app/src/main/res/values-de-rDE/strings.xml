@@ -104,4 +104,14 @@
     <string name="disk_lbl">Festplatte:</string>
     <string name="temperature_lbl">Temperatur:</string>
     <string name="error">Error</string>
+    <string name="weeks">Wochen</string>
+    <string name="months">Monate</string>
+    <string name="years">Jahre</string>
+
+    <string-array name="schedule_units">
+        <item>Tage</item>
+        <item>Wochen</item>
+        <item>Monate</item>
+        <item>Jahre</item>
+    </string-array>
 </resources>

@@ -154,7 +154,21 @@ public class PaymentPlanActivity extends AppCompatActivity {
 
         item.getDescription().setText(p.getDescription());
 
-        String schedule = p.getSchedule() + "d";
+        String scheduleUnit = "d";
+
+        switch (p.getScheduleUnit()) {
+            case "weeks":
+                scheduleUnit = "w";
+                break;
+            case "months":
+                scheduleUnit = "m";
+                break;
+            case "years":
+                scheduleUnit = "a";
+                break;
+        }
+
+        String schedule = p.getSchedule() + scheduleUnit;
         item.getSchedule().setText(schedule);
 
         String amount = p.getAmount() + getString(R.string.currency);

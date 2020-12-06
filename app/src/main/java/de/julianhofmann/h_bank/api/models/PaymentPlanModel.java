@@ -14,23 +14,26 @@ public class PaymentPlanModel {
     @Expose
     private String description;
     private int id;
-    @SerializedName("days_left")
-    private int daysLeft;
+    @SerializedName("left")
+    private int left;
     private String user;
+    @SerializedName("schedule_unit")
+    private String scheduleUnit;
 
-    public PaymentPlanModel(String receiver, String amount, int schedule, String description) {
+    public PaymentPlanModel(String receiver, String amount, int schedule, String scheduleUnit, String description) {
         this.receiver = receiver;
         this.amount = amount;
         this.schedule = schedule;
+        this.scheduleUnit = scheduleUnit;
         this.description = description;
     }
 
-    public int getDaysLeft() {
-        return daysLeft;
+    public int getLeft() {
+        return left;
     }
 
-    public void setDaysLeft(int daysLeft) {
-        this.daysLeft = daysLeft;
+    public void setLeft(int left) {
+        this.left = left;
     }
 
     public String getReceiver() {
@@ -79,5 +82,13 @@ public class PaymentPlanModel {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getScheduleUnit() {
+        return scheduleUnit;
+    }
+
+    public void setScheduleUnit(String scheduleUnit) {
+        this.scheduleUnit = scheduleUnit;
     }
 }

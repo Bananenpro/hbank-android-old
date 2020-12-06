@@ -102,16 +102,6 @@
             app:layout_constraintEnd_toEndOf="@+id/create_payment_plan_amount"
             app:layout_constraintTop_toTopOf="@+id/create_payment_plan_amount" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/days"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_schedule"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_schedule" />
-
         <EditText
             android:id="@+id/create_payment_plan_description"
             android:layout_width="0dp"
@@ -125,6 +115,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_receiver" />
+
+        <Spinner
+            android:id="@+id/schedule_unit_dropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_schedule"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_schedule" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

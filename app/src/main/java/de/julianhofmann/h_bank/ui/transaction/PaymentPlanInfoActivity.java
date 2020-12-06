@@ -81,7 +81,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                         title.setText(response.body().getDescription());
 
                     double balance = Double.parseDouble(BalanceCache.getBalance(RetrofitService.getName()));
-                    int missingPayments = (int) Math.floor((response.body().getSchedule() - (double) response.body().getDaysLeft()) / (double) response.body().getSchedule());
+                    int missingPayments = (int) Math.floor((response.body().getSchedule() - (double) response.body().getLeft()) / (double) response.body().getSchedule());
 
                     if (missingPayments > 0 && balance < Math.abs(Double.parseDouble(response.body().getAmount())) * missingPayments) {
                         delete.setText(R.string.no_money);
@@ -89,13 +89,28 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                     } else {
                         delete.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                     }
+
+                    String scheduleUnit = getString(R.string.days);
+
+                    switch (response.body().getScheduleUnit()) {
+                        case "weeks":
+                            scheduleUnit = getString(R.string.weeks);
+                            break;
+                        case "months":
+                            scheduleUnit = getString(R.string.months);
+                            break;
+                        case "years":
+                            scheduleUnit = getString(R.string.years);
+                            break;
+                    }
+
                     if (amount != null)
                         amount.setText(String.format("%s%s", response.body().getAmount(), getString(R.string.currency)));
                     if (schedule != null)
-                        schedule.setText(String.format("%d %s", response.body().getSchedule(), getString(R.string.days)));
+                        schedule.setText(String.format("%d %s", response.body().getSchedule(), scheduleUnit));
                     if (next != null) {
-                        next.setText(String.format("%d %s", response.body().getDaysLeft(), getString(R.string.days)));
-                        if (response.body().getDaysLeft() <= 0) {
+                        next.setText(String.format("%d %s", response.body().getLeft(), scheduleUnit));
+                        if (response.body().getLeft() <= 0) {
                             next.setTextColor(getColor(R.color.red));
                         }
                     }

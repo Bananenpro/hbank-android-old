@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +24,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Array;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -58,6 +63,10 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
         } else {
             receiver.setVisibility(View.GONE);
         }
+
+        Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.schedule_units, R.layout.support_simple_spinner_dropdown_item);
+        dropdown.setAdapter(adapter);
     }
 
     @Override
@@ -119,6 +128,7 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
         EditText description = findViewById(R.id.create_payment_plan_description);
         TextView error = findViewById(R.id.create_payment_plan_error);
         EditText receiver = findViewById(R.id.create_payment_plan_receiver);
+        Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
         error.setTextColor(getColor(R.color.red));
         Button submit = findViewById(R.id.create_payment_plan);
 
@@ -136,10 +146,21 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
                     int schedule_int = Integer.parseInt(schedule.getText().toString());
 
                     PaymentPlanModel model;
+
+                    String unit = "days";
+                    String text = dropdown.getSelectedItem().toString();
+                    if (text.equals(getString(R.string.weeks))) {
+                        unit = "weeks";
+                    } else if (text.equals(getString(R.string.months))) {
+                        unit = "months";
+                    } else if (text.equals(getString(R.string.years))) {
+                        unit = "years";
+                    }
+
                     if (name != null)
-                        model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, description.getText().toString());
+                        model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, unit, description.getText().toString());
                     else
-                        model = new PaymentPlanModel(receiver.getText().toString(), amount.getText().toString(), schedule_int, description.getText().toString());
+                        model = new PaymentPlanModel(receiver.getText().toString(), amount.getText().toString(), schedule_int, unit, description.getText().toString());
 
                     submit.setEnabled(false);
                     submit.setText(R.string.loading);
