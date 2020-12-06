@@ -49,6 +49,7 @@ public class LogItemInfoActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.log_item_lbl);
         TextView amount = findViewById(R.id.log_item_amount_lbl);
         TextView newBalance = findViewById(R.id.log_item_new_balance_lbl);
+        TextView date = findViewById(R.id.log_item_date_lbl);
         TextView time = findViewById(R.id.log_item_time_lbl);
         TextView user = findViewById(R.id.log_item_next_lbl);
         TextView userLbl = findViewById(R.id.log_item_next_lbl_lbl);
@@ -72,8 +73,11 @@ public class LogItemInfoActivity extends AppCompatActivity {
 
                     if (newBalance != null)
                         newBalance.setText(String.format("%s%s", response.body().getNewBalance(), getString(R.string.currency)));
-                    if (time != null)
-                        time.setText(response.body().getDate());
+                    if (time != null && date != null) {
+                        String[] datetime = response.body().getDate().split(" - ");
+                        date.setText(datetime[0]);
+                        time.setText(datetime[1]);
+                    }
                     if (user != null)
                         user.setText(response.body().getUsername());
                 } else if (response.code() == 403) {

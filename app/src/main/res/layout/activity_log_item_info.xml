@@ -65,6 +65,18 @@
             android:textSize="24sp"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_item_date_lbl_lbl" />
+
+        <TextView
+            android:id="@+id/log_item_date_lbl_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/date_lbl"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/log_item_new_balance_lbl_lbl" />
 
         <TextView
@@ -89,7 +101,6 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/log_item_amount_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/log_item_amount_lbl_lbl"
             app:layout_constraintTop_toTopOf="@+id/log_item_amount_lbl_lbl" />
 
@@ -112,13 +123,26 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/log_item_time_lbl_lbl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/log_item_time_lbl_lbl"
             app:layout_constraintTop_toTopOf="@+id/log_item_time_lbl_lbl" />
+
+        <TextView
+            android:id="@+id/log_item_date_lbl"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/log_item_date_lbl_lbl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/log_item_date_lbl_lbl"
+            app:layout_constraintTop_toTopOf="@+id/log_item_date_lbl_lbl" />
 
         <TextView
             android:id="@+id/log_item_next_lbl"

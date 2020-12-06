@@ -115,4 +115,5 @@
         <item>months</item>
         <item>years</item>
     </string-array>
+    <string name="date_lbl">Date:</string>
 </resources>

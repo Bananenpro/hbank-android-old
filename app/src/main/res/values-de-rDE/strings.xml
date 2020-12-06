@@ -57,7 +57,7 @@
     <string name="amount_lbl">Betrag:</string>
     <string name="schedule_lbl">Zeitplan:</string>
     <string name="next_lbl">Nächstes:</string>
-    <string name="time_lbl">Zeitpunkt:</string>
+    <string name="time_lbl">Uhrzeit:</string>
     <string name="new_balance_lbl">Neuer Kontostand:</string>
     <string name="sender_lbl">Sender:</string>
     <string name="receiver_lbl">Empfänger:</string>
@@ -114,4 +114,5 @@
         <item>Monate</item>
         <item>Jahre</item>
     </string-array>
+    <string name="date_lbl">Datum:</string>
 </resources>
