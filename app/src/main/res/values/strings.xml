@@ -116,4 +116,8 @@
         <item>years</item>
     </string-array>
     <string name="date_lbl">Date:</string>
+    <string name="day">day</string>
+    <string name="week">week</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
 </resources>

@@ -90,18 +90,74 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                         delete.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                     }
 
-                    String scheduleUnit = getString(R.string.days);
+                    String scheduleUnit = "";
 
-                    switch (response.body().getScheduleUnit()) {
-                        case "weeks":
-                            scheduleUnit = getString(R.string.weeks);
-                            break;
-                        case "months":
-                            scheduleUnit = getString(R.string.months);
-                            break;
-                        case "years":
-                            scheduleUnit = getString(R.string.years);
-                            break;
+                    if (response.body().getSchedule() == 1) {
+                        switch (response.body().getScheduleUnit()) {
+                            case "days":
+                                scheduleUnit = getString(R.string.day);
+                                break;
+                            case "weeks":
+                                scheduleUnit = getString(R.string.week);
+                                break;
+                            case "months":
+                                scheduleUnit = getString(R.string.month);
+                                break;
+                            case "years":
+                                scheduleUnit = getString(R.string.year);
+                                break;
+                        }
+                    } else {
+                        switch (response.body().getScheduleUnit()) {
+                            case "days":
+                                scheduleUnit = getString(R.string.days);
+                                break;
+                            case "weeks":
+                                scheduleUnit = getString(R.string.weeks);
+                                break;
+                            case "months":
+                                scheduleUnit = getString(R.string.months);
+                                break;
+                            case "years":
+                                scheduleUnit = getString(R.string.years);
+                                break;
+                        }
+                    }
+
+
+
+                    String nextUnit = "";
+
+                    if (response.body().getLeft() == 1 || response.body().getLeft() == -1) {
+                        switch (response.body().getScheduleUnit()) {
+                            case "days":
+                                nextUnit = getString(R.string.day);
+                                break;
+                            case "weeks":
+                                nextUnit = getString(R.string.week);
+                                break;
+                            case "months":
+                                nextUnit = getString(R.string.month);
+                                break;
+                            case "years":
+                                nextUnit = getString(R.string.year);
+                                break;
+                        }
+                    } else {
+                        switch (response.body().getScheduleUnit()) {
+                            case "days":
+                                nextUnit = getString(R.string.days);
+                                break;
+                            case "weeks":
+                                nextUnit = getString(R.string.weeks);
+                                break;
+                            case "months":
+                                nextUnit = getString(R.string.months);
+                                break;
+                            case "years":
+                                nextUnit = getString(R.string.years);
+                                break;
+                        }
                     }
 
                     if (amount != null)
@@ -109,7 +165,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                     if (schedule != null)
                         schedule.setText(String.format("%d %s", response.body().getSchedule(), scheduleUnit));
                     if (next != null) {
-                        next.setText(String.format("%d %s", response.body().getLeft(), scheduleUnit));
+                        next.setText(String.format("%d %s", response.body().getLeft(), nextUnit));
                         if (response.body().getLeft() <= 0) {
                             next.setTextColor(getColor(R.color.red));
                         }
