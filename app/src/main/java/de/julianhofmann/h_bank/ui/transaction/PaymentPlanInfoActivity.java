@@ -58,7 +58,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && name != null) {
             actionBar.setTitle(getString(R.string.title_activity_create_payment_plan) + " | " + name);
-        } else if (name == null) {
+        } else if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_create_payment_plan);
         }
 
