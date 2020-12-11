@@ -31,10 +31,15 @@ import retrofit2.Response;
 
 public class InfoActivity extends AppCompatActivity {
 
+    private boolean loggedOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        Intent i = getIntent();
+        loggedOut = i.getBooleanExtra("loggedOut", false);
 
         loadInfo(null);
     }
@@ -130,7 +135,10 @@ public class InfoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        if (!loggedOut)
+            inflater.inflate(R.menu.options_menu, menu);
+        else
+            inflater.inflate(R.menu.login_options_menu, menu);
         return true;
     }
 
@@ -162,6 +170,7 @@ public class InfoActivity extends AppCompatActivity {
 
     private void serverInfo() {
         Intent i = new Intent(this, InfoActivity.class);
+        i.putExtra("loggedOut", loggedOut);
         startActivity(i);
         overridePendingTransition(0, 0);
         finish();

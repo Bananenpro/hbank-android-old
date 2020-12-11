@@ -1,15 +1,24 @@
 package de.julianhofmann.h_bank.ui.auth;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +29,8 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.RegisterModel;
 import de.julianhofmann.h_bank.api.models.RegisterResponseModel;
+import de.julianhofmann.h_bank.ui.system.InfoActivity;
+import de.julianhofmann.h_bank.util.UpdateService;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +58,42 @@ public class RegisterActivity extends AppCompatActivity {
             EditText password_edit = findViewById(R.id.register_password);
             password_edit.setText(password);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.login_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.options_server_info:
+                serverInfo();
+                return true;
+            case R.id.options_check_for_updates:
+                update();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void serverInfo() {
+        Intent i = new Intent(this, InfoActivity.class);
+        i.putExtra("loggedOut", true);
+        startActivity(i);
+    }
+
+    private void update() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        }
+
+        UpdateService.update(this, false);
     }
 
     private void switchToLoginActivity() {

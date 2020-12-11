@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/options_server_info"
+        android:title="@string/info" />
+    <item
+        android:id="@+id/options_check_for_updates"
+        android:title="@string/update_btn" />
+</menu>
