@@ -57,54 +57,45 @@ public class InfoActivity extends AppCompatActivity {
         button.setEnabled(false);
         button.setText(R.string.loading);
 
+        status.setText(R.string.connecting);
+        status.setTextColor(getColor(R.color.yellow));
+        paymentPlans.setText(R.string.dash);
+        paymentPlans.setTextColor(getColor(R.color.foreground));
+        backups.setText(R.string.dash);
+        backups.setTextColor(getColor(R.color.foreground));
+        cpu.setText(R.string.dash);
+        ram.setText(R.string.dash);
+        disk.setText(R.string.dash);
+        temperature.setText(R.string.dash);
+
         call.enqueue(new Callback<InfoModel>() {
             @Override
             public void onResponse(@NotNull Call<InfoModel> call, @NotNull Response<InfoModel> response) {
-                if (status != null) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        status.setTextColor(getColor(R.color.green));
-                        status.setText(R.string.connected);
-                        if (response.body().isPaymentPlans()) {
-                            paymentPlans.setText(R.string.active);
-                            paymentPlans.setTextColor(getColor(R.color.green));
-                        } else {
-                            paymentPlans.setText(R.string.inactive);
-                            paymentPlans.setTextColor(getColor(R.color.red));
-                        }
-                        if (response.body().isBackups()) {
-                            backups.setText(R.string.active);
-                            backups.setTextColor(getColor(R.color.green));
-                        } else {
-                            backups.setText(R.string.inactive);
-                            backups.setTextColor(getColor(R.color.red));
-                        }
-
-                        cpu.setText(response.body().getCpu());
-                        ram.setText(response.body().getRam());
-                        disk.setText(response.body().getDisk());
-                        temperature.setText(response.body().getTemperature());
+                if (response.isSuccessful() && response.body() != null) {
+                    status.setTextColor(getColor(R.color.green));
+                    status.setText(R.string.connected);
+                    if (response.body().isPaymentPlans()) {
+                        paymentPlans.setText(R.string.active);
+                        paymentPlans.setTextColor(getColor(R.color.green));
                     } else {
-                        status.setTextColor(getColor(R.color.red));
-                        status.setText(R.string.error);
-                        paymentPlans.setText(R.string.dash);
-                        paymentPlans.setTextColor(getColor(R.color.foreground));
-                        backups.setText(R.string.dash);
-                        backups.setTextColor(getColor(R.color.foreground));
-                        cpu.setText(R.string.dash);
-                        ram.setText(R.string.dash);
-                        disk.setText(R.string.dash);
-                        temperature.setText(R.string.dash);
+                        paymentPlans.setText(R.string.inactive);
+                        paymentPlans.setTextColor(getColor(R.color.red));
                     }
-                    button.setEnabled(true);
-                    button.setText(R.string.update_btn);
-                }
-            }
+                    if (response.body().isBackups()) {
+                        backups.setText(R.string.active);
+                        backups.setTextColor(getColor(R.color.green));
+                    } else {
+                        backups.setText(R.string.inactive);
+                        backups.setTextColor(getColor(R.color.red));
+                    }
 
-            @Override
-            public void onFailure(@NotNull Call<InfoModel> call, @NotNull Throwable t) {
-                if (status != null) {
+                    cpu.setText(response.body().getCpu());
+                    ram.setText(response.body().getRam());
+                    disk.setText(response.body().getDisk());
+                    temperature.setText(response.body().getTemperature());
+                } else {
                     status.setTextColor(getColor(R.color.red));
-                    status.setText(R.string.not_connected);
+                    status.setText(R.string.error);
                     paymentPlans.setText(R.string.dash);
                     paymentPlans.setTextColor(getColor(R.color.foreground));
                     backups.setText(R.string.dash);
@@ -113,9 +104,25 @@ public class InfoActivity extends AppCompatActivity {
                     ram.setText(R.string.dash);
                     disk.setText(R.string.dash);
                     temperature.setText(R.string.dash);
-                    button.setEnabled(true);
-                    button.setText(R.string.update_btn);
                 }
+                button.setEnabled(true);
+                button.setText(R.string.update_btn);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<InfoModel> call, @NotNull Throwable t) {
+                status.setTextColor(getColor(R.color.red));
+                status.setText(R.string.not_connected);
+                paymentPlans.setText(R.string.dash);
+                paymentPlans.setTextColor(getColor(R.color.foreground));
+                backups.setText(R.string.dash);
+                backups.setTextColor(getColor(R.color.foreground));
+                cpu.setText(R.string.dash);
+                ram.setText(R.string.dash);
+                disk.setText(R.string.dash);
+                temperature.setText(R.string.dash);
+                button.setEnabled(true);
+                button.setText(R.string.update_btn);
             }
         });
     }

@@ -8,6 +8,7 @@
     <color name="foreground">#000000</color>
     <color name="red">#FF0000</color>
     <color name="green">#00CC00</color>
+    <color name="yellow">#DDAA0F</color>
     <color name="background">#FFFFFF</color>
     <color name="dark_gray">#8A8A8A</color>
 </resources>
