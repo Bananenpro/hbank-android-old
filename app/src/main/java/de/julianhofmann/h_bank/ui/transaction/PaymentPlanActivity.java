@@ -115,24 +115,22 @@ public class PaymentPlanActivity extends AppCompatActivity {
         TextView emptyLbl = findViewById(R.id.no_payment_plans_lbl);
         emptyLbl.setVisibility(View.VISIBLE);
         emptyLbl.setText(R.string.loading);
+        LinearLayout layout = findViewById(R.id.payment_plan_list_layout);
+        layout.removeAllViews();
         Call<List<PaymentPlanModel>> call = RetrofitService.getHbankApi().getPaymentPlans(name, RetrofitService.getAuthorization());
         call.enqueue(new Callback<List<PaymentPlanModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Response<List<PaymentPlanModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<PaymentPlanModel> paymentPlans = response.body();
-                    LinearLayout layout = findViewById(R.id.payment_plan_list_layout);
-                    if (layout != null) {
-                        layout.removeAllViews();
-                        if (paymentPlans.size() > 0) {
-                            emptyLbl.setVisibility(View.GONE);
-                        } else {
-                            emptyLbl.setVisibility(View.VISIBLE);
-                            emptyLbl.setText(R.string.no_payment_plans);
-                        }
-                        for (PaymentPlanModel p : paymentPlans) {
-                            addPaymentPlanListItem(layout, p);
-                        }
+                    if (paymentPlans.size() > 0) {
+                        emptyLbl.setVisibility(View.GONE);
+                    } else {
+                        emptyLbl.setVisibility(View.VISIBLE);
+                        emptyLbl.setText(R.string.no_payment_plans);
+                    }
+                    for (PaymentPlanModel p : paymentPlans) {
+                        addPaymentPlanListItem(layout, p);
                     }
                 } else if (response.code() == 403) {
                     String name = RetrofitService.getName();

@@ -353,26 +353,22 @@ public class MainActivity extends AppCompatActivity {
         TextView emptyLbl = findViewById(R.id.user_list_empty_lbl);
         emptyLbl.setVisibility(View.VISIBLE);
         emptyLbl.setText(R.string.loading);
-
+        LinearLayout layout = findViewById(R.id.user_list_layout);
+        layout.removeAllViews();
         call.enqueue(new Callback<List<UserModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     online();
-                    LinearLayout layout = findViewById(R.id.user_list_layout);
-
-                    if (layout != null) {
-                        layout.removeAllViews();
-                        if (response.body().size() > 1) {
-                            emptyLbl.setVisibility(View.GONE);
-                        } else {
-                            emptyLbl.setVisibility(View.VISIBLE);
-                            emptyLbl.setText(R.string.no_other_users);
-                        }
-                        for (UserModel user : response.body()) {
-                            if (!user.getName().equals(RetrofitService.getName())) {
-                                addUserListItem(layout, user.getName());
-                            }
+                    if (response.body().size() > 1) {
+                        emptyLbl.setVisibility(View.GONE);
+                    } else {
+                        emptyLbl.setVisibility(View.VISIBLE);
+                        emptyLbl.setText(R.string.no_other_users);
+                    }
+                    for (UserModel user : response.body()) {
+                        if (!user.getName().equals(RetrofitService.getName())) {
+                            addUserListItem(layout, user.getName());
                         }
                     }
                 }
@@ -415,6 +411,8 @@ public class MainActivity extends AppCompatActivity {
             if (logPage == 0) {
                 emptyLbl.setVisibility(View.VISIBLE);
                 emptyLbl.setText(R.string.loading);
+                LinearLayout layout = findViewById(R.id.log_list_layout);
+                layout.removeAllViews();
             }
             logPage++;
             call.enqueue(new Callback<List<LogModel>>() {
