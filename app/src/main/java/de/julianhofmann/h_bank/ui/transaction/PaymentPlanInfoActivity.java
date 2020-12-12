@@ -129,7 +129,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                     String nextUnit = "";
 
                     if (response.body().getLeft() == 1 || response.body().getLeft() == -1) {
-                        switch (response.body().getScheduleUnit()) {
+                        switch (response.body().getLeftUnit()) {
                             case "days":
                                 nextUnit = getString(R.string.day);
                                 break;
@@ -144,7 +144,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        switch (response.body().getScheduleUnit()) {
+                        switch (response.body().getLeftUnit()) {
                             case "days":
                                 nextUnit = getString(R.string.days);
                                 break;

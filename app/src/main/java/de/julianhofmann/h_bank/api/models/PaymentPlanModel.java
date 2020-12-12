@@ -19,6 +19,8 @@ public class PaymentPlanModel {
     private String user;
     @SerializedName("schedule_unit")
     private String scheduleUnit;
+    @SerializedName("left_unit")
+    private String leftUnit;
 
     public PaymentPlanModel(String receiver, String amount, int schedule, String scheduleUnit, String description) {
         this.receiver = receiver;
@@ -90,5 +92,13 @@ public class PaymentPlanModel {
 
     public void setScheduleUnit(String scheduleUnit) {
         this.scheduleUnit = scheduleUnit;
+    }
+
+    public String getLeftUnit() {
+        return leftUnit;
+    }
+
+    public void setLeftUnit(String leftUnit) {
+        this.leftUnit = leftUnit;
     }
 }
