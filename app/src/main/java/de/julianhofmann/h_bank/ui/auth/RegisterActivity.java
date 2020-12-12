@@ -84,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void serverInfo() {
         Intent i = new Intent(this, InfoActivity.class);
-        i.putExtra("loggedOut", true);
         startActivity(i);
     }
 

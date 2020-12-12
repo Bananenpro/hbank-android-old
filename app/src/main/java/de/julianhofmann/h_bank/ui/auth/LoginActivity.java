@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         RetrofitService.init(sp);
         BalanceCache.init(sp);
 
-        if (RetrofitService.getName() != null && RetrofitService.getToken() != null) {
+        if (RetrofitService.isLoggedIn()) {
             switchToMainActivity();
             return;
         }
@@ -133,7 +133,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void serverInfo() {
         Intent i = new Intent(this, InfoActivity.class);
-        i.putExtra("loggedOut", true);
         startActivity(i);
     }
 

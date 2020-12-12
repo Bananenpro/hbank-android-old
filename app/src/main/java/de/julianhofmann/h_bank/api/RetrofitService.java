@@ -41,6 +41,10 @@ public class RetrofitService {
         }
     }
 
+    public static boolean isLoggedIn() {
+        return name != null && token != null;
+    }
+
     public static void login(String loginName, String loginToken) {
         name = loginName;
         token = loginToken;
