@@ -24,10 +24,13 @@ import de.julianhofmann.h_bank.util.UpdateService;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private boolean gone = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        gone = false;
         SwitchCompat offlineLoginSwitch = findViewById(R.id.offline_login_switch);
         offlineLoginSwitch.setChecked(SettingsService.getOfflineLogin());
         SwitchCompat fingerprintLoginSwitch = findViewById(R.id.fingerprint_switch);
@@ -38,6 +41,11 @@ public class SettingsActivity extends AppCompatActivity {
         checkForUpdatesSwitch.setChecked(SettingsService.getCheckForUpdates());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gone = false;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,22 +57,26 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -81,11 +93,15 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     private void logout() {
@@ -103,8 +119,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void deleteUser(View v) {
-        Intent i = new Intent(this, DeleteUserActivity.class);
-        startActivity(i);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, DeleteUserActivity.class);
+            startActivity(i);
+        }
     }
 
     public void setOfflineLogin(View v) {

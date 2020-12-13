@@ -39,11 +39,13 @@ import retrofit2.Response;
 public class PaymentPlanInfoActivity extends AppCompatActivity {
 
     private int id;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_plan_info);
+        gone = false;
 
         Intent i = getIntent();
 
@@ -196,6 +198,12 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        gone = false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
@@ -205,22 +213,26 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -240,45 +252,54 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     public void deletePaymentPlan(View v) {
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            if (which == dialog.BUTTON_POSITIVE) {
-                Call<Void> call = RetrofitService.getHbankApi().deletePaymentPlan(id, RetrofitService.getAuthorization());
-                Button button = (Button) v;
-                button.setEnabled(false);
-                button.setText(R.string.loading);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            onSupportNavigateUp();
-                        } else if (response.code() == 403) {
-                            String name = RetrofitService.getName();
-                            RetrofitService.logout();
-                            switchToLoginActivity(name);
+        if (!gone) {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                if (which == dialog.BUTTON_POSITIVE) {
+                    Call<Void> call = RetrofitService.getHbankApi().deletePaymentPlan(id, RetrofitService.getAuthorization());
+                    Button button = (Button) v;
+                    button.setEnabled(false);
+                    button.setText(R.string.loading);
+                    gone = true;
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                onSupportNavigateUp();
+                            } else if (response.code() == 403) {
+                                String name = RetrofitService.getName();
+                                RetrofitService.logout();
+                                switchToLoginActivity(name);
+                            }
+                            button.setText(R.string.delete);
+                            button.setEnabled(true);
+                            gone = false;
                         }
-                        button.setText(R.string.delete);
-                        button.setEnabled(true);
-                    }
 
-                    @Override
-                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                        Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
-                        button.setText(R.string.delete);
-                        button.setEnabled(true);
-                    }
-                });
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.sure).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                        @Override
+                        public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                            Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
+                            button.setText(R.string.delete);
+                            button.setEnabled(true);
+                            gone = false;
+                        }
+                    });
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.sure).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+        }
     }
 
     private void switchToLoginActivity(String name) {

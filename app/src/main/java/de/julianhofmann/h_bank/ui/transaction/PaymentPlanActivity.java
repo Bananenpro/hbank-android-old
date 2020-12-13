@@ -37,11 +37,13 @@ public class PaymentPlanActivity extends AppCompatActivity {
 
     private String name;
     private boolean paused = false;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_plan);
+        gone = false;
 
         Intent i = getIntent();
 
@@ -69,22 +71,26 @@ public class PaymentPlanActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -196,11 +202,14 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     public void createPaymentPlan(View v) {
-        Intent i = new Intent(this, CreatePaymentPlanActivity.class);
-        if (!name.equals("")) {
-            i.putExtra("name", name);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, CreatePaymentPlanActivity.class);
+            if (!name.equals("")) {
+                i.putExtra("name", name);
+            }
+            startActivity(i);
         }
-        startActivity(i);
     }
 
     private void switchToLoginActivity(String name) {
@@ -231,5 +240,6 @@ public class PaymentPlanActivity extends AppCompatActivity {
             loadPaymentPlans();
             paused = false;
         }
+        gone = false;
     }
 }

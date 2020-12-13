@@ -35,11 +35,13 @@ import retrofit2.Response;
 public class TransferMoneyActivity extends AppCompatActivity {
 
     private String name;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer_money);
+        gone = false;
 
 
         Intent i = getIntent();
@@ -56,6 +58,12 @@ public class TransferMoneyActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        gone = false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
@@ -65,22 +73,26 @@ public class TransferMoneyActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -100,57 +112,66 @@ public class TransferMoneyActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     public void transferMoney(View v) {
-        EditText amount = findViewById(R.id.create_payment_plan_amount);
-        EditText description = findViewById(R.id.create_payment_plan_description);
-        TextView error = findViewById(R.id.transfer_money_error);
-        error.setTextColor(getColor(R.color.red));
-        Button submit = findViewById(R.id.transfer_money_submit_btn);
+        if (!gone) {
+            EditText amount = findViewById(R.id.create_payment_plan_amount);
+            EditText description = findViewById(R.id.create_payment_plan_description);
+            TextView error = findViewById(R.id.transfer_money_error);
+            error.setTextColor(getColor(R.color.red));
+            Button submit = findViewById(R.id.transfer_money_submit_btn);
 
-        if (amount.getText().length() > 0) {
-            try {
-                Double.parseDouble(amount.getText().toString());
+            if (amount.getText().length() > 0) {
+                try {
+                    Double.parseDouble(amount.getText().toString());
 
-                TransferMoneyModel model = new TransferMoneyModel(name, amount.getText().toString(), description.getText().toString());
-                Call<Void> call = RetrofitService.getHbankApi().transferMoney(model, RetrofitService.getAuthorization());
-                submit.setEnabled(false);
-                submit.setText(R.string.loading);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            error.setText(R.string.transaction_complete);
-                            error.setTextColor(getColor(R.color.green));
-                            new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
-                        } else if (response.code() == 400) {
-                            error.setText(R.string.not_enough_money);
-                        } else if (response.code() == 403) {
-                            logout();
+                    TransferMoneyModel model = new TransferMoneyModel(name, amount.getText().toString(), description.getText().toString());
+                    Call<Void> call = RetrofitService.getHbankApi().transferMoney(model, RetrofitService.getAuthorization());
+                    submit.setEnabled(false);
+                    submit.setText(R.string.loading);
+                    gone = true;
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                error.setText(R.string.transaction_complete);
+                                error.setTextColor(getColor(R.color.green));
+                                new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
+                            } else if (response.code() == 400) {
+                                error.setText(R.string.not_enough_money);
+                            } else if (response.code() == 403) {
+                                logout();
+                            }
+                            submit.setEnabled(true);
+                            submit.setText(R.string.transfer_money_btn);
+                            gone = false;
                         }
-                        submit.setEnabled(true);
-                        submit.setText(R.string.transfer_money_btn);
-                    }
 
-                    @Override
-                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                        error.setText(R.string.offline);
-                        submit.setEnabled(true);
-                        submit.setText(R.string.transfer_money_btn);
-                    }
-                });
+                        @Override
+                        public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                            error.setText(R.string.offline);
+                            submit.setEnabled(true);
+                            submit.setText(R.string.transfer_money_btn);
+                            gone = false;
+                        }
+                    });
 
-            } catch (NumberFormatException e) {
-                error.setText(getString(R.string.amount_not_a_number));
+                } catch (NumberFormatException e) {
+                    error.setText(getString(R.string.amount_not_a_number));
+                }
+            } else {
+                error.setText(getString(R.string.empty_amount_field));
             }
-        } else {
-            error.setText(getString(R.string.empty_amount_field));
         }
     }
 

@@ -41,11 +41,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private String name;
     private boolean paused = false;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        gone = false;
 
         Intent i = getIntent();
 
@@ -74,22 +76,26 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -141,15 +147,21 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void transferMoney(View v) {
-        Intent i = new Intent(this, TransferMoneyActivity.class);
-        i.putExtra("name", name);
-        startActivity(i);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, TransferMoneyActivity.class);
+            i.putExtra("name", name);
+            startActivity(i);
+        }
     }
 
     public void paymentPlans(View v) {
-        Intent i = new Intent(this, PaymentPlanActivity.class);
-        i.putExtra("name", name);
-        startActivity(i);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, PaymentPlanActivity.class);
+            i.putExtra("name", name);
+            startActivity(i);
+        }
     }
 
     private void switchToLoginActivity(String name) {
@@ -161,11 +173,15 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     @Override
@@ -188,5 +204,6 @@ public class UserInfoActivity extends AppCompatActivity {
             loadUserInfo();
             paused = false;
         }
+        gone = false;
     }
 }

@@ -45,11 +45,14 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        gone = false;
 
         SharedPreferences sp = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
 
@@ -109,6 +112,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        gone = false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.login_options_menu, menu);
@@ -118,16 +127,18 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -137,11 +148,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this, false);
+            UpdateService.update(this, false);
+            gone = false;
+        }
     }
 
     public void autoLogin(String name, String token) {
@@ -178,15 +193,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void switchToRegisterActivity(View v) {
-        Intent i = new Intent(this, RegisterActivity.class);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, RegisterActivity.class);
 
-        EditText name = findViewById(R.id.login_username);
-        EditText password = findViewById(R.id.login_password);
+            EditText name = findViewById(R.id.login_username);
+            EditText password = findViewById(R.id.login_password);
 
-        i.putExtra("name", name.getText().toString());
-        i.putExtra("password", password.getText().toString());
+            i.putExtra("name", name.getText().toString());
+            i.putExtra("password", password.getText().toString());
 
-        startActivity(i);
+            startActivity(i);
+        }
     }
 
     private void switchToMainActivity() {
@@ -196,64 +214,68 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
+        if (!gone) {
+            Button loginButton = findViewById(R.id.login_btn);
+            Button registerButton = findViewById(R.id.switch_to_register_btn);
 
-        Button loginButton = findViewById(R.id.login_btn);
-        Button registerButton = findViewById(R.id.switch_to_register_btn);
+            EditText name = findViewById(R.id.login_username);
+            EditText password = findViewById(R.id.login_password);
+            TextView error_text = findViewById(R.id.login_error_text);
+            error_text.setText("");
 
-        EditText name = findViewById(R.id.login_username);
-        EditText password = findViewById(R.id.login_password);
-        TextView error_text = findViewById(R.id.login_error_text);
-        error_text.setText("");
+            if (name.getText().length() > 0 && password.getText().length() > 0) {
 
-        if (name.getText().length() > 0 && password.getText().length() > 0) {
-
-            SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
-            if (SettingsService.getOfflineLogin()) {
-                String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
-                if (token != null) {
-                    RetrofitService.login(name.getText().toString(), token);
-                    switchToMainActivity();
-                    return;
-                }
-            } else {
-                RetrofitService.logout();
-            }
-
-            LoginModel model = new LoginModel(name.getText().toString(), password.getText().toString());
-
-            Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(model);
-
-            loginButton.setText(getString(R.string.loading));
-            loginButton.setEnabled(false);
-            registerButton.setEnabled(false);
-
-            call.enqueue(new Callback<LoginResponseModel>() {
-                @Override
-                public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        RetrofitService.login(name.getText().toString(), response.body().getToken());
-
-                        PasswordCache.storePassword(password.getText().toString(), sharedPreferences);
-
+                SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
+                if (SettingsService.getOfflineLogin()) {
+                    String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
+                    if (token != null) {
+                        RetrofitService.login(name.getText().toString(), token);
                         switchToMainActivity();
-                    } else {
-                        error_text.setText(getString(R.string.wrong_credentials));
+                        return;
                     }
-                    loginButton.setEnabled(true);
-                    registerButton.setEnabled(true);
-                    loginButton.setText(getString(R.string.login_btn));
+                } else {
+                    RetrofitService.logout();
                 }
 
-                @Override
-                public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
-                    error_text.setText(getString(R.string.offline));
-                    loginButton.setEnabled(true);
-                    registerButton.setEnabled(true);
-                    loginButton.setText(getString(R.string.login_btn));
-                }
-            });
-        } else {
-            error_text.setText(getString(R.string.empty_fields));
+                LoginModel model = new LoginModel(name.getText().toString(), password.getText().toString());
+
+                Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(model);
+
+                loginButton.setText(getString(R.string.loading));
+                loginButton.setEnabled(false);
+                registerButton.setEnabled(false);
+                gone = true;
+
+                call.enqueue(new Callback<LoginResponseModel>() {
+                    @Override
+                    public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            RetrofitService.login(name.getText().toString(), response.body().getToken());
+
+                            PasswordCache.storePassword(password.getText().toString(), sharedPreferences);
+
+                            switchToMainActivity();
+                        } else {
+                            error_text.setText(getString(R.string.wrong_credentials));
+                        }
+                        loginButton.setEnabled(true);
+                        registerButton.setEnabled(true);
+                        loginButton.setText(getString(R.string.login_btn));
+                        gone = false;
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
+                        error_text.setText(getString(R.string.offline));
+                        loginButton.setEnabled(true);
+                        registerButton.setEnabled(true);
+                        loginButton.setText(getString(R.string.login_btn));
+                        gone = false;
+                    }
+                });
+            } else {
+                error_text.setText(getString(R.string.empty_fields));
+            }
         }
     }
 }

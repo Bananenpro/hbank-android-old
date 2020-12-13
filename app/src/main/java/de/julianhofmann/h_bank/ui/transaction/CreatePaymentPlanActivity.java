@@ -41,11 +41,13 @@ import retrofit2.Response;
 public class CreatePaymentPlanActivity extends AppCompatActivity {
 
     private String name;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_payment_plan);
+        gone = false;
 
         Intent i = getIntent();
         name = i.getStringExtra("name");
@@ -70,6 +72,12 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        gone = false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
@@ -79,22 +87,26 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -114,92 +126,100 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     public void createPaymentPlan(View v) {
-
-        EditText amount = findViewById(R.id.create_payment_plan_amount);
-        EditText schedule = findViewById(R.id.create_payment_plan_schedule);
-        EditText description = findViewById(R.id.create_payment_plan_description);
-        TextView error = findViewById(R.id.create_payment_plan_error);
-        EditText receiver = findViewById(R.id.create_payment_plan_receiver);
-        Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
-        error.setTextColor(getColor(R.color.red));
-        Button submit = findViewById(R.id.create_payment_plan);
-
-        if (receiver.getText().toString().equals(RetrofitService.getName())) {
+        if (!gone) {
+            EditText amount = findViewById(R.id.create_payment_plan_amount);
+            EditText schedule = findViewById(R.id.create_payment_plan_schedule);
+            EditText description = findViewById(R.id.create_payment_plan_description);
+            TextView error = findViewById(R.id.create_payment_plan_error);
+            EditText receiver = findViewById(R.id.create_payment_plan_receiver);
+            Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
             error.setTextColor(getColor(R.color.red));
-            error.setText(R.string.sender_cannot_be_the_receiver);
-            return;
-        }
+            Button submit = findViewById(R.id.create_payment_plan);
 
-        if ((name != null || receiver.getText().length() > 0) && amount.getText().length() > 0 && schedule.getText().length() > 0) {
-
-            try {
-                Double.parseDouble(amount.getText().toString());
-                try {
-                    int schedule_int = Integer.parseInt(schedule.getText().toString());
-
-                    PaymentPlanModel model;
-
-                    String unit = "days";
-                    String text = dropdown.getSelectedItem().toString();
-                    if (text.equals(getString(R.string.weeks))) {
-                        unit = "weeks";
-                    } else if (text.equals(getString(R.string.months))) {
-                        unit = "months";
-                    } else if (text.equals(getString(R.string.years))) {
-                        unit = "years";
-                    }
-
-                    if (name != null)
-                        model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, unit, description.getText().toString());
-                    else
-                        model = new PaymentPlanModel(receiver.getText().toString(), amount.getText().toString(), schedule_int, unit, description.getText().toString());
-
-                    submit.setEnabled(false);
-                    submit.setText(R.string.loading);
-
-                    Call<Void> call = RetrofitService.getHbankApi().createPaymentPlan(model, RetrofitService.getAuthorization());
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                error.setTextColor(getColor(R.color.green));
-                                error.setText(R.string.create_success);
-                                new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
-                            } else if (response.code() == 403) {
-                                logout();
-                            } else if (response.code() == 400) {
-                                error.setTextColor(getColor(R.color.red));
-                                error.setText(R.string.user_does_not_exist);
-                            }
-                            submit.setEnabled(true);
-                            submit.setText(R.string.create);
-                        }
-
-                        @Override
-                        public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                            error.setText(R.string.offline);
-                            submit.setEnabled(true);
-                            submit.setText(R.string.create);
-                        }
-                    });
-
-                } catch (NumberFormatException e) {
-                    error.setText(R.string.schedule_not_a_number);
-                }
-            } catch (NumberFormatException e) {
-                error.setText(R.string.amount_not_a_number);
+            if (receiver.getText().toString().equals(RetrofitService.getName())) {
+                error.setTextColor(getColor(R.color.red));
+                error.setText(R.string.sender_cannot_be_the_receiver);
+                return;
             }
 
-        } else {
-            error.setText(R.string.empty_fields);
+            if ((name != null || receiver.getText().length() > 0) && amount.getText().length() > 0 && schedule.getText().length() > 0) {
+
+                try {
+                    Double.parseDouble(amount.getText().toString());
+                    try {
+                        int schedule_int = Integer.parseInt(schedule.getText().toString());
+
+                        PaymentPlanModel model;
+
+                        String unit = "days";
+                        String text = dropdown.getSelectedItem().toString();
+                        if (text.equals(getString(R.string.weeks))) {
+                            unit = "weeks";
+                        } else if (text.equals(getString(R.string.months))) {
+                            unit = "months";
+                        } else if (text.equals(getString(R.string.years))) {
+                            unit = "years";
+                        }
+
+                        if (name != null)
+                            model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, unit, description.getText().toString());
+                        else
+                            model = new PaymentPlanModel(receiver.getText().toString(), amount.getText().toString(), schedule_int, unit, description.getText().toString());
+
+                        submit.setEnabled(false);
+                        submit.setText(R.string.loading);
+                        gone = true;
+
+                        Call<Void> call = RetrofitService.getHbankApi().createPaymentPlan(model, RetrofitService.getAuthorization());
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                                if (response.isSuccessful()) {
+                                    error.setTextColor(getColor(R.color.green));
+                                    error.setText(R.string.create_success);
+                                    new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
+                                } else if (response.code() == 403) {
+                                    logout();
+                                } else if (response.code() == 400) {
+                                    error.setTextColor(getColor(R.color.red));
+                                    error.setText(R.string.user_does_not_exist);
+                                }
+                                submit.setEnabled(true);
+                                submit.setText(R.string.create);
+                                gone = false;
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                                error.setText(R.string.offline);
+                                submit.setEnabled(true);
+                                submit.setText(R.string.create);
+                                gone = false;
+                            }
+                        });
+
+                    } catch (NumberFormatException e) {
+                        error.setText(R.string.schedule_not_a_number);
+                    }
+                } catch (NumberFormatException e) {
+                    error.setText(R.string.amount_not_a_number);
+                }
+
+            } else {
+                error.setText(R.string.empty_fields);
+            }
         }
     }
 

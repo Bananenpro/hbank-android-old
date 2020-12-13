@@ -80,11 +80,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean paused = false;
     private boolean offline = false;
     private boolean spinning = false;
+    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        gone = false;
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_user_list, R.id.navigation_log)
@@ -144,22 +146,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.options_settings:
-                settings();
-                return true;
-            case R.id.options_server_info:
-                serverInfo();
-                return true;
-            case R.id.options_logout:
-                logout();
-                return true;
-            case R.id.options_check_for_updates:
-                update(false);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (!gone) {
+            switch (item.getItemId()) {
+                case R.id.options_settings:
+                    gone = true;
+                    settings();
+                    return true;
+                case R.id.options_server_info:
+                    gone = true;
+                    serverInfo();
+                    return true;
+                case R.id.options_logout:
+                    gone = true;
+                    logout();
+                    return true;
+                case R.id.options_check_for_updates:
+                    update(false);
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void settings() {
@@ -249,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadUserInfo(View v) {
-        if (!spinning) {
+        if (!spinning && !gone) {
 
             TextView username = findViewById(R.id.user_name_lbl);
             username.setText(RetrofitService.getName());
@@ -316,22 +322,28 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void update(boolean autoUpdate) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
+
+            UpdateService.update(this, autoUpdate);
+            gone = false;
         }
-
-
-        UpdateService.update(this, autoUpdate);
     }
 
     public void changeProfilePicture(View v) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        imagePicker = new ImagePicker(this);
-        imagePicker.setImagePickerCallback(imagePickerCallback);
-        imagePicker.pickImage();
+            imagePicker = new ImagePicker(this);
+            imagePicker.setImagePickerCallback(imagePickerCallback);
+            imagePicker.pickImage();
+            gone = true;
+        }
     }
 
     @Override
@@ -388,8 +400,11 @@ public class MainActivity extends AppCompatActivity {
 
         userListItem.getNameButton().setText(name);
         userListItem.getNameButton().setOnClickListener(v -> {
-            Button button = (Button) v;
-            goToUser(button.getText().toString());
+            if (!gone) {
+                gone = true;
+                Button button = (Button) v;
+                goToUser(button.getText().toString());
+            }
         });
 
         ImageUtils.loadProfilePicture(name, userListItem.getProfilePictureImageView(), userListItem.getProfilePictureImageView().getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
@@ -404,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadLog() {
-        if (!allLogPages && !loadingLog) {
+        if (!allLogPages && !loadingLog && !gone) {
             loadingLog = true;
             Call<List<LogModel>> call = RetrofitService.getHbankApi().getLog(logPage, RetrofitService.getAuthorization());
             TextView emptyLbl = findViewById(R.id.log_empty_lbl);
@@ -472,7 +487,12 @@ public class MainActivity extends AppCompatActivity {
             item.getAmount().setTextColor(getColor(R.color.red));
         }
 
-        item.getButton().setOnClickListener(v -> goToLogItemInfo(model.getId()));
+        item.getButton().setOnClickListener(v -> {
+            if (!gone) {
+                gone = true;
+                goToLogItemInfo(model.getId());
+            }
+        });
 
         layout.addView(item);
     }
@@ -499,6 +519,7 @@ public class MainActivity extends AppCompatActivity {
             }
             paused = false;
         }
+        gone = false;
     }
 
     private void offline() {
@@ -540,7 +561,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void paymentPlans(View v) {
-        Intent i = new Intent(this, PaymentPlanActivity.class);
-        startActivity(i);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, PaymentPlanActivity.class);
+            startActivity(i);
+        }
     }
 }
