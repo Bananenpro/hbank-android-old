@@ -2,14 +2,9 @@ package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
 
-import org.jetbrains.annotations.NotNull;
-
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.SettingsService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,8 +23,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
