@@ -110,11 +110,15 @@ public class PaymentPlanActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-        }
+        if (!gone) {
+            gone = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+            }
 
-        UpdateService.update(this);
+            UpdateService.update(this);
+            gone = false;
+        }
     }
 
     private void loadPaymentPlans() {
@@ -178,7 +182,12 @@ public class PaymentPlanActivity extends AppCompatActivity {
         String amount = p.getAmount() + getString(R.string.currency);
         item.getAmount().setText(amount);
 
-        item.getButton().setOnClickListener(v -> showPaymentPlan(p.getId()));
+        item.getButton().setOnClickListener(v -> {
+            if (!gone) {
+                gone = true;
+                showPaymentPlan(p.getId());
+            }
+        });
 
         if (p.getAmount().startsWith("+")) {
             item.getAmount().setTextColor(getColor(R.color.green));
