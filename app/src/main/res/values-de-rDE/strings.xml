@@ -120,4 +120,10 @@
     <string name="month">Monat</string>
     <string name="year">Jahr</string>
     <string name="connecting">verbinden…</string>
+    <string name="title_activity_connection_settings">Verbindungseinstellungen</string>
+    <string name="connection">Verbindung</string>
+    <string name="apply">Ändern</string>
+    <string name="ip_address_hint">IP Adresse…</string>
+    <string name="port_hint">Port…</string>
+    <string name="changes_saved">Änderungen gespeichert!</string>
 </resources>

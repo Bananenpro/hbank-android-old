@@ -78,7 +78,7 @@ public class UpdateService {
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
-        Uri downloadUri = Uri.parse(RetrofitService.URL + "apk");
+        Uri downloadUri = Uri.parse(RetrofitService.getUrl() + "apk");
 
         DownloadManager.Request request = new DownloadManager.Request(downloadUri);
         request.setMimeType("application/vnd.android.package-archive");

@@ -172,9 +172,18 @@ public class InfoActivity extends AppCompatActivity {
                 case R.id.options_check_for_updates:
                     update();
                     return true;
+                case R.id.options_connection_settings:
+                    gone = true;
+                    connectionSettings();
+                    return true;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void connectionSettings() {
+        Intent i = new Intent(this, ConnectionSettingsActivity.class);
+        startActivity(i);
     }
 
     private void settings() {

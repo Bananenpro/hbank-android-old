@@ -7,4 +7,7 @@
     <item
         android:id="@+id/options_check_for_updates"
         android:title="@string/update_btn" />
+    <item
+        android:id="@+id/options_connection_settings"
+        android:title="@string/title_activity_connection_settings" />
 </menu>

@@ -100,7 +100,7 @@ public class ImageUtils {
     }
 
     public static void loadProfilePicture(String name, ImageView imageView, Drawable placeholder, SharedPreferences sharedPreferences) {
-        Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
+        Picasso.get().load(RetrofitService.getUrl() + "profile_picture/" + name)
                 .placeholder(placeholder)
                 .error(placeholder)
                 .resize(500, 500)
@@ -115,9 +115,9 @@ public class ImageUtils {
                     if (response.isSuccessful() && response.body().getId() != cachedId) {
                         if (response.body() != null)
                             updateProfilePictureId(name, response.body().getId(), sharedPreferences);
-                        Picasso.get().invalidate(RetrofitService.URL + "profile_picture/" + name);
+                        Picasso.get().invalidate(RetrofitService.getUrl() + "profile_picture/" + name);
 
-                        Picasso.get().load(RetrofitService.URL + "profile_picture/" + name)
+                        Picasso.get().load(RetrofitService.getUrl() + "profile_picture/" + name)
                                 .networkPolicy(NetworkPolicy.NO_CACHE)
                                 .placeholder(placeholder)
                                 .error(placeholder)

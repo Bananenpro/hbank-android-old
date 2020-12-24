@@ -9,7 +9,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
-    public static final String URL = "http://192.168.0.200:8080/";
+    private static String ip;
+    private static int port;
 
     private static String name = null;
     private static String token = null;
@@ -20,19 +21,23 @@ public class RetrofitService {
     private static HBankApi hBankApi;
 
     public static void init(SharedPreferences sp) {
+
+        if (sharedPreferences == null) {
+            sharedPreferences = sp;
+        }
+
+        ip = sharedPreferences.getString("ip_address", "192.168.0.200");
+        port = sharedPreferences.getInt("port", 8080);
+
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(URL)
+                    .baseUrl(getUrl())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
 
         if (hBankApi == null) {
             hBankApi = retrofit.create(HBankApi.class);
-        }
-
-        if (sharedPreferences == null) {
-            sharedPreferences = sp;
         }
     }
 
@@ -79,6 +84,33 @@ public class RetrofitService {
             return "Bearer " + token;
         }
         return "";
+    }
+
+    public static String getUrl() {
+        return "http://"+ip+":"+port+"/";
+    }
+
+    public static String getIpAddress() {
+        return ip;
+    }
+
+    public static int getPort() {
+        return port;
+    }
+
+    public static void changeUrl(String ip_address, int port) {
+        RetrofitService.ip = ip_address;
+        RetrofitService.port = port;
+        retrofit = new Retrofit.Builder()
+                .baseUrl(getUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        hBankApi = retrofit.create(HBankApi.class);
+
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("ip_address", ip_address);
+        edit.putInt("port", port);
+        edit.apply();
     }
 
     public static Retrofit getRetrofit() {

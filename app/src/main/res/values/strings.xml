@@ -121,4 +121,10 @@
     <string name="month">month</string>
     <string name="year">year</string>
     <string name="connecting">connecting…</string>
+    <string name="title_activity_connection_settings">Connection Settings</string>
+    <string name="connection">Connection</string>
+    <string name="apply">Apply</string>
+    <string name="ip_address_hint">IP Address…</string>
+    <string name="port_hint">Port…</string>
+    <string name="changes_saved">Saved changes!</string>
 </resources>

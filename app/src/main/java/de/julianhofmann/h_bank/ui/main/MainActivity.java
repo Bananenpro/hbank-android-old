@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(RetrofitService.URL + "profile_picture")
+                    .url(RetrofitService.getUrl() + "profile_picture")
                     .post(requestBody)
                     .addHeader("Authorization", RetrofitService.getAuthorization())
                     .addHeader("Content-Type", "application/x-www-formurlencoded")

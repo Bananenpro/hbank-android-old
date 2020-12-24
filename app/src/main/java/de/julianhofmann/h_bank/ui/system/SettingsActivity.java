@@ -79,6 +79,11 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void connectionSettings(View v) {
+        Intent i = new Intent(this, ConnectionSettingsActivity.class);
+        startActivity(i);
+    }
+
     private void settings() {
         Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);

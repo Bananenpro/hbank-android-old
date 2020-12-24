@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 
+import de.julianhofmann.h_bank.ui.system.ConnectionSettingsActivity;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.RegisterModel;
@@ -88,9 +89,18 @@ public class RegisterActivity extends AppCompatActivity {
                 case R.id.options_check_for_updates:
                     update();
                     return true;
+                case R.id.options_connection_settings:
+                    gone = true;
+                    connectionSettings();
+                    return true;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void connectionSettings() {
+        Intent i = new Intent(this, ConnectionSettingsActivity.class);
+        startActivity(i);
     }
 
     private void serverInfo() {
