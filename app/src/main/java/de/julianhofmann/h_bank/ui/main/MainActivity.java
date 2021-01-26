@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
                 offline();
                 emptyLbl.setVisibility(View.VISIBLE);
-                emptyLbl.setText(R.string.offline);
+                emptyLbl.setText(R.string.cannot_reach_server);
             }
         });
     }
@@ -468,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
                     loadingLog = false;
                     if (logPage == 0) {
                         emptyLbl.setVisibility(View.VISIBLE);
-                        emptyLbl.setText(R.string.offline);
+                        emptyLbl.setText(R.string.cannot_reach_server);
                     }
                 }
             });
@@ -537,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setIcon(R.drawable.no_connection_icon);
         } else if (!offline) {
-            Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_SHORT).show();
         }
         offline = true;
     }

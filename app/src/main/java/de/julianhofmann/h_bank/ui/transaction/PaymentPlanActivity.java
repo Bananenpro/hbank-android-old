@@ -152,7 +152,7 @@ public class PaymentPlanActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Throwable t) {
                 emptyLbl.setVisibility(View.VISIBLE);
-                emptyLbl.setText(R.string.offline);
+                emptyLbl.setText(R.string.cannot_reach_server);
             }
         });
     }

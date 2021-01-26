@@ -127,4 +127,8 @@
     <string name="ip_address_hint">IP Address…</string>
     <string name="port_hint">Port…</string>
     <string name="changes_saved">Saved changes!</string>
+    <string name="cannot_reach_server">Cannot reach server!</string>
+    <string name="connection_established">Connection established!</string>
+    <string name="ip_address_lbl">IP-Address:</string>
+    <string name="port_lbl">Port:</string>
 </resources>

@@ -70,4 +70,7 @@ public interface HBankApi {
 
     @GET("info")
     Call<InfoModel> getInfo();
+
+    @GET("connect")
+    Call<Void> connect();
 }

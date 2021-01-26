@@ -61,7 +61,7 @@ public class UpdateService {
             public void onFailure(@NotNull Call<VersionModel> call, @NotNull Throwable t) {
                 if (!autoUpdate) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.update).setMessage(R.string.offline).setNeutralButton(context.getString(R.string.ok), null).show();
+                    builder.setTitle(R.string.update).setMessage(R.string.cannot_reach_server).setNeutralButton(context.getString(R.string.ok), null).show();
                 }
             }
         });

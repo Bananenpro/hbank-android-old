@@ -33,27 +33,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/developer_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/info_app_lbl" />
 
+
     <TextView
-        android:id="@+id/info_status_lbl"
+        android:id="@+id/info_ip_address_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/status_lbl"
+        android:layout_marginTop="8dp"
+        android:text="@string/ip_address_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_version_lbl"
         app:layout_constraintTop_toBottomOf="@+id/info_server_lbl" />
 
     <TextView
+        android:id="@+id/info_port_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/port_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_ip_address_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_ip_address_lbl" />
+
+    <TextView
+        android:id="@+id/info_status_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/status_lbl"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/info_port_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/info_port_lbl" />
+
+    <TextView
         android:id="@+id/info_payment_plans_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/payment_plans_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_status_lbl"
@@ -63,7 +84,7 @@
         android:id="@+id/info_backups_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/backups_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_payment_plans_lbl"
@@ -73,7 +94,7 @@
         android:id="@+id/info_cpu_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/cpu_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_backups_lbl"
@@ -83,7 +104,7 @@
         android:id="@+id/info_ram_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/ram_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_cpu_lbl"
@@ -93,7 +114,7 @@
         android:id="@+id/info_disk_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/disk_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_ram_lbl"
@@ -103,7 +124,7 @@
         android:id="@+id/info_temperature_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/temperature_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_disk_lbl"
@@ -119,6 +140,32 @@
         app:layout_constraintBottom_toBottomOf="@+id/info_developer_lbl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/info_developer_lbl" />
+
+    <TextView
+        android:id="@+id/info_ip_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_ip_address_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_ip_address_lbl"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/info_port"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/info_port_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/info_developer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/info_developer"
+        app:layout_constraintTop_toTopOf="@+id/info_port_lbl"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/info_status"
@@ -227,7 +274,7 @@
         android:id="@+id/info_version_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/version_lbl"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/info_developer_lbl"
@@ -238,7 +285,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/server_lbl"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"

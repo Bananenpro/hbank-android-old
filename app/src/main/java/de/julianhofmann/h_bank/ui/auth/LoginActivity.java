@@ -58,6 +58,12 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
 
         RetrofitService.init(sp);
+
+        if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
+            switchToConnectionSettingsAcitvity();
+            return;
+        }
+
         BalanceCache.init(sp);
 
         if (RetrofitService.isLoggedIn()) {
@@ -110,6 +116,12 @@ public class LoginActivity extends AppCompatActivity {
                 RetrofitService.logout();
             }
         }
+    }
+
+    private void switchToConnectionSettingsAcitvity() {
+        Intent i = new Intent(this, ConnectionSettingsActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -275,7 +287,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
-                        error_text.setText(getString(R.string.offline));
+                        error_text.setText(getString(R.string.cannot_reach_server));
                         loginButton.setEnabled(true);
                         registerButton.setEnabled(true);
                         loginButton.setText(getString(R.string.login_btn));

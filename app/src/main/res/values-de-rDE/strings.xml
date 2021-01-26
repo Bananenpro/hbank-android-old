@@ -126,4 +126,8 @@
     <string name="ip_address_hint">IP Adresse…</string>
     <string name="port_hint">Port…</string>
     <string name="changes_saved">Änderungen gespeichert!</string>
+    <string name="cannot_reach_server">Server kann nicht erreicht werden!</string>
+    <string name="connection_established">Verbindung hergestellt!</string>
+    <string name="ip_address_lbl">IP-Adresse</string>
+    <string name="port_lbl">Port:</string>
 </resources>

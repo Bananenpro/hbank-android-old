@@ -200,7 +200,7 @@ public class CreatePaymentPlanActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                                error.setText(R.string.offline);
+                                error.setText(R.string.cannot_reach_server);
                                 submit.setEnabled(true);
                                 submit.setText(R.string.create);
                                 gone = false;

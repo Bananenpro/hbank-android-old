@@ -1,6 +1,7 @@
 package de.julianhofmann.h_bank.ui.system;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,20 +12,28 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ConnectionSettingsActivity extends AppCompatActivity {
     private boolean gone = true;
+    private boolean wasEmpty = false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -36,7 +45,16 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
         EditText ip = findViewById(R.id.connection_ip_address);
         EditText port = findViewById(R.id.connection_port);
         ip.setText(RetrofitService.getIpAddress());
-        port.setText(""+RetrofitService.getPort());
+        port.setText("" + (RetrofitService.getPort() != -1 ? RetrofitService.getPort() : ""));
+
+        if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
+            wasEmpty = true;
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                actionBar.setHomeButtonEnabled(false);
+            }
+        }
     }
 
     public void apply(View v) {
@@ -44,13 +62,49 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
             EditText ip = findViewById(R.id.connection_ip_address);
             EditText port = findViewById(R.id.connection_port);
             TextView error = findViewById(R.id.connection_settings_error_lbl);
+            TextView password = findViewById(R.id.connection_password);
+            Button  apply = findViewById(R.id.apply_connection_settings);
             error.setText("");
             error.setTextColor(getColor(R.color.red));
-            if (ip.getText().length() > 0 && port.getText().length() > 0) {
-                RetrofitService.changeUrl(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
-                error.setTextColor(getColor(R.color.green));
-                error.setText(R.string.changes_saved);
-                new Handler().postDelayed(this::onSupportNavigateUp, 1000);
+            if (ip.getText().length() > 0 && port.getText().length() > 0 && password.getText().length() > 0) {
+                if (Integer.parseInt(port.getText().toString()) <= 0) {
+                    error.setText(R.string.cannot_reach_server);
+                    return;
+                }
+                String ipBefore = RetrofitService.getIpAddress();
+                int portBefore = RetrofitService.getPort();
+                String serverPasswordBefore = RetrofitService.getServerPassword();
+                RetrofitService.changeUrl(ip.getText().toString(), Integer.parseInt(port.getText().toString()), password.getText().toString());
+                Call<Void> call = RetrofitService.getHbankApi().connect();
+                Runnable navigateUp = this::onSupportNavigateUp;
+                apply.setEnabled(false);
+                apply.setText(R.string.connecting);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            error.setTextColor(getColor(R.color.green));
+                            error.setText(R.string.connection_established);
+                            if (!wasEmpty)
+                                new Handler().postDelayed(navigateUp, 2000);
+                            else
+                                switchToLoginActivity();
+                        } else if (response.code() == 403) {
+                            error.setText(R.string.wrong_password);
+                            RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
+                        }
+                        apply.setEnabled(true);
+                        apply.setText(R.string.apply);
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                        error.setText(R.string.cannot_reach_server);
+                        RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
+                        apply.setEnabled(true);
+                        apply.setText(R.string.apply);
+                    }
+                });
             } else {
                 error.setText(R.string.empty_fields);
             }
@@ -68,7 +122,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         if (RetrofitService.isLoggedIn())
             inflater.inflate(R.menu.options_menu, menu);
-        else
+        else if (RetrofitService.getRetrofit() != null && RetrofitService.getHbankApi() != null)
             inflater.inflate(R.menu.login_options_menu, menu);
         return true;
     }
@@ -136,6 +190,12 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
             UpdateService.update(this);
             gone = false;
         }
+    }
+
+    private void switchToLoginActivity() {
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finishAffinity();
     }
 
     private void switchToLoginActivity(String name) {

@@ -186,7 +186,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NotNull Call<RegisterResponseModel> call, @NotNull Throwable t) {
                             TextView text = findViewById(R.id.register_error_text);
-                            text.setText(getString(R.string.offline));
+                            text.setText(getString(R.string.cannot_reach_server));
 
                             registerButton.setEnabled(true);
                             registerButton.setText(getString(R.string.register_btn));

@@ -92,7 +92,7 @@ public class LogItemInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<LogModel> call, @NotNull Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
             }
         });
     }

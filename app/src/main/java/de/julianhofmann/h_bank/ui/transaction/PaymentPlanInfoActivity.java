@@ -192,7 +192,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<PaymentPlanModel> call, @NotNull Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -289,7 +289,7 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                            Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
                             button.setText(R.string.delete);
                             button.setEnabled(true);
                             gone = false;

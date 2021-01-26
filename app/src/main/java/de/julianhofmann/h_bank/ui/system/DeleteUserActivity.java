@@ -93,7 +93,7 @@ public class DeleteUserActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                                        error.setText(getString(R.string.offline));
+                                        error.setText(getString(R.string.cannot_reach_server));
                                         button.setEnabled(true);
                                         button.setText(getString(R.string.delete));
                                         gone = false;
@@ -109,7 +109,7 @@ public class DeleteUserActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
-                            error.setText(getString(R.string.offline));
+                            error.setText(getString(R.string.cannot_reach_server));
                             button.setEnabled(true);
                             button.setText(getString(R.string.delete));
                             gone = false;

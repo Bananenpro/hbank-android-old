@@ -4,14 +4,14 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "de.julianhofmann.h_bank.beta"
         minSdkVersion 29
         targetSdkVersion 30
-        versionCode 17
-        versionName "1.7"
+        versionCode 18
+        versionName "1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -49,10 +49,13 @@ public class InfoActivity extends AppCompatActivity {
         gone = false;
     }
 
+    @SuppressLint("SetTextI18n")
     public void loadInfo(View v) {
         if (!gone) {
             Button button = findViewById(R.id.info_refresh_btn);
             TextView version = findViewById(R.id.info_version);
+            TextView ipAddress = findViewById(R.id.info_ip_address);
+            TextView port = findViewById(R.id.info_port);
             TextView status = findViewById(R.id.info_status);
             TextView paymentPlans = findViewById(R.id.info_payment_plans);
             TextView backups = findViewById(R.id.info_backups);
@@ -62,6 +65,9 @@ public class InfoActivity extends AppCompatActivity {
             TextView temperature = findViewById(R.id.info_temperature);
 
             version.setText(BuildConfig.VERSION_NAME);
+
+            ipAddress.setText(RetrofitService.getIpAddress());
+            port.setText(Integer.toString(RetrofitService.getPort()));
 
             Call<InfoModel> call = RetrofitService.getHbankApi().getInfo();
 

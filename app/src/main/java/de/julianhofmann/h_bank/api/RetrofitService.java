@@ -2,15 +2,20 @@ package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
 
+import java.util.concurrent.TimeUnit;
+
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.SettingsService;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
     private static String ip;
     private static int port;
+    private static String serverPassword;
 
     private static String name = null;
     private static String token = null;
@@ -26,17 +31,23 @@ public class RetrofitService {
             sharedPreferences = sp;
         }
 
-        ip = sharedPreferences.getString("ip_address", "192.168.0.200");
-        port = sharedPreferences.getInt("port", 8080);
+        ip = sharedPreferences.getString("ip_address", null);
+        port = sharedPreferences.getInt("port", -1);
+        serverPassword = sharedPreferences.getString("server_password", null);
 
-        if (retrofit == null) {
+        if (ip != null && port != -1 && serverPassword != null && retrofit == null) {
+            OkHttpClient client = new OkHttpClient().newBuilder().readTimeout(10, TimeUnit.SECONDS).connectTimeout(3, TimeUnit.SECONDS).addInterceptor(chain -> {
+                Request request = chain.request().newBuilder().addHeader("Password", serverPassword).build();
+                return chain.proceed(request);
+            }).build();
             retrofit = new Retrofit.Builder()
                     .baseUrl(getUrl())
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
 
-        if (hBankApi == null) {
+        if (retrofit != null && hBankApi == null) {
             hBankApi = retrofit.create(HBankApi.class);
         }
     }
@@ -98,19 +109,17 @@ public class RetrofitService {
         return port;
     }
 
-    public static void changeUrl(String ip_address, int port) {
-        RetrofitService.ip = ip_address;
-        RetrofitService.port = port;
-        retrofit = new Retrofit.Builder()
-                .baseUrl(getUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        hBankApi = retrofit.create(HBankApi.class);
-
+    public static void changeUrl(String ip_address, int port, String serverPassword) {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString("ip_address", ip_address);
         edit.putInt("port", port);
+        edit.putString("server_password", serverPassword);
         edit.apply();
+
+        retrofit = null;
+        hBankApi = null;
+
+        init(sharedPreferences);
     }
 
     public static Retrofit getRetrofit() {
@@ -127,5 +136,9 @@ public class RetrofitService {
 
     public static String getToken() {
         return token;
+    }
+
+    public static String getServerPassword() {
+        return serverPassword;
     }
 }

@@ -139,7 +139,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                Toast.makeText(UserInfoActivity.this, getString(R.string.offline), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
             }
         });
 
