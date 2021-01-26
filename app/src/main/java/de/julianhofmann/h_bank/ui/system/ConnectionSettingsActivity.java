@@ -77,6 +77,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                 RetrofitService.changeUrl(ip.getText().toString().trim(), Integer.parseInt(port.getText().toString().trim()), password.getText().toString().trim());
                 Call<Void> call = RetrofitService.getHbankApi().connect();
                 Runnable navigateUp = this::onSupportNavigateUp;
+                Runnable switchToLoginActivity = this::switchToLoginActivity;
                 apply.setEnabled(false);
                 apply.setText(R.string.connecting);
                 call.enqueue(new Callback<Void>() {
@@ -86,9 +87,9 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                             error.setTextColor(getColor(R.color.green));
                             error.setText(R.string.connection_established);
                             if (!wasEmpty)
-                                new Handler().postDelayed(navigateUp, 2000);
+                                new Handler().postDelayed(navigateUp, 1000);
                             else
-                                switchToLoginActivity();
+                                new Handler().postDelayed(switchToLoginActivity, 1000);
                         } else if (response.code() == 403) {
                             error.setText(R.string.wrong_password);
                             RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
