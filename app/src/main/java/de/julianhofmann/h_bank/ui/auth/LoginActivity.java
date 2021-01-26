@@ -244,13 +244,13 @@ public class LoginActivity extends AppCompatActivity {
             TextView error_text = findViewById(R.id.login_error_text);
             error_text.setText("");
 
-            if (name.getText().length() > 0 && password.getText().length() > 0) {
+            if (name.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
 
                 SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
                 if (SettingsService.getOfflineLogin()) {
-                    String token = PasswordCache.checkPassword(name.getText().toString(), password.getText().toString(), sharedPreferences);
+                    String token = PasswordCache.checkPassword(name.getText().toString().trim(), password.getText().toString().trim(), sharedPreferences);
                     if (token != null) {
-                        RetrofitService.login(name.getText().toString(), token);
+                        RetrofitService.login(name.getText().toString().trim(), token);
                         switchToMainActivity();
                         return;
                     }
@@ -258,7 +258,7 @@ public class LoginActivity extends AppCompatActivity {
                     RetrofitService.logout();
                 }
 
-                LoginModel model = new LoginModel(name.getText().toString(), password.getText().toString());
+                LoginModel model = new LoginModel(name.getText().toString().trim(), password.getText().toString().trim());
 
                 Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(model);
 
@@ -271,9 +271,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            RetrofitService.login(name.getText().toString(), response.body().getToken());
+                            RetrofitService.login(name.getText().toString().trim(), response.body().getToken().trim());
 
-                            PasswordCache.storePassword(password.getText().toString(), sharedPreferences);
+                            PasswordCache.storePassword(password.getText().toString().trim(), sharedPreferences);
 
                             switchToMainActivity();
                         } else {

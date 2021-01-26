@@ -66,7 +66,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
             Button  apply = findViewById(R.id.apply_connection_settings);
             error.setText("");
             error.setTextColor(getColor(R.color.red));
-            if (ip.getText().length() > 0 && port.getText().length() > 0 && password.getText().length() > 0) {
+            if (ip.getText().toString().trim().length() > 0 && port.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
                 if (Integer.parseInt(port.getText().toString()) <= 0) {
                     error.setText(R.string.cannot_reach_server);
                     return;
@@ -74,7 +74,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                 String ipBefore = RetrofitService.getIpAddress();
                 int portBefore = RetrofitService.getPort();
                 String serverPasswordBefore = RetrofitService.getServerPassword();
-                RetrofitService.changeUrl(ip.getText().toString(), Integer.parseInt(port.getText().toString()), password.getText().toString());
+                RetrofitService.changeUrl(ip.getText().toString().trim(), Integer.parseInt(port.getText().toString().trim()), password.getText().toString().trim());
                 Call<Void> call = RetrofitService.getHbankApi().connect();
                 Runnable navigateUp = this::onSupportNavigateUp;
                 apply.setEnabled(false);

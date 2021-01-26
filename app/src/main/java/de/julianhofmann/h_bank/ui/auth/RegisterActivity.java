@@ -139,9 +139,9 @@ public class RegisterActivity extends AppCompatActivity {
             TextView error_text = findViewById(R.id.register_error_text);
             error_text.setText("");
 
-            if (name.getText().length() > 0 && password.getText().length() > 0) {
+            if (name.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
                 if (password.getText().toString().equals(repeatPassword.getText().toString())) {
-                    RegisterModel model = new RegisterModel(name.getText().toString(), password.getText().toString(), switchCompat.isChecked());
+                    RegisterModel model = new RegisterModel(name.getText().toString().trim(), password.getText().toString().trim(), switchCompat.isChecked());
 
                     Call<RegisterResponseModel> call = RetrofitService.getHbankApi().register(model);
 

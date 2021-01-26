@@ -58,7 +58,7 @@ public class DeleteUserActivity extends AppCompatActivity {
             error.setText("");
 
             EditText password = findViewById(R.id.delete_password);
-            if (password.getText().length() == 0) {
+            if (password.getText().toString().trim().length() == 0) {
                 error.setText(R.string.empty_fields);
                 return;
             }
@@ -66,7 +66,7 @@ public class DeleteUserActivity extends AppCompatActivity {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 if (which == dialog.BUTTON_POSITIVE) {
 
-                    Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(new LoginModel(RetrofitService.getName(), password.getText().toString()));
+                    Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(new LoginModel(RetrofitService.getName(), password.getText().toString().trim()));
                     button.setEnabled(false);
                     button.setText(R.string.loading);
                     gone = true;
