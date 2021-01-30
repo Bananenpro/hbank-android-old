@@ -10,6 +10,7 @@ import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.api.models.PaymentPlanModel;
 import de.julianhofmann.h_bank.api.models.RegisterModel;
 import de.julianhofmann.h_bank.api.models.RegisterResponseModel;
+import de.julianhofmann.h_bank.api.models.SizeModel;
 import de.julianhofmann.h_bank.api.models.TransferMoneyModel;
 import de.julianhofmann.h_bank.api.models.UserModel;
 import de.julianhofmann.h_bank.api.models.VersionModel;
@@ -73,4 +74,7 @@ public interface HBankApi {
 
     @GET("connect")
     Call<Void> connect();
+
+    @GET("log-size")
+    Call<SizeModel> getLogSize(@Header("Authorization") String authorization);
 }

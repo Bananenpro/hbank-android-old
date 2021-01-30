@@ -1,6 +1,8 @@
 package de.julianhofmann.h_bank.ui.main.log;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.api.RetrofitService;
+import de.julianhofmann.h_bank.api.models.SizeModel;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LogFragment extends Fragment {
 
+    private final Handler refreshLogHandler = new Handler();
+    private Runnable refreshLogRunnable;
     private boolean paused = false;
+    private int logSize = -1;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,21 +56,70 @@ public class LogFragment extends Fragment {
                         activity.loadLog();
                     }
                 });
+
+        refreshLogRunnable = () -> {
+            Call<SizeModel> call = RetrofitService.getHbankApi().getLogSize(RetrofitService.getAuthorization());
+            call.enqueue(new Callback<SizeModel>() {
+                @Override
+                public void onResponse(@NotNull Call<SizeModel> call, @NotNull Response<SizeModel> response) {
+                    activity.online();
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && response.body().getSize() != logSize) {
+                            logSize = response.body().getSize();
+                            MainActivity activity = (MainActivity) requireActivity();
+                            activity.resetLogPages();
+                            activity.loadLog();
+                        }
+                    }
+                    refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
+                    activity.offline();
+                    refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+                }
+            });
+        };
+        refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        refreshLogHandler.removeCallbacks(refreshLogRunnable);
         paused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        MainActivity activity = (MainActivity) requireActivity();
+
+        Call<SizeModel> call = RetrofitService.getHbankApi().getLogSize(RetrofitService.getAuthorization());
+        call.enqueue(new Callback<SizeModel>() {
+            @Override
+            public void onResponse(@NotNull Call<SizeModel> call, @NotNull Response<SizeModel> response) {
+                activity.online();
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        logSize = response.body().getSize();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
+                activity.offline();
+            }
+        });
+
         if (paused) {
-            MainActivity activity = (MainActivity) requireActivity();
             activity.resetLogPages();
             activity.loadLog();
+
+            refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
             paused = false;
         }
     }

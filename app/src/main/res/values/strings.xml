@@ -12,7 +12,6 @@
     <string name="password_length_error_part_2">characters long!</string>
     <string name="password_length_error_part_1">The password must be at least</string>
     <string name="name_too_short">The name is too short!</string>
-    <string name="offline">You are offline!</string>
     <string name="passwords_dont_match">The passwords don\'t match!</string>
     <string name="empty_fields">Please fill out all fields!</string>
     <string name="wrong_credentials">Wrong password or username!</string>
@@ -65,7 +64,6 @@
     <string name="update">Update</string>
     <string name="downloading">Downloading…</string>
     <string name="no_money">No Money</string>
-    <string name="online">You are online!</string>
     <string name="title_activity_my_payment_plans">My Payment Plans</string>
     <string name="no_other_users">There are no other users.</string>
     <string name="empty_log">The log is empty.</string>

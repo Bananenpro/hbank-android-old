@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,9 +40,13 @@ import retrofit2.Response;
 
 public class UserInfoActivity extends AppCompatActivity {
 
+    private final Handler refreshBalanceHandler = new Handler();
+    private Runnable refreshBalanceRunnable;
     private String name;
     private boolean paused = false;
     private boolean gone = true;
+    private boolean balanceAccess = true;
+    private boolean offlineToast = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,14 @@ public class UserInfoActivity extends AppCompatActivity {
         }
 
         loadUserInfo();
+        refreshBalanceRunnable = new Runnable() {
+            @Override
+            public void run() {
+                refreshBalance();
+                refreshBalanceHandler.postDelayed(this, 3000);
+            }
+        };
+        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
     }
 
     @Override
@@ -127,23 +140,69 @@ public class UserInfoActivity extends AppCompatActivity {
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                if (offlineToast) {
+                    Toast.makeText(UserInfoActivity.this, getString(R.string.connection_established), Toast.LENGTH_SHORT).show();
+                    offlineToast = false;
+                }
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
                         balance.setText(newBalance);
                         balance.setVisibility(View.VISIBLE);
                         BalanceCache.update(name, response.body().getBalance());
+                    } else {
+                        balanceAccess = false;
                     }
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
+                if (!offlineToast) {
+                    Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
+                    offlineToast = true;
+                }
             }
         });
 
         ImageUtils.loadProfilePicture(name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+    }
+
+    public void refreshBalance() {
+        if (balanceAccess && !gone) {
+            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
+            TextView balance = findViewById(R.id.user_balance_lbl);
+
+            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
+            balance.setText(newBalance);
+
+            call.enqueue(new Callback<UserModel>() {
+                @Override
+                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                    if (offlineToast) {
+                        Toast.makeText(UserInfoActivity.this, getString(R.string.connection_established), Toast.LENGTH_SHORT).show();
+                        offlineToast = false;
+                    }
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && response.body().getBalance() != null) {
+                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
+                            balance.setText(newBalance);
+                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
+                        } else {
+                            balanceAccess = false;
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                    if (!offlineToast) {
+                        Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
+                        offlineToast = true;
+                    }
+                }
+            });
+        }
     }
 
     public void transferMoney(View v) {
@@ -194,6 +253,7 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
         paused = true;
     }
 
@@ -202,6 +262,7 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onResume();
         if (paused) {
             loadUserInfo();
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
             paused = false;
         }
         gone = false;

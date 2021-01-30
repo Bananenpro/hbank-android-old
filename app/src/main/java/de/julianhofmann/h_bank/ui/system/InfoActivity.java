@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.jar.JarEntry;
 
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
@@ -31,7 +34,10 @@ import retrofit2.Response;
 
 public class InfoActivity extends AppCompatActivity {
 
+    private final Handler refreshInfoHandler = new Handler();
+    private Runnable refreshInfoRunnable;
     private boolean gone = true;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +46,38 @@ public class InfoActivity extends AppCompatActivity {
 
         gone = false;
 
-        loadInfo(null);
+        loadInfo();
+
+        refreshInfoRunnable = new Runnable() {
+            @Override
+            public void run() {
+                refreshInfo();
+                refreshInfoHandler.postDelayed(this, 5000);
+            }
+        };
+        refreshInfoHandler.postDelayed(refreshInfoRunnable, 5000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (paused) {
+            refreshInfoHandler.postDelayed(refreshInfoRunnable, 5000);
+        }
         gone = false;
+        paused = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        refreshInfoHandler.removeCallbacks(refreshInfoRunnable);
+        paused = false;
     }
 
     @SuppressLint("SetTextI18n")
-    public void loadInfo(View v) {
+    public void loadInfo() {
         if (!gone) {
-            Button button = findViewById(R.id.info_refresh_btn);
             TextView version = findViewById(R.id.info_version);
             TextView ipAddress = findViewById(R.id.info_ip_address);
             TextView port = findViewById(R.id.info_port);
@@ -71,8 +96,6 @@ public class InfoActivity extends AppCompatActivity {
 
             Call<InfoModel> call = RetrofitService.getHbankApi().getInfo();
 
-            button.setEnabled(false);
-            button.setText(R.string.loading);
             gone = true;
 
             status.setText(R.string.connecting);
@@ -123,8 +146,6 @@ public class InfoActivity extends AppCompatActivity {
                         disk.setText(R.string.dash);
                         temperature.setText(R.string.dash);
                     }
-                    button.setEnabled(true);
-                    button.setText(R.string.update_btn);
                     gone = false;
                 }
 
@@ -140,9 +161,83 @@ public class InfoActivity extends AppCompatActivity {
                     ram.setText(R.string.dash);
                     disk.setText(R.string.dash);
                     temperature.setText(R.string.dash);
-                    button.setEnabled(true);
-                    button.setText(R.string.update_btn);
                     gone = false;
+                }
+            });
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void refreshInfo() {
+        if (!gone) {
+            TextView version = findViewById(R.id.info_version);
+            TextView ipAddress = findViewById(R.id.info_ip_address);
+            TextView port = findViewById(R.id.info_port);
+            TextView status = findViewById(R.id.info_status);
+            TextView paymentPlans = findViewById(R.id.info_payment_plans);
+            TextView backups = findViewById(R.id.info_backups);
+            TextView cpu = findViewById(R.id.info_cpu);
+            TextView ram = findViewById(R.id.info_ram);
+            TextView disk = findViewById(R.id.info_disk);
+            TextView temperature = findViewById(R.id.info_temperature);
+
+            version.setText(BuildConfig.VERSION_NAME);
+
+            ipAddress.setText(RetrofitService.getIpAddress());
+            port.setText(Integer.toString(RetrofitService.getPort()));
+
+            Call<InfoModel> call = RetrofitService.getHbankApi().getInfo();
+            call.enqueue(new Callback<InfoModel>() {
+                @Override
+                public void onResponse(@NotNull Call<InfoModel> call, @NotNull Response<InfoModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        status.setTextColor(getColor(R.color.green));
+                        status.setText(R.string.connected);
+                        if (response.body().isPaymentPlans()) {
+                            paymentPlans.setText(R.string.active);
+                            paymentPlans.setTextColor(getColor(R.color.green));
+                        } else {
+                            paymentPlans.setText(R.string.inactive);
+                            paymentPlans.setTextColor(getColor(R.color.red));
+                        }
+                        if (response.body().isBackups()) {
+                            backups.setText(R.string.active);
+                            backups.setTextColor(getColor(R.color.green));
+                        } else {
+                            backups.setText(R.string.inactive);
+                            backups.setTextColor(getColor(R.color.red));
+                        }
+
+                        cpu.setText(response.body().getCpu());
+                        ram.setText(response.body().getRam());
+                        disk.setText(response.body().getDisk());
+                        temperature.setText(response.body().getTemperature());
+                    } else {
+                        status.setTextColor(getColor(R.color.red));
+                        status.setText(R.string.error);
+                        paymentPlans.setText(R.string.dash);
+                        paymentPlans.setTextColor(getColor(R.color.foreground));
+                        backups.setText(R.string.dash);
+                        backups.setTextColor(getColor(R.color.foreground));
+                        cpu.setText(R.string.dash);
+                        ram.setText(R.string.dash);
+                        disk.setText(R.string.dash);
+                        temperature.setText(R.string.dash);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<InfoModel> call, @NotNull Throwable t) {
+                    status.setTextColor(getColor(R.color.red));
+                    status.setText(R.string.not_connected);
+                    paymentPlans.setText(R.string.dash);
+                    paymentPlans.setTextColor(getColor(R.color.foreground));
+                    backups.setText(R.string.dash);
+                    backups.setTextColor(getColor(R.color.foreground));
+                    cpu.setText(R.string.dash);
+                    ram.setText(R.string.dash);
+                    disk.setText(R.string.dash);
+                    temperature.setText(R.string.dash);
                 }
             });
         }

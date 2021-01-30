@@ -13,7 +13,6 @@
     <string name="password_length_error_part_1">Das Passwort muss mindestens</string>
     <string name="password_length_error_part_2">Zeichen lang sein!</string>
     <string name="name_too_short">Der Name ist zu kurz!</string>
-    <string name="offline">Keine Internetverbindung!</string>
     <string name="passwords_dont_match">Die Passwörter stimmen nicht überein!</string>
     <string name="empty_fields">Bitte fülle alle Felder aus!</string>
     <string name="wrong_credentials">Falsches Passwort oder Benutzername!</string>
@@ -66,7 +65,6 @@
     <string name="update">Aktualisierung</string>
     <string name="downloading">Herunterladen…</string>
     <string name="no_money">Kein Geld</string>
-    <string name="online">Verbindung wiederhergestellt!</string>
     <string name="title_activity_my_payment_plans">Meine Zahlungspläne</string>
     <string name="no_other_users">Es gibt keine anderen Benutzer.</string>
     <string name="empty_log">Der Verlauf ist leer.</string>

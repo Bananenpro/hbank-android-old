@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -254,38 +255,11 @@ public class MainActivity extends AppCompatActivity {
         finishAffinity();
     }
 
-    public void loadUserInfo(View v) {
-        if (!spinning && !gone) {
-
+    public void loadUserInfo() {
+        if (!gone) {
             TextView username = findViewById(R.id.user_name_lbl);
             username.setText(RetrofitService.getName());
 
-            FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
-            AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
-            if (v != null) {
-                spinning = true;
-                ViewCompat.animate(refreshBtn).
-                        rotation(720).
-                        withLayer().
-                        setDuration(1125).
-                        setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
-                    @Override
-                    public void onAnimationStart(View view) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(View view) {
-                        view.setRotation(0);
-                        spinning = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(View view) {
-                        view.setRotation(0);
-                        spinning = false;
-                    }
-                }).start();
-            }
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
 
@@ -317,6 +291,37 @@ public class MainActivity extends AppCompatActivity {
 
 
             ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+        }
+    }
+
+    public void refreshBalance() {
+        if (!gone) {
+            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
+            TextView balance = findViewById(R.id.user_balance_lbl);
+
+            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
+            balance.setText(newBalance);
+
+            call.enqueue(new Callback<UserModel>() {
+                @Override
+                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                    online();
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && response.body().getBalance() != null) {
+                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
+                            balance.setText(newBalance);
+                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
+                        } else {
+                            logout();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                    offline();
+                }
+            });
         }
     }
 
@@ -522,7 +527,7 @@ public class MainActivity extends AppCompatActivity {
         gone = false;
     }
 
-    private void offline() {
+    public void offline() {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.INVISIBLE);
@@ -542,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
         offline = true;
     }
 
-    private void online() {
+    public void online() {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
@@ -555,7 +560,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(false);
             getSupportActionBar().setIcon(null);
         } else if (offline) {
-            Toast.makeText(getApplicationContext(), R.string.online, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.connection_established, Toast.LENGTH_SHORT).show();
         }
         offline = false;
     }
