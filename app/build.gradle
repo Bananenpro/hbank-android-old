@@ -7,11 +7,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "de.julianhofmann.h_bank"
+        applicationId "de.julianhofmann.h_bank.beta"
         minSdkVersion 29
         targetSdkVersion 30
-        versionCode 18
-        versionName "1.8"
+        versionCode 19
+        versionName "1.9 Beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

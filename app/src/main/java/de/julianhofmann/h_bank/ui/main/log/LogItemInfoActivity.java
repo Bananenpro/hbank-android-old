@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import de.julianhofmann.h_bank.api.models.LogModel;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
+import de.julianhofmann.h_bank.ui.transaction.PaymentPlanInfoActivity;
 import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +36,7 @@ import retrofit2.Response;
 public class LogItemInfoActivity extends AppCompatActivity {
 
     private boolean gone = true;
+    private int paymentPlanId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class LogItemInfoActivity extends AppCompatActivity {
         TextView time = findViewById(R.id.log_item_time_lbl);
         TextView user = findViewById(R.id.log_item_next_lbl);
         TextView userLbl = findViewById(R.id.log_item_next_lbl_lbl);
+
+        Button gotoPaymentPlan = findViewById(R.id.goto_payment_plan_btn);
 
         Call<LogModel> call = RetrofitService.getHbankApi().getLogItem(id, RetrofitService.getAuthorization());
         call.enqueue(new Callback<LogModel>() {
@@ -83,6 +89,9 @@ public class LogItemInfoActivity extends AppCompatActivity {
                     }
                     if (user != null)
                         user.setText(response.body().getUsername());
+
+                    gotoPaymentPlan.setVisibility(response.body().isPaymentPlan() ? Button.VISIBLE : Button.GONE);
+                    paymentPlanId = response.body().getPaymentPlanId();
                 } else if (response.code() == 403) {
                     logout();
                 } else {
@@ -133,6 +142,14 @@ public class LogItemInfoActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void gotoPaymentPlan(View v) {
+        if (paymentPlanId != -1) {
+            Intent i = new Intent(this, PaymentPlanInfoActivity.class);
+            i.putExtra("id", paymentPlanId);
+            startActivity(i);
+        }
     }
 
     private void settings() {

@@ -2,6 +2,8 @@ package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.concurrent.TimeUnit;
 
 import de.julianhofmann.h_bank.util.BalanceCache;
@@ -71,6 +73,23 @@ public class RetrofitService {
     public static void clearPreferences() {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove("token");
+        edit.apply();
+
+        PasswordCache.clearPassword(sharedPreferences);
+    }
+
+    public static void reset() {
+        name = null;
+        token = null;
+
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.clear();
+
+        edit.putString("ip_address", ip);
+        edit.putInt("port", port);
+        edit.putString("server_password", serverPassword);
+
         edit.apply();
 
         PasswordCache.clearPassword(sharedPreferences);

@@ -184,6 +184,8 @@ public class PaymentPlanInfoActivity extends AppCompatActivity {
                         delete.setVisibility(Button.VISIBLE);
                         if (amount != null)
                             amount.setTextColor(getColor(R.color.red));
+                    } else {
+                        delete.setVisibility(Button.GONE);
                     }
                 } else if (response.code() == 403) {
                     logout();

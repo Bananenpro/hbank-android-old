@@ -33,7 +33,6 @@ import retrofit2.Response;
 
 public class ConnectionSettingsActivity extends AppCompatActivity {
     private boolean gone = true;
-    private boolean wasEmpty = false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -48,7 +47,6 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
         port.setText("" + (RetrofitService.getPort() != -1 ? RetrofitService.getPort() : ""));
 
         if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
-            wasEmpty = true;
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(false);
@@ -86,10 +84,8 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             error.setTextColor(getColor(R.color.green));
                             error.setText(R.string.connection_established);
-                            if (!wasEmpty)
-                                new Handler().postDelayed(navigateUp, 1000);
-                            else
-                                new Handler().postDelayed(switchToLoginActivity, 1000);
+                            RetrofitService.reset();
+                            new Handler().postDelayed(switchToLoginActivity, 1000);
                         } else if (response.code() == 403) {
                             error.setText(R.string.wrong_password);
                             RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);

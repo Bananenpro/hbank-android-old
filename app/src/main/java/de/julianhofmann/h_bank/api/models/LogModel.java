@@ -10,6 +10,10 @@ public class LogModel {
     private String newBalance;
     private String date;
     private String description;
+    @SerializedName("is_payment_plan")
+    private boolean isPaymentPlan;
+    @SerializedName("payment_plan_id")
+    private Integer paymentPlanId;
 
     public int getId() {
         return id;
@@ -35,4 +39,11 @@ public class LogModel {
         return description;
     }
 
+    public boolean isPaymentPlan() {
+        return isPaymentPlan;
+    }
+
+    public Integer getPaymentPlanId() {
+        return paymentPlanId;
+    }
 }

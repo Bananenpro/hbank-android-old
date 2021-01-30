@@ -131,4 +131,5 @@
     <string name="connection_established">Connection established!</string>
     <string name="ip_address_lbl">IP-Address:</string>
     <string name="port_lbl">Port:</string>
+    <string name="payment_plan">Payment Plan</string>
 </resources>

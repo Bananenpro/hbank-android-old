@@ -159,4 +159,16 @@
             app:layout_constraintStart_toEndOf="@+id/log_item_next_lbl_lbl"
             app:layout_constraintTop_toTopOf="@+id/log_item_next_lbl_lbl" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/goto_payment_plan_btn"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:onClick="gotoPaymentPlan"
+        android:text="@string/payment_plan"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
