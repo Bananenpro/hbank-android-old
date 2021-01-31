@@ -299,9 +299,6 @@ public class MainActivity extends AppCompatActivity {
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
 
-            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
-            balance.setText(newBalance);
-
             call.enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {

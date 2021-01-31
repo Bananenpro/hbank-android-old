@@ -170,11 +170,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
     public void refreshBalance() {
         if (balanceAccess && !gone) {
-            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
+            Call<UserModel> call = RetrofitService.getHbankApi().getUser(name, RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
-
-            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
-            balance.setText(newBalance);
 
             call.enqueue(new Callback<UserModel>() {
                 @Override
@@ -187,7 +184,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         if (response.body() != null && response.body().getBalance() != null) {
                             String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
                             balance.setText(newBalance);
-                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
+                            BalanceCache.update(name, response.body().getBalance());
                         } else {
                             balanceAccess = false;
                         }
