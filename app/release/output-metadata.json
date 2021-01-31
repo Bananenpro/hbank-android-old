@@ -4,14 +4,14 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "de.julianhofmann.h_bank",
+  "applicationId": "de.julianhofmann.h_bank.beta",
   "variantName": "processReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 18,
-      "versionName": "1.8",
+      "versionCode": 19,
+      "versionName": "1.9",
       "outputFile": "app-release.apk"
     }
   ]

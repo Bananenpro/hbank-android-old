@@ -51,6 +51,8 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(false);
                 actionBar.setHomeButtonEnabled(false);
+                Button apply = findViewById(R.id.apply_connection_settings);
+                apply.setText(R.string.connect);
             }
         }
     }
