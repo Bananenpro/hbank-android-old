@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "de.julianhofmann.h_bank.beta",
+  "applicationId": "de.julianhofmann.h_bank",
   "variantName": "processReleaseResources",
   "elements": [
     {

@@ -51,9 +51,9 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(false);
                 actionBar.setHomeButtonEnabled(false);
-                Button apply = findViewById(R.id.apply_connection_settings);
-                apply.setText(R.string.connect);
             }
+            Button apply = findViewById(R.id.apply_connection_settings);
+            apply.setText(R.string.connect);
         }
     }
 
@@ -93,7 +93,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                             RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
                         }
                         apply.setEnabled(true);
-                        apply.setText(R.string.apply);
+                        apply.setText(RetrofitService.getRetrofit() != null && RetrofitService.getHbankApi() != null ? R.string.apply : R.string.connect);
                     }
 
                     @Override
@@ -101,7 +101,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                         error.setText(R.string.cannot_reach_server);
                         RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
                         apply.setEnabled(true);
-                        apply.setText(R.string.apply);
+                        apply.setText(RetrofitService.getRetrofit() != null && RetrofitService.getHbankApi() != null ? R.string.apply : R.string.connect);
                     }
                 });
             } else {
