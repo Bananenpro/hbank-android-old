@@ -113,6 +113,13 @@
         <item>months</item>
         <item>years</item>
     </string-array>
+
+    <string-array name="protocols">
+        <item>http</item>
+        <item>https</item>
+    </string-array>
+
+
     <string name="date_lbl">Date:</string>
     <string name="day">day</string>
     <string name="week">week</string>
@@ -131,4 +138,6 @@
     <string name="port_lbl">Port:</string>
     <string name="payment_plan">Payment Plan</string>
     <string name="connect">connect</string>
+    <string name="protocol">Protocol:</string>
+    <string name="wrong_protocol">Wrong protocol!</string>
 </resources>

@@ -17,11 +17,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -43,6 +47,15 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
 
         EditText ip = findViewById(R.id.connection_ip_address);
         EditText port = findViewById(R.id.connection_port);
+        Spinner protocol = findViewById(R.id.protocol_dropdown);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.protocols, R.layout.support_simple_spinner_dropdown_item);
+        protocol.setAdapter(adapter);
+
+        if (RetrofitService.getProtocol() != null) {
+            protocol.setSelection(RetrofitService.getProtocol().equals("http") ? 0 : 1);
+        }
+
         ip.setText(RetrofitService.getIpAddress());
         port.setText("" + (RetrofitService.getPort() != -1 ? RetrofitService.getPort() : ""));
 
@@ -59,6 +72,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
 
     public void apply(View v) {
         if (!gone) {
+            Spinner protocol = findViewById(R.id.protocol_dropdown);
             EditText ip = findViewById(R.id.connection_ip_address);
             EditText port = findViewById(R.id.connection_port);
             TextView error = findViewById(R.id.connection_settings_error_lbl);
@@ -71,10 +85,11 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                     error.setText(R.string.cannot_reach_server);
                     return;
                 }
+                String protocolBefore = RetrofitService.getProtocol();
                 String ipBefore = RetrofitService.getIpAddress();
                 int portBefore = RetrofitService.getPort();
                 String serverPasswordBefore = RetrofitService.getServerPassword();
-                RetrofitService.changeUrl(ip.getText().toString().trim(), Integer.parseInt(port.getText().toString().trim()), password.getText().toString().trim());
+                RetrofitService.changeUrl(protocol.getSelectedItem().toString(), ip.getText().toString().trim(), Integer.parseInt(port.getText().toString().trim()), password.getText().toString().trim());
                 Call<Void> call = RetrofitService.getHbankApi().connect();
                 Runnable navigateUp = this::onSupportNavigateUp;
                 Runnable switchToLoginActivity = this::switchToLoginActivity;
@@ -90,7 +105,10 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                             new Handler().postDelayed(switchToLoginActivity, 1000);
                         } else if (response.code() == 403) {
                             error.setText(R.string.wrong_password);
-                            RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
+                            RetrofitService.changeUrl(protocolBefore, ipBefore, portBefore, serverPasswordBefore);
+                        } else if (response.code() == 400) {
+                            error.setText(R.string.wrong_protocol);
+                            RetrofitService.changeUrl(protocolBefore, ipBefore, portBefore, serverPasswordBefore);
                         }
                         apply.setEnabled(true);
                         apply.setText(RetrofitService.getRetrofit() != null && RetrofitService.getHbankApi() != null ? R.string.apply : R.string.connect);
@@ -99,7 +117,7 @@ public class ConnectionSettingsActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
                         error.setText(R.string.cannot_reach_server);
-                        RetrofitService.changeUrl(ipBefore, portBefore, serverPasswordBefore);
+                        RetrofitService.changeUrl(protocolBefore, ipBefore, portBefore, serverPasswordBefore);
                         apply.setEnabled(true);
                         apply.setText(RetrofitService.getRetrofit() != null && RetrofitService.getHbankApi() != null ? R.string.apply : R.string.connect);
                     }

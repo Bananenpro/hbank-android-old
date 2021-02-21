@@ -2,8 +2,6 @@ package de.julianhofmann.h_bank.api;
 
 import android.content.SharedPreferences;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.concurrent.TimeUnit;
 
 import de.julianhofmann.h_bank.util.BalanceCache;
@@ -17,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
     private static String ip;
     private static int port;
+    private static String protocol;
     private static String serverPassword;
 
     private static String name = null;
@@ -33,6 +32,7 @@ public class RetrofitService {
             sharedPreferences = sp;
         }
 
+        protocol = sharedPreferences.getString("protocol", null);
         ip = sharedPreferences.getString("ip_address", null);
         port = sharedPreferences.getInt("port", -1);
         serverPassword = sharedPreferences.getString("server_password", null);
@@ -86,6 +86,7 @@ public class RetrofitService {
 
         edit.clear();
 
+        edit.putString("protocol", protocol);
         edit.putString("ip_address", ip);
         edit.putInt("port", port);
         edit.putString("server_password", serverPassword);
@@ -117,19 +118,25 @@ public class RetrofitService {
     }
 
     public static String getUrl() {
-        return "http://"+ip+":"+port+"/";
+        return protocol + "://"+ip+":"+port+"/";
     }
 
     public static String getIpAddress() {
         return ip;
     }
 
+    public static String getProtocol() {
+        return protocol;
+    }
+
     public static int getPort() {
         return port;
     }
 
-    public static void changeUrl(String ip_address, int port, String serverPassword) {
+    public static void changeUrl(String protocol, String ip_address, int port, String serverPassword) {
         SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString("protocol", protocol);
         edit.putString("ip_address", ip_address);
         edit.putInt("port", port);
         edit.putString("server_password", serverPassword);
