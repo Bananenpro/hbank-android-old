@@ -73,10 +73,10 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 refreshBalance();
-                refreshBalanceHandler.postDelayed(this, 3000);
+                refreshBalanceHandler.postDelayed(this, 2000);
             }
         };
-        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
+        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onResume();
         if (paused) {
             loadUserInfo();
-            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
             paused = false;
         }
         gone = false;

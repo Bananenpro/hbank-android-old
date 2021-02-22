@@ -71,17 +71,17 @@ public class LogFragment extends Fragment {
                             activity.loadLog();
                         }
                     }
-                    refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+                    refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
                     activity.offline();
-                    refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+                    refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
                 }
             });
         };
-        refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class LogFragment extends Fragment {
             activity.resetLogPages();
             activity.loadLog();
 
-            refreshLogHandler.postDelayed(refreshLogRunnable, 3000);
+            refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
             paused = false;
         }
     }

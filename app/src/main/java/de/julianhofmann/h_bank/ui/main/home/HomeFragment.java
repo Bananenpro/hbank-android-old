@@ -33,12 +33,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 ((MainActivity) requireActivity()).refreshBalance();
-                refreshBalanceHandler.postDelayed(this, 3000);
+                refreshBalanceHandler.postDelayed(this, 2000);
             }
         };
 
         ((MainActivity) requireActivity()).loadUserInfo();
-        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
+        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         if (paused) {
             ((MainActivity) requireActivity()).loadUserInfo();
-            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 3000);
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
             paused = false;
         }
     }
