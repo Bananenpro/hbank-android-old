@@ -1,8 +1,25 @@
 package de.julianhofmann.h_bank.api;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.security.KeyPairGeneratorSpec;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.util.Base64;
+import android.util.Pair;
 
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
@@ -35,7 +52,15 @@ public class RetrofitService {
         protocol = sharedPreferences.getString("protocol", null);
         ip = sharedPreferences.getString("ip_address", null);
         port = sharedPreferences.getInt("port", -1);
-        serverPassword = sharedPreferences.getString("server_password", null);
+
+        String serverPasswordIv = sharedPreferences.getString("server_password_iv", null);
+        String encryptedServerPassword = sharedPreferences.getString("server_password", null);
+
+        if (serverPasswordIv != null && encryptedServerPassword != null) {
+            serverPassword = decryptServerPassword(Base64.decode(serverPasswordIv, Base64.NO_WRAP), Base64.decode(encryptedServerPassword, Base64.NO_WRAP));
+        } else {
+            serverPassword = null;
+        }
 
         if (ip != null && port != -1 && serverPassword != null && retrofit == null) {
             OkHttpClient client = new OkHttpClient().newBuilder().readTimeout(10, TimeUnit.SECONDS).connectTimeout(3, TimeUnit.SECONDS).addInterceptor(chain -> {
@@ -82,6 +107,9 @@ public class RetrofitService {
         name = null;
         token = null;
 
+        String serverPasswordIv = sharedPreferences.getString("server_password_iv", null);
+        String encryptedServerPassword = sharedPreferences.getString("server_password", null);
+
         SharedPreferences.Editor edit = sharedPreferences.edit();
 
         edit.clear();
@@ -89,7 +117,9 @@ public class RetrofitService {
         edit.putString("protocol", protocol);
         edit.putString("ip_address", ip);
         edit.putInt("port", port);
-        edit.putString("server_password", serverPassword);
+
+        edit.putString("server_password_iv", serverPasswordIv);
+        edit.putString("server_password", encryptedServerPassword);
 
         edit.apply();
 
@@ -139,13 +169,80 @@ public class RetrofitService {
         edit.putString("protocol", protocol);
         edit.putString("ip_address", ip_address);
         edit.putInt("port", port);
-        edit.putString("server_password", serverPassword);
+
+        Pair<byte[], byte[]> encryptedServerPassword = encryptServerPassword(serverPassword);
+
+        if (encryptedServerPassword != null) {
+            edit.putString("server_password_iv", Base64.encodeToString(encryptedServerPassword.first, Base64.NO_WRAP));
+            edit.putString("server_password", Base64.encodeToString(encryptedServerPassword.second, Base64.NO_WRAP));
+        }
+
         edit.apply();
 
         retrofit = null;
         hBankApi = null;
 
         init(sharedPreferences);
+    }
+
+    private static Pair<byte[], byte[]> encryptServerPassword(String serverPassword) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+
+            StringBuilder temp = new StringBuilder(serverPassword);
+            while (temp.toString().getBytes().length % 16 != 0)
+                temp.append("\u0020");
+
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
+
+            byte[] ivBytes = cipher.getIV();
+
+            byte[] encryptedBytes = cipher.doFinal(temp.toString().getBytes(StandardCharsets.UTF_8));
+
+            return new Pair<>(ivBytes, encryptedBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static String decryptServerPassword(byte[] iv, byte[] encryptedPassword) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            IvParameterSpec spec = new IvParameterSpec(iv);
+
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec);
+
+            return new String(cipher.doFinal(encryptedPassword), StandardCharsets.UTF_8).trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static SecretKey getSecretKey() {
+        try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+
+            if (!keyStore.containsAlias("server_password_key")) {
+                KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+                KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder("server_password_key", KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                        .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                        .build();
+                keyGenerator.init(spec);
+                keyGenerator.generateKey();
+            }
+
+            KeyStore.SecretKeyEntry secretKeyEntry = (KeyStore.SecretKeyEntry) keyStore.getEntry("server_password_key", null);
+            return secretKeyEntry.getSecretKey();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Retrofit getRetrofit() {
