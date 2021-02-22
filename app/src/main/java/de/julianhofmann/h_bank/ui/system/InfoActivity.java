@@ -52,17 +52,17 @@ public class InfoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 refreshInfo();
-                refreshInfoHandler.postDelayed(this, 1000);
+                refreshInfoHandler.postDelayed(this, 2000);
             }
         };
-        refreshInfoHandler.postDelayed(refreshInfoRunnable, 1000);
+        refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (paused) {
-            refreshInfoHandler.postDelayed(refreshInfoRunnable, 1000);
+            refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
         }
         gone = false;
         paused = false;
