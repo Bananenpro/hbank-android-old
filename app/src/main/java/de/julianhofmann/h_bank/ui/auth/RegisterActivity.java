@@ -1,24 +1,14 @@
 package de.julianhofmann.h_bank.ui.auth;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,13 +16,10 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 import de.julianhofmann.h_bank.ui.BaseActivity;
-import de.julianhofmann.h_bank.ui.system.ConnectionSettingsActivity;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.RegisterModel;
 import de.julianhofmann.h_bank.api.models.RegisterResponseModel;
-import de.julianhofmann.h_bank.ui.system.InfoActivity;
-import de.julianhofmann.h_bank.util.UpdateService;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

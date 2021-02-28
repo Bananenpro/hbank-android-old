@@ -1,7 +1,6 @@
 package de.julianhofmann.h_bank.ui.auth;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,18 +9,12 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -36,11 +29,9 @@ import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LoginModel;
 import de.julianhofmann.h_bank.api.models.LoginResponseModel;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
-import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.SettingsService;
-import de.julianhofmann.h_bank.util.UpdateService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +48,7 @@ public class LoginActivity extends BaseActivity {
         RetrofitService.init(sp);
 
         if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
-            switchToConnectionSettingsAcitvity();
+            switchToConnectionSettingsActivity();
             return;
         }
 
@@ -115,7 +106,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void switchToConnectionSettingsAcitvity() {
+    private void switchToConnectionSettingsActivity() {
         Intent i = new Intent(this, ConnectionSettingsActivity.class);
         startActivity(i);
         finish();
