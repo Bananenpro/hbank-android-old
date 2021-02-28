@@ -26,6 +26,7 @@ import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.UserModel;
+import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
@@ -38,21 +39,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends BaseActivity {
 
     private final Handler refreshBalanceHandler = new Handler();
     private Runnable refreshBalanceRunnable;
     private String name;
     private boolean paused = false;
-    private boolean gone = true;
     private boolean balanceAccess = true;
     private boolean offlineToast = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
-        gone = false;
+        super.init(R.layout.activity_user_info);
 
         Intent i = getIntent();
 
@@ -77,54 +76,6 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         };
         refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!gone) {
-            switch (item.getItemId()) {
-                case R.id.options_settings:
-                    gone = true;
-                    settings();
-                    return true;
-                case R.id.options_server_info:
-                    gone = true;
-                    serverInfo();
-                    return true;
-                case R.id.options_logout:
-                    gone = true;
-                    logout();
-                    return true;
-                case R.id.options_check_for_updates:
-                    update();
-                    return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void settings() {
-        Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    private void serverInfo() {
-        Intent i = new Intent(this, InfoActivity.class);
-        startActivity(i);
-    }
-
-    private void logout() {
-        String name = RetrofitService.getName();
-        RetrofitService.logout();
-        switchToLoginActivity(name);
     }
 
     public void loadUserInfo() {
@@ -220,48 +171,19 @@ public class UserInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void switchToLoginActivity(String name) {
-        Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra("name", name);
-        i.putExtra("logout", true);
-        startActivity(i);
-        finishAffinity();
-    }
-
-    private void update() {
-        if (!gone) {
-            gone = true;
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-            }
-
-            UpdateService.update(this);
-            gone = false;
-        }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        finish();
-        return true;
-    }
-
     @Override
     protected void onPause() {
-        super.onPause();
         refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
-        paused = true;
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
         if (paused) {
             loadUserInfo();
             refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
             paused = false;
         }
-        gone = false;
+        super.onResume();
     }
 }

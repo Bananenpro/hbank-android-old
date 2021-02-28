@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import de.julianhofmann.h_bank.BuildConfig;
+import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.ui.system.ConnectionSettingsActivity;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -44,16 +45,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
-
-    private boolean gone = true;
+public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        gone = false;
+        super.init(R.layout.activity_login);
 
         SharedPreferences sp = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
 
@@ -122,62 +119,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, ConnectionSettingsActivity.class);
         startActivity(i);
         finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        gone = false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.login_options_menu, menu);
-        return true;
-    }
-
-    @Override
-    @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!gone) {
-            switch (item.getItemId()) {
-                case R.id.options_server_info:
-                    gone = true;
-                    serverInfo();
-                    return true;
-                case R.id.options_check_for_updates:
-                    update();
-                    return true;
-                case R.id.options_connection_settings:
-                    gone = true;
-                    connectionSettings();
-                    return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void connectionSettings() {
-        Intent i = new Intent(this, ConnectionSettingsActivity.class);
-        startActivity(i);
-    }
-
-    private void serverInfo() {
-        Intent i = new Intent(this, InfoActivity.class);
-        startActivity(i);
-    }
-
-    private void update() {
-        if (!gone) {
-            gone = true;
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-            }
-
-            UpdateService.update(this, false);
-            gone = false;
-        }
     }
 
     public void autoLogin(String name, String token) {

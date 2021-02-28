@@ -46,6 +46,7 @@ import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -70,7 +71,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
 
     private ImagePicker imagePicker;
@@ -78,16 +79,13 @@ public class MainActivity extends AppCompatActivity {
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
-    private boolean paused = false;
     private boolean offline = false;
-    private boolean spinning = false;
-    private boolean gone = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        gone = false;
+        super.init(R.layout.activity_main);
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_user_list, R.id.navigation_log)
@@ -135,54 +133,6 @@ public class MainActivity extends AppCompatActivity {
         if (SettingsService.getCheckForUpdates() && !UpdateService.askedForUpdate) {
             update(true);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!gone) {
-            switch (item.getItemId()) {
-                case R.id.options_settings:
-                    gone = true;
-                    settings();
-                    return true;
-                case R.id.options_server_info:
-                    gone = true;
-                    serverInfo();
-                    return true;
-                case R.id.options_logout:
-                    gone = true;
-                    logout();
-                    return true;
-                case R.id.options_check_for_updates:
-                    update(false);
-                    return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void settings() {
-        Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    private void serverInfo() {
-        Intent i = new Intent(this, InfoActivity.class);
-        startActivity(i);
-    }
-
-    private void logout() {
-        String name = RetrofitService.getName();
-        RetrofitService.logout();
-        switchToLoginActivity(name);
     }
 
     public void resetLogPages() {
@@ -245,14 +195,6 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         finish();
         overridePendingTransition(0, 0);
-    }
-
-    private void switchToLoginActivity(String name) {
-        Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra("logout", true);
-        i.putExtra("name", name);
-        startActivity(i);
-        finishAffinity();
     }
 
     public void loadUserInfo() {
@@ -319,19 +261,6 @@ public class MainActivity extends AppCompatActivity {
                     offline();
                 }
             });
-        }
-    }
-
-
-    private void update(boolean autoUpdate) {
-        if (!gone) {
-            gone = true;
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-            }
-
-            UpdateService.update(this, autoUpdate);
-            gone = false;
         }
     }
 
@@ -505,25 +434,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        paused = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (paused) {
-            if (SettingsService.getCheckForUpdates() && !UpdateService.askedForUpdate) {
-                update(true);
-                UpdateService.askedForUpdate = true;
-            }
-            paused = false;
-        }
-        gone = false;
-    }
-
     public void offline() {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
@@ -568,5 +478,17 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, PaymentPlanActivity.class);
             startActivity(i);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if (paused) {
+            if (SettingsService.getCheckForUpdates() && !UpdateService.askedForUpdate) {
+                update(true);
+                UpdateService.askedForUpdate = true;
+            }
+            paused = false;
+        }
+        super.onResume();
     }
 }

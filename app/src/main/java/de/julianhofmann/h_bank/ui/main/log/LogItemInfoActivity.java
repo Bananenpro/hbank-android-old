@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
+import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.ui.auth.LoginActivity;
 import de.julianhofmann.h_bank.ui.system.InfoActivity;
 import de.julianhofmann.h_bank.ui.system.SettingsActivity;
@@ -33,16 +34,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LogItemInfoActivity extends AppCompatActivity {
+public class LogItemInfoActivity extends BaseActivity {
 
-    private boolean gone = true;
     private int paymentPlanId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_item_info);
-        gone = false;
+        super.init(R.layout.activity_log_item_info);
 
         Intent i = getIntent();
 
@@ -106,92 +105,11 @@ public class LogItemInfoActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        gone = false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!gone) {
-            switch (item.getItemId()) {
-                case R.id.options_settings:
-                    gone = true;
-                    settings();
-                    return true;
-                case R.id.options_server_info:
-                    gone = true;
-                    serverInfo();
-                    return true;
-                case R.id.options_logout:
-                    gone = true;
-                    logout();
-                    return true;
-                case R.id.options_check_for_updates:
-                    update();
-                    return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void gotoPaymentPlan(View v) {
         if (paymentPlanId != -1) {
             Intent i = new Intent(this, PaymentPlanInfoActivity.class);
             i.putExtra("id", paymentPlanId);
             startActivity(i);
         }
-    }
-
-    private void settings() {
-        Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    private void serverInfo() {
-        Intent i = new Intent(this, InfoActivity.class);
-        startActivity(i);
-    }
-
-    private void logout() {
-        String name = RetrofitService.getName();
-        RetrofitService.logout();
-        switchToLoginActivity(name);
-    }
-
-    private void update() {
-        if (!gone) {
-            gone = true;
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
-            }
-
-            UpdateService.update(this);
-            gone = false;
-        }
-    }
-
-    private void switchToLoginActivity(String name) {
-        Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra("name", name);
-        i.putExtra("logout", true);
-        startActivity(i);
-        finishAffinity();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        finish();
-        return true;
     }
 }

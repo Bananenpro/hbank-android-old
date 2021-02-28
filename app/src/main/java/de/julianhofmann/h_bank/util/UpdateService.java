@@ -29,42 +29,40 @@ public class UpdateService {
 
     public static boolean askedForUpdate = false;
 
-    public static void update(Context context) {
-        update(context, false);
-    }
-
     public static void update(Context context, boolean autoUpdate) {
-        Call<VersionModel> call = RetrofitService.getHbankApi().getVersion();
-        call.enqueue(new Callback<VersionModel>() {
-            @Override
-            public void onResponse(@NotNull Call<VersionModel> call, @NotNull Response<VersionModel> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    if (response.body().getVersion() > BuildConfig.VERSION_CODE) {
-                        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                            if (which == dialog.BUTTON_POSITIVE) {
-                                installUpdate(context);
-                                askedForUpdate = true;
-                            } else if (which == dialog.BUTTON_NEGATIVE) {
-                                askedForUpdate = true;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
-                    } else if (!autoUpdate){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(R.string.update).setMessage(R.string.up_to_date).setNeutralButton(context.getString(R.string.ok), null).show();
+        if (RetrofitService.getHbankApi() != null) {
+            Call<VersionModel> call = RetrofitService.getHbankApi().getVersion();
+            call.enqueue(new Callback<VersionModel>() {
+                @Override
+                public void onResponse(@NotNull Call<VersionModel> call, @NotNull Response<VersionModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().getVersion() > BuildConfig.VERSION_CODE) {
+                            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                                if (which == dialog.BUTTON_POSITIVE) {
+                                    installUpdate(context);
+                                    askedForUpdate = true;
+                                } else if (which == dialog.BUTTON_NEGATIVE) {
+                                    askedForUpdate = true;
+                                }
+                            };
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                        } else if (!autoUpdate) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle(R.string.update).setMessage(R.string.up_to_date).setNeutralButton(context.getString(R.string.ok), null).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(@NotNull Call<VersionModel> call, @NotNull Throwable t) {
-                if (!autoUpdate) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.update).setMessage(R.string.cannot_reach_server).setNeutralButton(context.getString(R.string.ok), null).show();
+                @Override
+                public void onFailure(@NotNull Call<VersionModel> call, @NotNull Throwable t) {
+                    if (!autoUpdate) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle(R.string.update).setMessage(R.string.cannot_reach_server).setNeutralButton(context.getString(R.string.ok), null).show();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
