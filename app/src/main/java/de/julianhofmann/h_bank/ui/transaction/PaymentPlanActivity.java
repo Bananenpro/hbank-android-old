@@ -147,11 +147,11 @@ public class PaymentPlanActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         if (paused) {
             loadPaymentPlans();
             paused = false;
         }
         gone = false;
+        super.onResume();
     }
 }
