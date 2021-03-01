@@ -117,6 +117,7 @@ public class RetrofitService {
 
         edit.apply();
 
+        BalanceCache.clear();
         PasswordCache.clearPassword(sharedPreferences);
     }
 
