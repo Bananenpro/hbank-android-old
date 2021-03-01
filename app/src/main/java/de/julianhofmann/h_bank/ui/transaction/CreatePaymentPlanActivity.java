@@ -114,7 +114,8 @@ public class CreatePaymentPlanActivity extends BaseActivity {
         Button submit = findViewById(R.id.create_payment_plan_btn);
         EditText amount = findViewById(R.id.create_payment_plan_amount);
         EditText schedule = findViewById(R.id.create_payment_plan_schedule);
-        submit.setEnabled(amount.getText().toString().trim().length() > 0 && schedule.getText().toString().trim().length() > 0);
+        Spinner receiver = findViewById(R.id.receiver_dropdown);
+        submit.setEnabled(amount.getText().toString().trim().length() > 0 && schedule.getText().toString().trim().length() > 0 && (name != null || receiver.getSelectedItem() != null));
     }
 
     public void createPaymentPlan(View v) {
@@ -128,73 +129,70 @@ public class CreatePaymentPlanActivity extends BaseActivity {
             Button submit = findViewById(R.id.create_payment_plan_btn);
             Spinner receiver = findViewById(R.id.receiver_dropdown);
 
-            if (receiver.getSelectedItem() != null) {
-                if ((name != null || receiver.getSelectedItem().toString().length() > 0) && amount.getText().length() > 0 && schedule.getText().length() > 0) {
-
+            if ((name != null || receiver.getSelectedItem() != null) && amount.getText().length() > 0 && schedule.getText().length() > 0) {
+                try {
+                    Double.parseDouble(amount.getText().toString());
                     try {
-                        Double.parseDouble(amount.getText().toString());
-                        try {
-                            int schedule_int = Integer.parseInt(schedule.getText().toString());
+                        int schedule_int = Integer.parseInt(schedule.getText().toString());
 
-                            PaymentPlanModel model;
+                        PaymentPlanModel model;
 
-                            String unit = "days";
-                            String text = dropdown.getSelectedItem().toString();
-                            if (text.equals(getString(R.string.weeks))) {
-                                unit = "weeks";
-                            } else if (text.equals(getString(R.string.months))) {
-                                unit = "months";
-                            } else if (text.equals(getString(R.string.years))) {
-                                unit = "years";
+                        String unit = "days";
+                        String text = dropdown.getSelectedItem().toString();
+                        if (text.equals(getString(R.string.weeks))) {
+                            unit = "weeks";
+                        } else if (text.equals(getString(R.string.months))) {
+                            unit = "months";
+                        } else if (text.equals(getString(R.string.years))) {
+                            unit = "years";
+                        }
+
+                        if (name != null)
+                            model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, unit, description.getText().toString());
+                        else
+                            model = new PaymentPlanModel(receiver.getSelectedItem().toString(), amount.getText().toString(), schedule_int, unit, description.getText().toString());
+
+                        submit.setEnabled(false);
+                        submit.setText(R.string.loading);
+                        gone = true;
+
+                        Call<Void> call = RetrofitService.getHbankApi().createPaymentPlan(model, RetrofitService.getAuthorization());
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                                if (response.isSuccessful()) {
+                                    error.setTextColor(getColor(R.color.green));
+                                    error.setText(R.string.create_success);
+                                    new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
+                                } else if (response.code() == 403) {
+                                    logout();
+                                } else if (response.code() == 400) {
+                                    error.setTextColor(getColor(R.color.red));
+                                    error.setText(R.string.user_does_not_exist);
+                                }
+                                submit.setEnabled(true);
+                                submit.setText(R.string.create);
+                                gone = false;
                             }
 
-                            if (name != null)
-                                model = new PaymentPlanModel(name, amount.getText().toString(), schedule_int, unit, description.getText().toString());
-                            else
-                                model = new PaymentPlanModel(receiver.getSelectedItem().toString(), amount.getText().toString(), schedule_int, unit, description.getText().toString());
+                            @Override
+                            public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                                error.setText(R.string.cannot_reach_server);
+                                submit.setEnabled(true);
+                                submit.setText(R.string.create);
+                                gone = false;
+                            }
+                        });
 
-                            submit.setEnabled(false);
-                            submit.setText(R.string.loading);
-                            gone = true;
-
-                            Call<Void> call = RetrofitService.getHbankApi().createPaymentPlan(model, RetrofitService.getAuthorization());
-                            call.enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                                    if (response.isSuccessful()) {
-                                        error.setTextColor(getColor(R.color.green));
-                                        error.setText(R.string.create_success);
-                                        new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
-                                    } else if (response.code() == 403) {
-                                        logout();
-                                    } else if (response.code() == 400) {
-                                        error.setTextColor(getColor(R.color.red));
-                                        error.setText(R.string.user_does_not_exist);
-                                    }
-                                    submit.setEnabled(true);
-                                    submit.setText(R.string.create);
-                                    gone = false;
-                                }
-
-                                @Override
-                                public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                                    error.setText(R.string.cannot_reach_server);
-                                    submit.setEnabled(true);
-                                    submit.setText(R.string.create);
-                                    gone = false;
-                                }
-                            });
-
-                        } catch (NumberFormatException e) {
-                            error.setText(R.string.schedule_not_a_number);
-                        }
                     } catch (NumberFormatException e) {
-                        error.setText(R.string.amount_not_a_number);
+                        error.setText(R.string.schedule_not_a_number);
                     }
-
-                } else {
-                    error.setText(R.string.empty_fields);
+                } catch (NumberFormatException e) {
+                    error.setText(R.string.amount_not_a_number);
                 }
+
+            } else {
+                error.setText(R.string.empty_fields);
             }
         }
     }
