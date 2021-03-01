@@ -27,7 +27,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup">
         <activity
-            android:name=".CalculatorActivity"
+            android:name=".ui.tools.CalculatorActivity"
             android:label="@string/title_activity_calculator"
             android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait"/>

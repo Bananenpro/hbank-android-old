@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
-import de.julianhofmann.h_bank.CalculatorActivity;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -45,6 +44,7 @@ import de.julianhofmann.h_bank.ui.main.log.LogItemInfoActivity;
 import de.julianhofmann.h_bank.ui.main.log.LogListItem;
 import de.julianhofmann.h_bank.ui.main.user_list.UserInfoActivity;
 import de.julianhofmann.h_bank.ui.main.user_list.UserListItem;
+import de.julianhofmann.h_bank.ui.tools.CalculatorActivity;
 import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.ImageUtils;
