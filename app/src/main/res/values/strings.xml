@@ -142,7 +142,7 @@
     <string name="wrong_protocol">Wrong protocol!</string>
     <string name="title_activity_calculator">Calculator</string>
     <string name="calculate">calculate</string>
-    <string name="money_hint">Money...</string>
-    <string name="time_hint">Time...</string>
-    <string name="date_hint">Date...</string>
+    <string name="money_hint">Money…</string>
+    <string name="time_hint">Time…</string>
+    <string name="date_hint">Date…</string>
 </resources>

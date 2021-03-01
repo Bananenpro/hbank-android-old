@@ -140,7 +140,7 @@
     <string name="wrong_protocol">Falsches Protokoll!</string>
     <string name="title_activity_calculator">Rechner</string>
     <string name="calculate">berechnen</string>
-    <string name="money_hint">Geld...</string>
-    <string name="time_hint">Zeit...</string>
-    <string name="date_hint">Datum...</string>
+    <string name="money_hint">Geld…</string>
+    <string name="time_hint">Zeit…</string>
+    <string name="date_hint">Datum…</string>
 </resources>
