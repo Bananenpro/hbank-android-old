@@ -141,7 +141,7 @@ public class CalculatorActivity extends BaseActivity {
                         afterCalculate = false;
                         date.setText("");
                         date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-                        money.setText("");
+                        time.setText("");
                     }
                 }
             }
@@ -180,6 +180,7 @@ public class CalculatorActivity extends BaseActivity {
                     afterCalculate = false;
                     date.setText("");
                     date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+                    time.setText("");
                     money.setText("");
                 }
             }
