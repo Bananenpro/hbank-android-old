@@ -51,7 +51,7 @@ public class SettingsActivity extends BaseActivity {
             SwitchCompat autoLogin = findViewById(R.id.auto_login_switch);
             autoLogin.setChecked(false);
             SettingsService.setAutoLogin(false);
-            RetrofitService.clearPreferences();
+            RetrofitService.clearPassword();
         } else {
             RetrofitService.login(RetrofitService.getName(), RetrofitService.getToken());
         }

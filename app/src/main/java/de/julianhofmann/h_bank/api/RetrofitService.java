@@ -89,7 +89,7 @@ public class RetrofitService {
         edit.apply();
     }
 
-    public static void clearPreferences() {
+    public static void clearPassword() {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove("token");
         edit.apply();
