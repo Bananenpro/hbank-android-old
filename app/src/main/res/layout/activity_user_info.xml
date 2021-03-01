@@ -10,7 +10,7 @@
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="60dp"
         app:cardCornerRadius="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
     <ImageView
         android:layout_width="202dp"
         android:layout_height="202dp"
-        android:layout_marginTop="69dp"
+        android:layout_marginTop="59dp"
         android:background="@android:color/transparent"
         android:src="@drawable/profile_picture_border"
         android:translationZ="2dp"

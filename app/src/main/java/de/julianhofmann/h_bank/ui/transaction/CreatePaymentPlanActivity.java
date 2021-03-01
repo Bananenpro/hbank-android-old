@@ -48,21 +48,21 @@ public class CreatePaymentPlanActivity extends BaseActivity {
             receiver.setVisibility(View.GONE);
         }
 
-        Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
+        Spinner dropdown = findViewById(R.id.calculate_time_unit);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.schedule_units, R.layout.support_simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
     }
 
     public void createPaymentPlan(View v) {
         if (!gone) {
-            EditText amount = findViewById(R.id.create_payment_plan_amount);
-            EditText schedule = findViewById(R.id.create_payment_plan_schedule);
+            EditText amount = findViewById(R.id.calculate_money);
+            EditText schedule = findViewById(R.id.calculate_time);
             EditText description = findViewById(R.id.create_payment_plan_description);
-            TextView error = findViewById(R.id.create_payment_plan_error);
+            TextView error = findViewById(R.id.calculate_error);
             EditText receiver = findViewById(R.id.create_payment_plan_receiver);
-            Spinner dropdown = findViewById(R.id.schedule_unit_dropdown);
+            Spinner dropdown = findViewById(R.id.calculate_time_unit);
             error.setTextColor(getColor(R.color.red));
-            Button submit = findViewById(R.id.create_payment_plan);
+            Button submit = findViewById(R.id.calculate_btn);
 
             if (receiver.getText().toString().equals(RetrofitService.getName())) {
                 error.setTextColor(getColor(R.color.red));

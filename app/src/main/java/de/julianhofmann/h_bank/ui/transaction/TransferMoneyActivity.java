@@ -43,7 +43,7 @@ public class TransferMoneyActivity extends BaseActivity {
 
     public void transferMoney(View v) {
         if (!gone) {
-            EditText amount = findViewById(R.id.create_payment_plan_amount);
+            EditText amount = findViewById(R.id.calculate_money);
             EditText description = findViewById(R.id.create_payment_plan_description);
             TextView error = findViewById(R.id.transfer_money_error);
             error.setTextColor(getColor(R.color.red));

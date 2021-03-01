@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
+import de.julianhofmann.h_bank.CalculatorActivity;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -427,6 +428,11 @@ public class MainActivity extends BaseActivity {
             editProfilePicture.setVisibility(View.INVISIBLE);
         }
 
+        Button calculator = findViewById(R.id.home_calculator_btn);
+        if (calculator != null) {
+            calculator.setVisibility(View.INVISIBLE);
+        }
+
         Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
         if (paymentPlansBtn != null) {
             paymentPlansBtn.setVisibility(View.INVISIBLE);
@@ -446,6 +452,10 @@ public class MainActivity extends BaseActivity {
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
         }
+        Button calculator = findViewById(R.id.home_calculator_btn);
+        if (calculator != null) {
+            calculator.setVisibility(View.VISIBLE);
+        }
         Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
         if (paymentPlansBtn != null) {
             paymentPlansBtn.setVisibility(View.VISIBLE);
@@ -463,6 +473,14 @@ public class MainActivity extends BaseActivity {
         if (!gone) {
             gone = true;
             Intent i = new Intent(this, PaymentPlanActivity.class);
+            startActivity(i);
+        }
+    }
+
+    public void calculator(View v) {
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, CalculatorActivity.class);
             startActivity(i);
         }
     }

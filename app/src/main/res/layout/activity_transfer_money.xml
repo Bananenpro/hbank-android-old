@@ -45,7 +45,7 @@
         app:layout_constraintVertical_bias="0.08">
 
         <EditText
-            android:id="@+id/create_payment_plan_amount"
+            android:id="@+id/calculate_money"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -72,7 +72,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_amount" />
+            app:layout_constraintTop_toBottomOf="@+id/calculate_money" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,9 +80,9 @@
             android:layout_marginEnd="5dp"
             android:text="@string/currency"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_amount"
-            app:layout_constraintEnd_toEndOf="@+id/create_payment_plan_amount"
-            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_amount" />
+            app:layout_constraintBottom_toBottomOf="@+id/calculate_money"
+            app:layout_constraintEnd_toEndOf="@+id/calculate_money"
+            app:layout_constraintTop_toTopOf="@+id/calculate_money" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

@@ -4,21 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
-    tools:context=".ui.transaction.CreatePaymentPlanActivity">
-
-    <TextView
-        android:id="@+id/calculate_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:textAlignment="center"
-        android:textColor="@color/red"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@id/calculate_lbl"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@id/calculate_lbl"
-        app:layout_constraintTop_toBottomOf="@id/calculate_lbl" />
+    tools:context=".CalculatorActivity">
 
     <TextView
         android:id="@+id/calculate_lbl"
@@ -29,7 +15,7 @@
         android:layout_marginEnd="5dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="@string/create"
+        android:text="@string/title_activity_calculator"
         android:textAlignment="center"
         android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,8 +29,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calculate_error"
-        app:layout_constraintVertical_bias="0.08">
+        app:layout_constraintTop_toBottomOf="@+id/calculate_lbl"
+        app:layout_constraintVertical_bias="0.32">
 
         <EditText
             android:id="@+id/calculate_money"
@@ -54,12 +40,12 @@
             android:autofillHints="amount"
             android:backgroundTint="@color/edit_text"
             android:ems="10"
-            android:hint="@string/amount_hint"
+            android:hint="@string/money_hint"
             android:inputType="numberDecimal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/calculate_time" />
 
         <EditText
             android:id="@+id/calculate_time"
@@ -69,28 +55,12 @@
             android:autofillHints="amount"
             android:backgroundTint="@color/edit_text"
             android:ems="10"
-            android:hint="@string/schedule_hint"
+            android:hint="@string/time_hint"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calculate_money" />
-
-        <EditText
-            android:id="@+id/create_payment_plan_receiver"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:autofillHints="description"
-            android:backgroundTint="@color/edit_text"
-            android:ems="10"
-            android:hint="@string/receiver_hint"
-            android:inputType="textPersonName"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calculate_time" />
+            app:layout_constraintTop_toBottomOf="@+id/calculate_date" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -102,20 +72,6 @@
             app:layout_constraintEnd_toEndOf="@+id/calculate_money"
             app:layout_constraintTop_toTopOf="@+id/calculate_money" />
 
-        <EditText
-            android:id="@+id/create_payment_plan_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:autofillHints="description"
-            android:backgroundTint="@color/edit_text"
-            android:ems="10"
-            android:hint="@string/description_hint"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_receiver" />
-
         <Spinner
             android:id="@+id/calculate_time_unit"
             android:layout_width="wrap_content"
@@ -125,6 +81,22 @@
             app:layout_constraintBottom_toBottomOf="@+id/calculate_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/calculate_time" />
+
+        <EditText
+            android:id="@+id/calculate_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_baseline_cancel_24"
+            android:drawableTint="@color/cancel"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/date_hint"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -132,8 +104,8 @@
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"
-        android:onClick="createPaymentPlan"
-        android:text="@string/create"
+        android:onClick="calculate"
+        android:text="@string/calculate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
