@@ -3,7 +3,10 @@ package de.julianhofmann.h_bank.ui.system;
 import androidx.appcompat.app.AlertDialog;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +30,30 @@ public class DeleteUserActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init(R.layout.activity_delete_user);
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        EditText password = findViewById(R.id.delete_password);
+        password.addTextChangedListener(textWatcher);
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.delete_account_btn);
+        EditText password = findViewById(R.id.delete_password);
+        submit.setEnabled(password.getText().toString().trim().length() > 0);
+        submit.setBackgroundTintList(submit.isEnabled() ? ColorStateList.valueOf(getColor(R.color.red)) : ColorStateList.valueOf(getColor(R.color.dark_gray)));
     }
 
     public void deleteUser(View v) {
@@ -48,6 +75,7 @@ public class DeleteUserActivity extends BaseActivity {
                     Call<LoginResponseModel> call = RetrofitService.getHbankApi().login(new LoginModel(RetrofitService.getName(), password.getText().toString().trim()));
                     button.setEnabled(false);
                     button.setText(R.string.loading);
+                    button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.dark_gray)));
                     gone = true;
                     call.enqueue(new Callback<LoginResponseModel>() {
                         @Override
@@ -68,6 +96,7 @@ public class DeleteUserActivity extends BaseActivity {
                                         button.setEnabled(true);
                                         button.setText(R.string.delete);
                                         gone = false;
+                                        button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                                     }
 
                                     @Override
@@ -76,6 +105,7 @@ public class DeleteUserActivity extends BaseActivity {
                                         button.setEnabled(true);
                                         button.setText(getString(R.string.delete));
                                         gone = false;
+                                        button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                                     }
                                 });
                             } else {
@@ -83,6 +113,7 @@ public class DeleteUserActivity extends BaseActivity {
                                 button.setEnabled(true);
                                 button.setText(getString(R.string.delete));
                                 gone = false;
+                                button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                             }
                         }
 
@@ -92,6 +123,7 @@ public class DeleteUserActivity extends BaseActivity {
                             button.setEnabled(true);
                             button.setText(getString(R.string.delete));
                             gone = false;
+                            button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                         }
                     });
 

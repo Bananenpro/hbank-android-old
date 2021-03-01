@@ -3,6 +3,8 @@ package de.julianhofmann.h_bank.ui.transaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,11 +41,35 @@ public class TransferMoneyActivity extends BaseActivity {
 
         TextView title = findViewById(R.id.transfer_money_lbl);
         title.setText(name);
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        EditText amount = findViewById(R.id.transfer_money_amount);
+        amount.addTextChangedListener(textWatcher);
+
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.transfer_money_submit_btn);
+        EditText amount = findViewById(R.id.transfer_money_amount);
+        submit.setEnabled(amount.getText().toString().trim().length() > 0);
     }
 
     public void transferMoney(View v) {
         if (!gone) {
-            EditText amount = findViewById(R.id.calculate_money);
+            EditText amount = findViewById(R.id.transfer_money_amount);
             EditText description = findViewById(R.id.create_payment_plan_description);
             TextView error = findViewById(R.id.transfer_money_error);
             error.setTextColor(getColor(R.color.red));

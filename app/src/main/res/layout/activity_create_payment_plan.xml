@@ -8,20 +8,20 @@
     tools:context=".ui.transaction.CreatePaymentPlanActivity">
 
     <TextView
-        android:id="@+id/calculate_error"
+        android:id="@+id/create_payment_plan_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:textAlignment="center"
         android:textColor="@color/red"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@id/calculate_lbl"
+        app:layout_constraintEnd_toEndOf="@id/create_payment_plan_lbl"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@id/calculate_lbl"
-        app:layout_constraintTop_toBottomOf="@id/calculate_lbl" />
+        app:layout_constraintStart_toStartOf="@id/create_payment_plan_lbl"
+        app:layout_constraintTop_toBottomOf="@id/create_payment_plan_lbl" />
 
     <TextView
-        android:id="@+id/calculate_lbl"
+        android:id="@+id/create_payment_plan_lbl"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:layout_marginStart="5dp"
@@ -43,11 +43,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calculate_error"
+        app:layout_constraintTop_toBottomOf="@id/create_payment_plan_error"
         app:layout_constraintVertical_bias="0.08">
 
         <EditText
-            android:id="@+id/calculate_money"
+            android:id="@+id/create_payment_plan_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/receiver_dropdown_lbl" />
 
         <EditText
-            android:id="@+id/calculate_time"
+            android:id="@+id/create_payment_plan_schedule"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -74,7 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calculate_money" />
+            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_amount" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,9 +82,9 @@
             android:layout_marginEnd="5dp"
             android:text="@string/currency"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/calculate_money"
-            app:layout_constraintEnd_toEndOf="@+id/calculate_money"
-            app:layout_constraintTop_toTopOf="@+id/calculate_money" />
+            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_amount"
+            app:layout_constraintEnd_toEndOf="@+id/create_payment_plan_amount"
+            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_amount" />
 
         <EditText
             android:id="@+id/create_payment_plan_description"
@@ -98,17 +98,17 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calculate_time" />
+            app:layout_constraintTop_toBottomOf="@+id/create_payment_plan_schedule" />
 
         <Spinner
-            android:id="@+id/calculate_time_unit"
+            android:id="@+id/create_payment_plan_schedule_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|end"
             android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="@+id/calculate_time"
+            app:layout_constraintBottom_toBottomOf="@+id/create_payment_plan_schedule"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/calculate_time" />
+            app:layout_constraintTop_toTopOf="@+id/create_payment_plan_schedule" />
 
         <TextView
             android:id="@+id/receiver_dropdown_lbl"
@@ -130,7 +130,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/calculate_btn"
+        android:id="@+id/create_payment_plan_btn"
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"

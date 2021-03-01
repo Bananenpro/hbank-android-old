@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,6 +35,7 @@ public class ConnectionSettingsActivity extends BaseActivity {
 
         EditText ip = findViewById(R.id.connection_ip_address);
         EditText port = findViewById(R.id.connection_port);
+        EditText password = findViewById(R.id.connection_password);
         Spinner protocol = findViewById(R.id.protocol_dropdown);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.protocols, R.layout.support_simple_spinner_dropdown_item);
@@ -54,6 +57,33 @@ public class ConnectionSettingsActivity extends BaseActivity {
             Button apply = findViewById(R.id.apply_connection_settings);
             apply.setText(R.string.connect);
         }
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        ip.addTextChangedListener(textWatcher);
+        port.addTextChangedListener(textWatcher);
+        password.addTextChangedListener(textWatcher);
+
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.apply_connection_settings);
+        EditText ip = findViewById(R.id.connection_ip_address);
+        EditText port = findViewById(R.id.connection_port);
+        EditText password = findViewById(R.id.connection_password);
+        submit.setEnabled(ip.getText().toString().trim().length() > 0 && port.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0);
     }
 
     public void apply(View v) {

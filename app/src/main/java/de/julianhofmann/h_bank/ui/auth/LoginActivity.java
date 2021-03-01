@@ -1,6 +1,7 @@
 package de.julianhofmann.h_bank.ui.auth;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,8 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -104,6 +107,34 @@ public class LoginActivity extends BaseActivity {
                 RetrofitService.logout();
             }
         }
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        @SuppressLint("CutPasteId")
+        EditText username = findViewById(R.id.login_username);
+        username.addTextChangedListener(textWatcher);
+        EditText password = findViewById(R.id.login_password);
+        password.addTextChangedListener(textWatcher);
+
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.login_btn);
+        EditText username = findViewById(R.id.login_username);
+        EditText password = findViewById(R.id.login_password);
+        submit.setEnabled(username.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0);
     }
 
     private void switchToConnectionSettingsActivity() {

@@ -3,6 +3,8 @@ package de.julianhofmann.h_bank.ui.transaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -83,22 +85,47 @@ public class CreatePaymentPlanActivity extends BaseActivity {
             receiverLbl.setVisibility(View.GONE);
         }
 
-        Spinner dropdown = findViewById(R.id.calculate_time_unit);
+        Spinner dropdown = findViewById(R.id.create_payment_plan_schedule_unit);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.schedule_units, R.layout.support_simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
 
-        // TODO: Add auto enabling/disabling of submit button depending on text fields ( + in all other forms)
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        EditText amount = findViewById(R.id.create_payment_plan_amount);
+        amount.addTextChangedListener(textWatcher);
+        EditText schedule = findViewById(R.id.create_payment_plan_schedule);
+        schedule.addTextChangedListener(textWatcher);
+
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.create_payment_plan_btn);
+        EditText amount = findViewById(R.id.create_payment_plan_amount);
+        EditText schedule = findViewById(R.id.create_payment_plan_schedule);
+        submit.setEnabled(amount.getText().toString().trim().length() > 0 && schedule.getText().toString().trim().length() > 0);
     }
 
     public void createPaymentPlan(View v) {
         if (!gone) {
-            EditText amount = findViewById(R.id.calculate_money);
-            EditText schedule = findViewById(R.id.calculate_time);
+            EditText amount = findViewById(R.id.create_payment_plan_amount);
+            EditText schedule = findViewById(R.id.create_payment_plan_schedule);
             EditText description = findViewById(R.id.create_payment_plan_description);
-            TextView error = findViewById(R.id.calculate_error);
-            Spinner dropdown = findViewById(R.id.calculate_time_unit);
+            TextView error = findViewById(R.id.create_payment_plan_error);
+            Spinner dropdown = findViewById(R.id.create_payment_plan_schedule_unit);
             error.setTextColor(getColor(R.color.red));
-            Button submit = findViewById(R.id.calculate_btn);
+            Button submit = findViewById(R.id.create_payment_plan_btn);
             Spinner receiver = findViewById(R.id.receiver_dropdown);
 
             if (receiver.getSelectedItem() != null) {

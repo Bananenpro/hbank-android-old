@@ -1,7 +1,10 @@
 package de.julianhofmann.h_bank.ui.auth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,8 +50,39 @@ public class RegisterActivity extends BaseActivity {
             EditText password_edit = findViewById(R.id.register_password);
             password_edit.setText(password);
         }
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        @SuppressLint("CutPasteId")
+        EditText username = findViewById(R.id.register_username);
+        username.addTextChangedListener(textWatcher);
+        @SuppressLint("CutPasteId")
+        EditText passwordEditText = findViewById(R.id.register_password);
+        passwordEditText.addTextChangedListener(textWatcher);
+        EditText passwordRepeat = findViewById(R.id.register_password_repeat);
+        passwordRepeat.addTextChangedListener(textWatcher);
+
+        checkSubmitButton();
     }
 
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.register_btn);
+        EditText username = findViewById(R.id.register_username);
+        EditText password = findViewById(R.id.register_password);
+        EditText passwordRepeat = findViewById(R.id.register_password_repeat);
+        submit.setEnabled(username.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0 && passwordRepeat.getText().toString().equals(password.getText().toString()));
+    }
 
     private void switchToLoginActivity() {
         Intent i = new Intent(this, LoginActivity.class);

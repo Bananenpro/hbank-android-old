@@ -60,6 +60,7 @@ public class CalculatorActivity extends BaseActivity {
                                 time.setText("");
                                 money.setText("");
                             }
+                            checkSubmitButton();
                         } else {
                             pickDate();
                         }
@@ -110,6 +111,7 @@ public class CalculatorActivity extends BaseActivity {
                         money.setText("");
                     }
                 }
+                checkSubmitButton();
             }
 
             @Override
@@ -140,6 +142,7 @@ public class CalculatorActivity extends BaseActivity {
                         time.setText("");
                     }
                 }
+                checkSubmitButton();
             }
 
             @Override
@@ -186,6 +189,16 @@ public class CalculatorActivity extends BaseActivity {
         });
 
         date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+
+        checkSubmitButton();
+    }
+
+    private void checkSubmitButton() {
+        Button submit = findViewById(R.id.calculate_btn);
+        EditText date = findViewById(R.id.calculate_date);
+        EditText time = findViewById(R.id.calculate_time);
+        EditText money = findViewById(R.id.calculate_money);
+        submit.setEnabled(date.getText().toString().trim().length() > 0 || time.getText().toString().trim().length() > 0 || money.getText().toString().trim().length() > 0);
     }
 
     public void calculate(View v) {
@@ -268,6 +281,7 @@ public class CalculatorActivity extends BaseActivity {
             money.setText("");
             dialog = false;
             date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_cancel_24, 0);
+            checkSubmitButton();
         }, year, month, day);
         picker.setOnCancelListener(d -> dialog = false);
         picker.setOnDismissListener(d -> dialog = false);
