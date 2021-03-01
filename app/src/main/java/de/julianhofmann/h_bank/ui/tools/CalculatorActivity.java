@@ -223,6 +223,10 @@ public class CalculatorActivity extends BaseActivity {
                         money.setEnabled(true);
                         afterCalculate = true;
                     }
+                } else if (response.code() == 403) {
+                    String name = RetrofitService.getName();
+                    RetrofitService.logout();
+                    switchToLoginActivity(name);
                 }
                 button.setText(R.string.calculate);
                 button.setEnabled(true);
