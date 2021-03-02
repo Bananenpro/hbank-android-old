@@ -15,6 +15,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
+import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.PasswordCache;
 import de.julianhofmann.h_bank.util.SettingsService;
@@ -59,6 +60,12 @@ public class RetrofitService {
         if (ip != null && port != -1 && serverPassword != null && retrofit == null) {
             OkHttpClient client = new OkHttpClient().newBuilder().readTimeout(10, TimeUnit.SECONDS).connectTimeout(3, TimeUnit.SECONDS).addInterceptor(chain -> {
                 Request request = chain.request().newBuilder().addHeader("Password", serverPassword).build();
+                return chain.proceed(request);
+            }).addInterceptor(chain -> {
+                Request request = chain.request().newBuilder().addHeader("Frontend", "android").build();
+                return chain.proceed(request);
+            }).addInterceptor(chain -> {
+                Request request = chain.request().newBuilder().addHeader("Version", Integer.toString(BuildConfig.VERSION_CODE)).build();
                 return chain.proceed(request);
             }).build();
             retrofit = new Retrofit.Builder()
