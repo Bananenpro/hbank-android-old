@@ -48,43 +48,7 @@ public class CreatePaymentPlanActivity extends BaseActivity {
             actionBar.setTitle(R.string.title_activity_create_payment_plan);
         }
 
-        Spinner receiver = findViewById(R.id.receiver_dropdown);
-        TextView receiverLbl = findViewById(R.id.receiver_dropdown_lbl);
-        if (name == null) {
-            receiver.setVisibility(View.VISIBLE);
-            receiverLbl.setVisibility(View.VISIBLE);
-            Call<List<UserModel>> call = RetrofitService.getHbankApi().getUsers();
-            call.enqueue(new Callback<List<UserModel>>() {
-                @Override
-                public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            online();
-                            List<CharSequence> usernames = new ArrayList<>();
-                            for (UserModel user : response.body()) {
-                                if (!user.getName().equals(RetrofitService.getName())) {
-                                    usernames.add(user.getName());
-                                }
-                            }
-                            receiver.setAdapter(new ArrayAdapter<>(CreatePaymentPlanActivity.this, R.layout.support_simple_spinner_dropdown_item, usernames));
-                        }
-                    } else if (response.code() == 403) {
-                        String name = RetrofitService.getName();
-                        RetrofitService.logout();
-                        switchToLoginActivity(name);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
-                    offline();
-                    receiver.setEnabled(false);
-                }
-            });
-        } else {
-            receiver.setVisibility(View.GONE);
-            receiverLbl.setVisibility(View.GONE);
-        }
+        loadUsers();
 
         Spinner dropdown = findViewById(R.id.create_payment_plan_schedule_unit);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.schedule_units, R.layout.support_simple_spinner_dropdown_item);
@@ -109,6 +73,47 @@ public class CreatePaymentPlanActivity extends BaseActivity {
         schedule.addTextChangedListener(textWatcher);
 
         checkSubmitButton();
+    }
+
+    private void loadUsers() {
+        Spinner receiver = findViewById(R.id.receiver_dropdown);
+        TextView receiverLbl = findViewById(R.id.receiver_dropdown_lbl);
+        if (name == null) {
+            receiver.setVisibility(View.VISIBLE);
+            receiverLbl.setVisibility(View.VISIBLE);
+            Call<List<UserModel>> call = RetrofitService.getHbankApi().getUsers();
+            call.enqueue(new Callback<List<UserModel>>() {
+                @Override
+                public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            online();
+                            List<CharSequence> usernames = new ArrayList<>();
+                            for (UserModel user : response.body()) {
+                                if (!user.getName().equals(RetrofitService.getName())) {
+                                    usernames.add(user.getName());
+                                }
+                            }
+                            receiver.setAdapter(new ArrayAdapter<>(CreatePaymentPlanActivity.this, R.layout.support_simple_spinner_dropdown_item, usernames));
+                            receiver.setEnabled(true);
+                        }
+                    } else if (response.code() == 403) {
+                        String name = RetrofitService.getName();
+                        RetrofitService.logout();
+                        switchToLoginActivity(name);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
+                    offline();
+                    receiver.setEnabled(false);
+                }
+            });
+        } else {
+            receiver.setVisibility(View.GONE);
+            receiverLbl.setVisibility(View.GONE);
+        }
     }
 
     private void checkSubmitButton() {
@@ -196,5 +201,13 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                 error.setText(R.string.empty_fields);
             }
         }
+    }
+
+    @Override
+    protected void online() {
+        if (offline) {
+            loadUsers();
+        }
+        super.online();
     }
 }

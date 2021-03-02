@@ -50,7 +50,10 @@ public class PaymentPlanInfoActivity extends BaseActivity {
             actionBar.setTitle(R.string.title_activity_create_payment_plan);
         }
 
+        loadPaymentPlan();
+    }
 
+    private void loadPaymentPlan() {
         TextView title = findViewById(R.id.payment_plan_lbl);
         TextView amount = findViewById(R.id.log_item_amount_lbl);
         TextView schedule = findViewById(R.id.log_item_time_lbl);
@@ -224,5 +227,13 @@ public class PaymentPlanInfoActivity extends BaseActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.sure).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
         }
+    }
+
+    @Override
+    protected void online() {
+        if (offline) {
+            loadPaymentPlan();
+        }
+        super.online();
     }
 }

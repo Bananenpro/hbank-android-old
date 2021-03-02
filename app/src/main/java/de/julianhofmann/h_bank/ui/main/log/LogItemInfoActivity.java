@@ -22,6 +22,7 @@ import retrofit2.Response;
 public class LogItemInfoActivity extends BaseActivity {
 
     private int paymentPlanId = -1;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +31,17 @@ public class LogItemInfoActivity extends BaseActivity {
 
         Intent i = getIntent();
 
-        int id = i.getIntExtra("id", -1);
+        id = i.getIntExtra("id", -1);
 
         if (id == -1) {
             onSupportNavigateUp();
             return;
         }
 
+        loadLogItem();
+    }
+
+    private void loadLogItem() {
         TextView title = findViewById(R.id.log_item_lbl);
         TextView amount = findViewById(R.id.log_item_amount_lbl);
         TextView newBalance = findViewById(R.id.log_item_new_balance_lbl);
@@ -97,5 +102,13 @@ public class LogItemInfoActivity extends BaseActivity {
             i.putExtra("id", paymentPlanId);
             startActivity(i);
         }
+    }
+
+    @Override
+    protected void online() {
+        if (offline) {
+            loadLogItem();
+        }
+        super.online();
     }
 }

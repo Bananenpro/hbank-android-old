@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -206,6 +207,7 @@ public class CalculatorActivity extends BaseActivity {
         Spinner dropdown = findViewById(R.id.calculate_time_unit);
         EditText money = findViewById(R.id.calculate_money);
         Button button = findViewById(R.id.calculate_btn);
+        TextView error = findViewById(R.id.calculator_error);
 
         String unit = "";
         if (dropdown.getSelectedItem().toString().equals(getString(R.string.days))) unit = "days";
@@ -248,6 +250,7 @@ public class CalculatorActivity extends BaseActivity {
             @Override
             public void onFailure(@NotNull Call<CalculateModel> call, @NotNull Throwable t) {
                 offline();
+                error.setText(R.string.cannot_reach_server);
                 button.setText(R.string.calculate);
                 button.setEnabled(true);
             }
@@ -295,5 +298,12 @@ public class CalculatorActivity extends BaseActivity {
         picker.getDatePicker().setMaxDate(max.getTimeInMillis());
 
         picker.show();
+    }
+
+    @Override
+    protected void online() {
+        TextView error = findViewById(R.id.calculator_error);
+        error.setText("");
+        super.online();
     }
 }

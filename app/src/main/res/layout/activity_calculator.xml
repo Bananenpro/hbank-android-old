@@ -7,6 +7,19 @@
     tools:context=".ui.tools.CalculatorActivity">
 
     <TextView
+        android:id="@+id/calculator_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:textAlignment="center"
+        android:textColor="@color/red"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@id/calculate_lbl"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@id/calculate_lbl"
+        app:layout_constraintTop_toBottomOf="@id/calculate_lbl" />
+
+    <TextView
         android:id="@+id/calculate_lbl"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
@@ -29,8 +42,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calculate_lbl"
-        app:layout_constraintVertical_bias="0.32">
+        app:layout_constraintTop_toBottomOf="@+id/calculator_error"
+        app:layout_constraintVertical_bias="0.07999998">
 
         <EditText
             android:id="@+id/calculate_money"

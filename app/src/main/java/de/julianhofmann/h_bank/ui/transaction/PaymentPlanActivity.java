@@ -148,6 +148,14 @@ public class PaymentPlanActivity extends BaseActivity {
     }
 
     @Override
+    protected void online() {
+        if (offline) {
+            loadPaymentPlans();
+        }
+        super.online();
+    }
+
+    @Override
     protected void onResume() {
         if (paused) {
             loadPaymentPlans();

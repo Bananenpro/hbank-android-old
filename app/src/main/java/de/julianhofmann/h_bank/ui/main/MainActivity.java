@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity {
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
+    private String currentFragment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,11 @@ public class MainActivity extends BaseActivity {
                 R.id.navigation_home, R.id.navigation_user_list, R.id.navigation_log)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getLabel() != null) {
+                currentFragment = destination.getLabel().toString();
+            }
+        });
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -437,6 +443,17 @@ public class MainActivity extends BaseActivity {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
+        }
+
+        if (offline) {
+            if (currentFragment.equals(getString(R.string.title_fragment_home))) {
+                loadUserInfo();
+            } else if (currentFragment.equals(getString(R.string.title_fragment_user_list))) {
+                loadUsers();
+            } else if (currentFragment.equals(getString(R.string.title_fragment_log))) {
+                resetLogPages();
+                loadLog();
+            }
         }
 
         super.online();

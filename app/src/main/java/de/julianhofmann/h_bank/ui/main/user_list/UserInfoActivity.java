@@ -153,6 +153,7 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void online() {
         if (offline) {
+            loadUserInfo();
             refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
         }
         super.online();
