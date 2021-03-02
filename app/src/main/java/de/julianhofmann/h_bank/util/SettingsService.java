@@ -7,6 +7,8 @@ public class SettingsService {
     private static boolean fingerprintLogin;
     private static boolean autoLogin;
     private static boolean checkForUpdates;
+    private static boolean autoRefresh;
+    private static int autoRefreshInterval;
 
     private static SharedPreferences sharedPreferences;
     private static String username;
@@ -18,6 +20,8 @@ public class SettingsService {
         fingerprintLogin = sp.getBoolean(username + "_settings_fingerprint_login", false);
         autoLogin = sp.getBoolean(username + "_settings_auto_login", false);
         checkForUpdates = sp.getBoolean(username + "_settings_check_for_updates", true);
+        autoRefresh = sp.getBoolean(username + "_settings_auto_refresh", true);
+        autoRefreshInterval = sp.getInt(username + "_settings_auto_refresh_interval", 2000);
     }
 
     public static void deleteSettings(String username) {
@@ -26,6 +30,8 @@ public class SettingsService {
         edit.remove(username+"_settings_fingerprint_login");
         edit.remove(username+"_settings_auto_login");
         edit.remove(username+"_settings_check_for_updates");
+        edit.remove(username + "_settings_auto_refresh");
+        edit.remove(username + "_settings_auto_refresh_interval");
         edit.apply();
     }
 
@@ -71,5 +77,27 @@ public class SettingsService {
         edit.putBoolean(username + "_settings_check_for_updates", checkForUpdates);
         edit.apply();
         SettingsService.checkForUpdates = checkForUpdates;
+    }
+
+    public static boolean getAutoRefresh() {
+        return autoRefresh;
+    }
+
+    public static void setAutoRefresh(boolean autoRefresh) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putBoolean(username + "_settings_auto_refresh", autoRefresh);
+        edit.apply();
+        SettingsService.autoRefresh = autoRefresh;
+    }
+
+    public static int getAutoRefreshInterval() {
+        return autoRefreshInterval;
+    }
+
+    public static void setAutoRefreshInterval(int autoRefreshInterval) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putInt(username + "_settings_auto_refresh_interval", autoRefreshInterval);
+        edit.apply();
+        SettingsService.autoRefreshInterval = autoRefreshInterval;
     }
 }

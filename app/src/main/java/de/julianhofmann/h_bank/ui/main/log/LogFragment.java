@@ -17,6 +17,7 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.SizeModel;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
+import de.julianhofmann.h_bank.util.SettingsService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,20 +72,22 @@ public class LogFragment extends Fragment {
                                 activity.loadLog();
                             }
                         }
-                        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+                        refreshLogHandler.postDelayed(refreshLogRunnable, SettingsService.getAutoRefreshInterval());
                     }
 
                     @Override
                     public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
                         activity.offline();
-                        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+                        refreshLogHandler.postDelayed(refreshLogRunnable, SettingsService.getAutoRefreshInterval());
                     }
                 });
             } else {
-                refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+                refreshLogHandler.postDelayed(refreshLogRunnable, SettingsService.getAutoRefreshInterval());
             }
         };
-        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+        if (SettingsService.getAutoRefresh()) {
+            refreshLogHandler.postDelayed(refreshLogRunnable, SettingsService.getAutoRefreshInterval());
+        }
     }
 
     @Override
@@ -122,7 +125,9 @@ public class LogFragment extends Fragment {
             activity.resetLogPages();
             activity.loadLog();
 
-            refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+            if (SettingsService.getAutoRefresh()) {
+                refreshLogHandler.postDelayed(refreshLogRunnable, SettingsService.getAutoRefreshInterval());
+            }
             paused = false;
         }
     }

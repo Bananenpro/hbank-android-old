@@ -12,6 +12,7 @@ import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.InfoModel;
 import de.julianhofmann.h_bank.ui.BaseActivity;
+import de.julianhofmann.h_bank.util.SettingsService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,10 +33,12 @@ public class InfoActivity extends BaseActivity {
             @Override
             public void run() {
                 refreshInfo();
-                refreshInfoHandler.postDelayed(this, 2000);
+                refreshInfoHandler.postDelayed(this, SettingsService.getAutoRefreshInterval());
             }
         };
-        refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
+        if (SettingsService.getAutoRefresh()) {
+            refreshInfoHandler.postDelayed(refreshInfoRunnable, SettingsService.getAutoRefreshInterval());
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -221,7 +224,9 @@ public class InfoActivity extends BaseActivity {
     @Override
     protected void online() {
         if (offline) {
-            refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
+            if (SettingsService.getAutoRefresh()) {
+                refreshInfoHandler.postDelayed(refreshInfoRunnable, SettingsService.getAutoRefreshInterval());
+            }
         }
         super.online();
     }
@@ -229,7 +234,9 @@ public class InfoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         if (paused) {
-            refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
+            if (SettingsService.getAutoRefresh()) {
+                refreshInfoHandler.postDelayed(refreshInfoRunnable, SettingsService.getAutoRefreshInterval());
+            }
         }
         super.onResume();
     }

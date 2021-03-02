@@ -10,8 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
+import de.julianhofmann.h_bank.util.SettingsService;
 
 public class HomeFragment extends Fragment {
 
@@ -33,12 +36,17 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 ((MainActivity) requireActivity()).refreshBalance();
-                refreshBalanceHandler.postDelayed(this, 2000);
+                refreshBalanceHandler.postDelayed(this, SettingsService.getAutoRefreshInterval());
             }
         };
 
-        ((MainActivity) requireActivity()).loadUserInfo();
-        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+        ((MainActivity) requireActivity()).loadUserInfo(null);
+        if (SettingsService.getAutoRefresh()) {
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
+        }
+
+        FloatingActionButton refresh = requireView().findViewById(R.id.user_refresh_button);
+        refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -52,8 +60,12 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (paused) {
-            ((MainActivity) requireActivity()).loadUserInfo();
-            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+            ((MainActivity) requireActivity()).loadUserInfo(null);
+            if (SettingsService.getAutoRefresh()) {
+                refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
+            }
+            FloatingActionButton refresh = requireView().findViewById(R.id.user_refresh_button);
+            refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
             paused = false;
         }
     }

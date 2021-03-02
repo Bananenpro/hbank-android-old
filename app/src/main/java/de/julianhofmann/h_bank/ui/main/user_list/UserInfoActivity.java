@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -21,6 +20,7 @@ import de.julianhofmann.h_bank.ui.transaction.PaymentPlanActivity;
 import de.julianhofmann.h_bank.ui.transaction.TransferMoneyActivity;
 import de.julianhofmann.h_bank.util.BalanceCache;
 import de.julianhofmann.h_bank.util.ImageUtils;
+import de.julianhofmann.h_bank.util.SettingsService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,10 +57,12 @@ public class UserInfoActivity extends BaseActivity {
             @Override
             public void run() {
                 refreshBalance();
-                refreshBalanceHandler.postDelayed(this, 2000);
+                refreshBalanceHandler.postDelayed(this, SettingsService.getAutoRefreshInterval());
             }
         };
-        refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+        if (SettingsService.getAutoRefresh()) {
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
+        }
     }
 
     public void loadUserInfo() {
@@ -154,7 +156,9 @@ public class UserInfoActivity extends BaseActivity {
     protected void online() {
         if (offline) {
             loadUserInfo();
-            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+            if (SettingsService.getAutoRefresh()) {
+                refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
+            }
         }
         super.online();
     }
@@ -169,7 +173,9 @@ public class UserInfoActivity extends BaseActivity {
     protected void onResume() {
         if (paused) {
             loadUserInfo();
-            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+            if (SettingsService.getAutoRefresh()) {
+                refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
+            }
             paused = false;
         }
         super.onResume();

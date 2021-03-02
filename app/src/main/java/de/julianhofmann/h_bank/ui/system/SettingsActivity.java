@@ -2,9 +2,14 @@ package de.julianhofmann.h_bank.ui.system;
 
 import androidx.appcompat.widget.SwitchCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
@@ -14,6 +19,7 @@ import de.julianhofmann.h_bank.util.SettingsService;
 public class SettingsActivity extends BaseActivity {
 
     @Override
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init(R.layout.activity_settings);
@@ -25,6 +31,53 @@ public class SettingsActivity extends BaseActivity {
         autoLoginSwitch.setChecked(SettingsService.getAutoLogin());
         SwitchCompat checkForUpdatesSwitch = findViewById(R.id.check_for_updates_switch);
         checkForUpdatesSwitch.setChecked(SettingsService.getCheckForUpdates());
+        SwitchCompat autoRefreshSwitch = findViewById(R.id.auto_refresh_switch);
+        autoRefreshSwitch.setChecked(SettingsService.getAutoRefresh());
+        EditText autoRefreshInterval = findViewById(R.id.auto_refresh_interval);
+        autoRefreshInterval.setText(Integer.toString(SettingsService.getAutoRefreshInterval()));
+        autoRefreshInterval.setEnabled(autoRefreshSwitch.isChecked());
+        autoRefreshInterval.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkChangeAutoRefreshIntervalButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        checkChangeAutoRefreshIntervalButton();
+    }
+
+    private void checkChangeAutoRefreshIntervalButton() {
+        SwitchCompat autoRefreshSwitch = findViewById(R.id.auto_refresh_switch);
+        Button changeAutoRefreshInterval = findViewById(R.id.change_refresh_interval);
+        EditText autoRefreshInterval = findViewById(R.id.auto_refresh_interval);
+        boolean enabled = autoRefreshInterval.getText().length() > 0 && autoRefreshSwitch.isChecked();
+        if (enabled) {
+            int interval = Integer.parseInt(autoRefreshInterval.getText().toString());
+            enabled = interval >= 500 && interval != SettingsService.getAutoRefreshInterval();
+        }
+        changeAutoRefreshInterval.setEnabled(enabled);
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void setAutoRefreshInterval(View v) {
+        EditText autoRefreshInterval = findViewById(R.id.auto_refresh_interval);
+        int interval = Integer.parseInt(autoRefreshInterval.getText().toString());
+        SettingsService.setAutoRefreshInterval(interval);
+        autoRefreshInterval.setText(Integer.toString(SettingsService.getAutoRefreshInterval()));
+        checkChangeAutoRefreshIntervalButton();
+    }
+
+    public void setAutoRefresh(View v) {
+        EditText autoRefreshInterval = findViewById(R.id.auto_refresh_interval);
+        SwitchCompat autoRefreshSwitch = findViewById(R.id.auto_refresh_switch);
+        SettingsService.setAutoRefresh(autoRefreshSwitch.isChecked());
+        autoRefreshInterval.setEnabled(autoRefreshSwitch.isChecked());
+        checkChangeAutoRefreshIntervalButton();
     }
 
     public void connectionSettings(View v) {

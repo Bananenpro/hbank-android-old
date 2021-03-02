@@ -7,18 +7,32 @@
     tools:context=".ui.system.SettingsActivity">
 
     <Button
-        android:id="@+id/create_payment_plan2"
+        android:id="@+id/change_refresh_interval"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setAutoRefreshInterval"
+        android:text="@string/change_auto_refresh_interval"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/auto_refresh_lbl" />
+
+    <Button
+        android:id="@+id/connection_settings_btn"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:onClick="connectionSettings"
         android:text="@string/title_activity_connection_settings"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_for_updates_lbl" />
+        app:layout_constraintTop_toBottomOf="@+id/change_refresh_interval" />
 
     <Button
         android:layout_width="170dp"
@@ -72,6 +86,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/check_for_updates_lbl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/check_for_updates_lbl" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/auto_refresh_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="setAutoRefresh"
+        app:layout_constraintBottom_toBottomOf="@+id/auto_refresh_lbl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/auto_refresh_lbl"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/offline_login_lbl"
@@ -134,4 +159,61 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/auto_login_lbl" />
+
+    <TextView
+        android:id="@+id/auto_refresh_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/auto_refresh"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/fingerprint_switch"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/check_for_updates_lbl" />
+
+    <TextView
+        android:id="@+id/auto_refresh_interval_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/auto_refresh_interval"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/auto_refresh_interval"
+        app:layout_constraintEnd_toStartOf="@+id/fingerprint_switch"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/auto_refresh_interval" />
+
+    <EditText
+        android:id="@+id/auto_refresh_interval"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/auto_refresh_interval_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/auto_refresh_switch" />
+
+    <TextView
+        android:id="@+id/s_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/ms"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/auto_refresh_interval"
+        app:layout_constraintEnd_toEndOf="@+id/auto_refresh_interval"
+        app:layout_constraintTop_toTopOf="@+id/auto_refresh_interval" />
 </androidx.constraintlayout.widget.ConstraintLayout>

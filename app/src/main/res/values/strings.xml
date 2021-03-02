@@ -77,9 +77,9 @@
     <string name="update_btn">Update</string>
     <string name="up_to_date">The app is up to date!</string>
     <string name="ok">OK</string>
-    <string name="offline_login">Offline-Sign-In</string>
+    <string name="offline_login">Offline sign in</string>
     <string name="fingerprint_login">Sign in with fingerprint</string>
-    <string name="auto_login">Auto-Sign-In</string>
+    <string name="auto_login">Auto sign in</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="delete_account">Delete account</string>
     <string name="delete_info">All of your data will be gone! Please enter your password to confirm.</string>
@@ -148,4 +148,8 @@
     <string name="dont_ask">Don\'t ask</string>
     <string name="parent_password_hint">Parent password…</string>
     <string name="wrong_parent_password">Wrong parent password!</string>
+    <string name="auto_refresh">Auto refresh</string>
+    <string name="auto_refresh_interval">Refresh interval</string>
+    <string name="ms">ms</string>
+    <string name="change_auto_refresh_interval">Change Refresh Interval</string>
 </resources>

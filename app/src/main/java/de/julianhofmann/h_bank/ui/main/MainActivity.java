@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -70,6 +73,7 @@ public class MainActivity extends BaseActivity {
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
+    private boolean spinning = false;
     private String currentFragment = "";
 
     @Override
@@ -193,10 +197,38 @@ public class MainActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    public void loadUserInfo() {
-        if (!gone) {
+    public void loadUserInfo(View v) {
+        if (!spinning && !gone) {
             TextView username = findViewById(R.id.user_name_lbl);
             username.setText(RetrofitService.getName());
+
+            FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
+            AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+            if (v != null) {
+                spinning = true;
+                ViewCompat.animate(refreshBtn).
+                        rotation(720).
+                        withLayer().
+                        setDuration(1125).
+                        setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
+                    @Override
+                    public void onAnimationStart(View view) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(View view) {
+                        view.setRotation(0);
+                        spinning = false;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(View view) {
+                        view.setRotation(0);
+                        spinning = false;
+                    }
+                }).start();
+            }
+
 
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
@@ -447,7 +479,7 @@ public class MainActivity extends BaseActivity {
 
         if (offline) {
             if (currentFragment.equals(getString(R.string.title_fragment_home))) {
-                loadUserInfo();
+                loadUserInfo(null);
             } else if (currentFragment.equals(getString(R.string.title_fragment_user_list))) {
                 loadUsers();
             } else if (currentFragment.equals(getString(R.string.title_fragment_log))) {
