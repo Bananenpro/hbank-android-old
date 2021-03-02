@@ -15,11 +15,16 @@ public class RegisterModel {
     @Expose
     private Boolean isParent;
 
+    @SerializedName("parent_password")
+    @Expose
+    private String parentPassword;
 
-    public RegisterModel(String name, String password, Boolean isParent) {
+
+    public RegisterModel(String name, String password, Boolean isParent, String parentPassword) {
         this.name = name;
         this.password = password;
         this.isParent = isParent;
+        this.parentPassword = parentPassword;
     }
 
     public String getName() {
@@ -46,4 +51,11 @@ public class RegisterModel {
         this.isParent = isParent;
     }
 
+    public String getParentPassword() {
+        return parentPassword;
+    }
+
+    public void setParentPassword(String parentPassword) {
+        this.parentPassword = parentPassword;
+    }
 }

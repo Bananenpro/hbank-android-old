@@ -73,6 +73,15 @@ public class RegisterActivity extends BaseActivity {
         EditText passwordRepeat = findViewById(R.id.register_password_repeat);
         passwordRepeat.addTextChangedListener(textWatcher);
 
+        EditText parentPassword = findViewById(R.id.register_parent_password);
+        parentPassword.addTextChangedListener(textWatcher);
+
+        SwitchCompat isParent = findViewById(R.id.is_parent_switch);
+        isParent.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            parentPassword.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            checkSubmitButton();
+        });
+
         checkSubmitButton();
     }
 
@@ -81,7 +90,10 @@ public class RegisterActivity extends BaseActivity {
         EditText username = findViewById(R.id.register_username);
         EditText password = findViewById(R.id.register_password);
         EditText passwordRepeat = findViewById(R.id.register_password_repeat);
-        submit.setEnabled(username.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0 && passwordRepeat.getText().toString().equals(password.getText().toString()));
+        EditText parentPassword = findViewById(R.id.register_parent_password);
+        SwitchCompat isParent = findViewById(R.id.is_parent_switch);
+        submit.setEnabled(username.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0 && passwordRepeat.getText().toString().equals(password.getText().toString())
+            && (!isParent.isChecked() || parentPassword.getText().length() > 0));
     }
 
     private void switchToLoginActivity() {
@@ -100,12 +112,13 @@ public class RegisterActivity extends BaseActivity {
             EditText password = findViewById(R.id.register_password);
             EditText repeatPassword = findViewById(R.id.register_password_repeat);
             SwitchCompat switchCompat = findViewById(R.id.is_parent_switch);
-            TextView error_text = findViewById(R.id.register_error_text);
-            error_text.setText("");
+            EditText parentPassword = findViewById(R.id.register_parent_password);
+            TextView errorText = findViewById(R.id.register_error_text);
+            errorText.setText("");
 
-            if (name.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
+            if (name.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0 && (!switchCompat.isChecked() || parentPassword.getText().length() > 0)) {
                 if (password.getText().toString().equals(repeatPassword.getText().toString())) {
-                    RegisterModel model = new RegisterModel(name.getText().toString().trim(), password.getText().toString().trim(), switchCompat.isChecked());
+                    RegisterModel model = new RegisterModel(name.getText().toString().trim(), password.getText().toString().trim(), switchCompat.isChecked(), parentPassword.getText().toString());
 
                     Call<RegisterResponseModel> call = RetrofitService.getHbankApi().register(model);
 
@@ -125,16 +138,20 @@ public class RegisterActivity extends BaseActivity {
                                     RegisterResponseModel body = converter.convert(response.errorBody());
                                     if (body != null) {
                                         if (!body.getNameLength()) {
-                                            String newText = error_text.getText().toString() + "\n" + getString(R.string.name_too_short);
-                                            error_text.setText(newText);
+                                            String newText = errorText.getText().toString() + "\n" + getString(R.string.name_too_short);
+                                            errorText.setText(newText);
                                         }
                                         if (!body.getPasswordLength()) {
-                                            String newText = error_text.getText().toString() + "\n" + getString(R.string.password_length_error_part_1) + " " + body.getRequiredPasswordLength() + " " + getString(R.string.password_length_error_part_2);
-                                            error_text.setText(newText);
+                                            String newText = errorText.getText().toString() + "\n" + getString(R.string.password_length_error_part_1) + " " + body.getRequiredPasswordLength() + " " + getString(R.string.password_length_error_part_2);
+                                            errorText.setText(newText);
                                         }
                                         if (body.getAlreadyExists()) {
-                                            String newText = error_text.getText().toString() + "\n" + getString(R.string.user_already_exists);
-                                            error_text.setText(newText);
+                                            String newText = errorText.getText().toString() + "\n" + getString(R.string.user_already_exists);
+                                            errorText.setText(newText);
+                                        }
+                                        if (body.getWrongParentPassword()) {
+                                            String newText = errorText.getText().toString() + "\n" + getString(R.string.wrong_parent_password);
+                                            errorText.setText(newText);
                                         }
                                     }
                                 } catch (IOException e) {
@@ -158,10 +175,10 @@ public class RegisterActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    error_text.setText(getString(R.string.passwords_dont_match));
+                    errorText.setText(getString(R.string.passwords_dont_match));
                 }
             } else {
-                error_text.setText(getString(R.string.empty_fields));
+                errorText.setText(getString(R.string.empty_fields));
             }
         }
     }

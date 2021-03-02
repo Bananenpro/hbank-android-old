@@ -144,4 +144,6 @@
     <string name="time_hint">Zeit…</string>
     <string name="date_hint">Datum…</string>
     <string name="dont_ask">Nicht fragen</string>
+    <string name="parent_password_hint">Elternpasswort…</string>
+    <string name="wrong_parent_password">Falsches Elternpasswort!</string>
 </resources>

@@ -15,6 +15,9 @@ public class RegisterResponseModel {
     @SerializedName("already_exists")
     private Boolean alreadyExists;
 
+    @SerializedName("wrong_parent_password")
+    private Boolean wrongParentPassword;
+
     public Boolean getAlreadyExists() {
         return alreadyExists;
     }
@@ -45,5 +48,13 @@ public class RegisterResponseModel {
 
     public void setRequiredPasswordLength(Integer requiredPasswordLength) {
         this.requiredPasswordLength = requiredPasswordLength;
+    }
+
+    public Boolean getWrongParentPassword() {
+        return wrongParentPassword;
+    }
+
+    public void setWrongParentPassword(Boolean wrongParentPassword) {
+        this.wrongParentPassword = wrongParentPassword;
     }
 }

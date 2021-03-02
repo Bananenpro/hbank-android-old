@@ -146,4 +146,6 @@
     <string name="time_hint">Time…</string>
     <string name="date_hint">Date…</string>
     <string name="dont_ask">Don\'t ask</string>
+    <string name="parent_password_hint">Parent password…</string>
+    <string name="wrong_parent_password">Wrong parent password!</string>
 </resources>
