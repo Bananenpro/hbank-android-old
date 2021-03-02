@@ -143,4 +143,5 @@
     <string name="money_hint">Geld…</string>
     <string name="time_hint">Zeit…</string>
     <string name="date_hint">Datum…</string>
+    <string name="dont_ask">Nicht fragen</string>
 </resources>

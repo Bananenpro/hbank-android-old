@@ -21,6 +21,7 @@ import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.VersionModel;
+import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,13 +41,17 @@ public class UpdateService {
                             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                                 if (which == dialog.BUTTON_POSITIVE) {
                                     installUpdate(context);
-                                    askedForUpdate = true;
-                                } else if (which == dialog.BUTTON_NEGATIVE) {
-                                    askedForUpdate = true;
+                                } else if (which == dialog.BUTTON_NEUTRAL) {
+                                    SettingsService.setCheckForUpdates(false);
                                 }
+                                askedForUpdate = true;
                             };
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                            if (autoUpdate)
+                                builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).setNeutralButton(R.string.dont_ask, dialogClickListener).show();
+                            else
+                                builder.setTitle(R.string.update_available).setMessage(R.string.update_question).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+
                         } else if (!autoUpdate) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle(R.string.update).setMessage(R.string.up_to_date).setNeutralButton(context.getString(R.string.ok), null).show();
