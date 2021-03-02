@@ -145,6 +145,20 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     @Override
+    protected void offline() {
+        refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
+        super.offline();
+    }
+
+    @Override
+    protected void online() {
+        if (offline) {
+            refreshBalanceHandler.postDelayed(refreshBalanceRunnable, 2000);
+        }
+        super.online();
+    }
+
+    @Override
     protected void onPause() {
         refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
         super.onPause();

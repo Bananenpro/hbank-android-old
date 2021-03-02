@@ -12,10 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -224,7 +227,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void refreshBalance() {
-        if (!gone) {
+        if (!gone && !offline) {
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
             TextView balance = findViewById(R.id.user_balance_lbl);
 

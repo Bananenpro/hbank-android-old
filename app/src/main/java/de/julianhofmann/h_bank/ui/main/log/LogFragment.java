@@ -57,28 +57,32 @@ public class LogFragment extends Fragment {
                 });
 
         refreshLogRunnable = () -> {
-            Call<SizeModel> call = RetrofitService.getHbankApi().getLogSize(RetrofitService.getAuthorization());
-            call.enqueue(new Callback<SizeModel>() {
-                @Override
-                public void onResponse(@NotNull Call<SizeModel> call, @NotNull Response<SizeModel> response) {
-                    activity.online();
-                    if (response.isSuccessful()) {
-                        if (response.body() != null && response.body().getSize() != logSize) {
-                            logSize = response.body().getSize();
-                            MainActivity activity = (MainActivity) requireActivity();
-                            activity.resetLogPages();
-                            activity.loadLog();
+            if (!activity.isOffline()) {
+                Call<SizeModel> call = RetrofitService.getHbankApi().getLogSize(RetrofitService.getAuthorization());
+                call.enqueue(new Callback<SizeModel>() {
+                    @Override
+                    public void onResponse(@NotNull Call<SizeModel> call, @NotNull Response<SizeModel> response) {
+                        activity.online();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getSize() != logSize) {
+                                logSize = response.body().getSize();
+                                MainActivity activity = (MainActivity) requireActivity();
+                                activity.resetLogPages();
+                                activity.loadLog();
+                            }
                         }
+                        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
                     }
-                    refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
-                }
 
-                @Override
-                public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
-                    activity.offline();
-                    refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
-                }
-            });
+                    @Override
+                    public void onFailure(@NotNull Call<SizeModel> call, @NotNull Throwable t) {
+                        activity.offline();
+                        refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+                    }
+                });
+            } else {
+                refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
+            }
         };
         refreshLogHandler.postDelayed(refreshLogRunnable, 2000);
     }

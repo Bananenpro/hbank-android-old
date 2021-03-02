@@ -224,5 +224,9 @@ public class BaseActivity extends AppCompatActivity {
         finish();
         return true;
     }
+
+    public boolean isOffline() {
+        return offline;
+    }
 }
 

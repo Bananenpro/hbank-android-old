@@ -150,6 +150,10 @@ public class InfoActivity extends BaseActivity {
             port.setText(Integer.toString(RetrofitService.getPort()));
 
             Call<InfoModel> call = RetrofitService.getHbankApi().getInfo();
+            if (!status.getText().equals(getString(R.string.connected))) {
+                status.setText(R.string.connecting);
+                status.setTextColor(getColor(R.color.yellow));
+            }
             call.enqueue(new Callback<InfoModel>() {
                 @Override
                 public void onResponse(@NotNull Call<InfoModel> call, @NotNull Response<InfoModel> response) {
@@ -204,6 +208,20 @@ public class InfoActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void offline() {
+        refreshInfoHandler.removeCallbacks(refreshInfoRunnable);
+        super.offline();
+    }
+
+    @Override
+    protected void online() {
+        if (offline) {
+            refreshInfoHandler.postDelayed(refreshInfoRunnable, 2000);
+        }
+        super.online();
     }
 
     @Override
