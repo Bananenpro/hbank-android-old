@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -221,13 +220,14 @@ public class CalculatorActivity extends BaseActivity {
             @Override
             public void onResponse(@NotNull Call<CalculateModel> call, @NotNull Response<CalculateModel> response) {
                 if (response.isSuccessful()) {
+                    online();
                     if (response.body() != null) {
                         date.setEnabled(false);
                         time.setEnabled(false);
                         money.setEnabled(false);
 
                         date.setText(response.body().getDate());
-                        date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_cancel_24, 0);
+                        date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.cancel_icon, 0);
                         date.setEnabled(true);
                         time.setText(response.body().getDeltatime());
                         time.setEnabled(true);
@@ -247,7 +247,7 @@ public class CalculatorActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NotNull Call<CalculateModel> call, @NotNull Throwable t) {
-                Toast.makeText(CalculatorActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
+                offline();
                 button.setText(R.string.calculate);
                 button.setEnabled(true);
             }
@@ -280,7 +280,7 @@ public class CalculatorActivity extends BaseActivity {
             money.setEnabled(false);
             money.setText("");
             dialog = false;
-            date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_cancel_24, 0);
+            date.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.cancel_icon, 0);
             checkSubmitButton();
         }, year, month, day);
         picker.setOnCancelListener(d -> dialog = false);

@@ -56,6 +56,12 @@ public class ConnectionSettingsActivity extends BaseActivity {
             }
             Button apply = findViewById(R.id.apply_connection_settings);
             apply.setText(R.string.connect);
+        } else if (getIntent().getBooleanExtra("hide_back_arrow", false)) {
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                actionBar.setHomeButtonEnabled(false);
+            }
         }
 
         TextWatcher textWatcher = new TextWatcher() {

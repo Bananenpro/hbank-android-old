@@ -67,6 +67,8 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                             }
                             receiver.setAdapter(new ArrayAdapter<>(CreatePaymentPlanActivity.this, R.layout.support_simple_spinner_dropdown_item, usernames));
                         }
+
+                        online();
                     } else if (response.code() == 403) {
                         String name = RetrofitService.getName();
                         RetrofitService.logout();
@@ -77,7 +79,7 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                 @Override
                 public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
                     receiver.setEnabled(false);
-                    Toast.makeText(CreatePaymentPlanActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
+                    offline();
                 }
             });
         } else {

@@ -32,7 +32,6 @@ public class UserInfoActivity extends BaseActivity {
     private String name;
     private boolean paused = false;
     private boolean balanceAccess = true;
-    private boolean offlineToast = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +76,7 @@ public class UserInfoActivity extends BaseActivity {
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                if (offlineToast) {
-                    Toast.makeText(UserInfoActivity.this, getString(R.string.connection_established), Toast.LENGTH_SHORT).show();
-                    offlineToast = false;
-                }
+                online();
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getBalance() != null) {
                         String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
@@ -95,10 +91,7 @@ public class UserInfoActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                if (!offlineToast) {
-                    Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
-                    offlineToast = true;
-                }
+                offline();
             }
         });
 
@@ -113,10 +106,7 @@ public class UserInfoActivity extends BaseActivity {
             call.enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                    if (offlineToast) {
-                        Toast.makeText(UserInfoActivity.this, getString(R.string.connection_established), Toast.LENGTH_SHORT).show();
-                        offlineToast = false;
-                    }
+                    online();
                     if (response.isSuccessful()) {
                         if (response.body() != null && response.body().getBalance() != null) {
                             String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
@@ -130,10 +120,7 @@ public class UserInfoActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                    if (!offlineToast) {
-                        Toast.makeText(UserInfoActivity.this, getString(R.string.cannot_reach_server), Toast.LENGTH_SHORT).show();
-                        offlineToast = true;
-                    }
+                    offline();
                 }
             });
         }

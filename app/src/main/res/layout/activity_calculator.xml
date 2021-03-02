@@ -86,7 +86,7 @@
             android:id="@+id/calculate_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_baseline_cancel_24"
+            android:drawableEnd="@drawable/cancel_icon"
             android:drawableTint="@color/cancel"
             android:ems="10"
             android:focusable="false"

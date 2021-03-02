@@ -65,6 +65,7 @@ public class PaymentPlanInfoActivity extends BaseActivity {
             @Override
             public void onResponse(@NotNull Call<PaymentPlanModel> call, @NotNull Response<PaymentPlanModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    online();
                     if (title != null)
                         title.setText(response.body().getDescription());
 
@@ -180,7 +181,7 @@ public class PaymentPlanInfoActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NotNull Call<PaymentPlanModel> call, @NotNull Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
+                offline();
             }
         });
     }
@@ -198,6 +199,7 @@ public class PaymentPlanInfoActivity extends BaseActivity {
                         @Override
                         public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                             if (response.isSuccessful()) {
+                                online();
                                 onSupportNavigateUp();
                             } else if (response.code() == 403) {
                                 String name = RetrofitService.getName();
@@ -211,7 +213,7 @@ public class PaymentPlanInfoActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                            Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
+                            offline();
                             button.setText(R.string.delete);
                             button.setEnabled(true);
                             gone = false;

@@ -52,6 +52,7 @@ public class LogItemInfoActivity extends BaseActivity {
             @Override
             public void onResponse(@NotNull Call<LogModel> call, @NotNull Response<LogModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    online();
 
                     if (title != null)
                         title.setText(response.body().getDescription());
@@ -85,7 +86,7 @@ public class LogItemInfoActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NotNull Call<LogModel> call, @NotNull Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_LONG).show();
+                offline();
             }
         });
     }

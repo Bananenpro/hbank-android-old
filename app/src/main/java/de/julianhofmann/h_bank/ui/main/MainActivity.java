@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity {
     private int logPage = 0;
     private boolean allLogPages = false;
     private boolean loadingLog = false;
-    private boolean offline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -438,13 +437,7 @@ public class MainActivity extends BaseActivity {
             paymentPlansBtn.setVisibility(View.INVISIBLE);
         }
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.drawable.no_connection_icon);
-        } else if (!offline) {
-            Toast.makeText(getApplicationContext(), R.string.cannot_reach_server, Toast.LENGTH_SHORT).show();
-        }
-        offline = true;
+        super.offline();
     }
 
     public void online() {
@@ -460,13 +453,8 @@ public class MainActivity extends BaseActivity {
         if (paymentPlansBtn != null) {
             paymentPlansBtn.setVisibility(View.VISIBLE);
         }
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
-            getSupportActionBar().setIcon(null);
-        } else if (offline) {
-            Toast.makeText(getApplicationContext(), R.string.connection_established, Toast.LENGTH_SHORT).show();
-        }
-        offline = false;
+
+        super.online();
     }
 
     public void paymentPlans(View v) {
