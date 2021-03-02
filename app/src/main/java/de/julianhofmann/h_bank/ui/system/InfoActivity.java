@@ -157,6 +157,7 @@ public class InfoActivity extends BaseActivity {
             call.enqueue(new Callback<InfoModel>() {
                 @Override
                 public void onResponse(@NotNull Call<InfoModel> call, @NotNull Response<InfoModel> response) {
+                    online();
                     if (response.isSuccessful() && response.body() != null) {
                         status.setTextColor(getColor(R.color.green));
                         status.setText(R.string.connected);
@@ -195,6 +196,7 @@ public class InfoActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<InfoModel> call, @NotNull Throwable t) {
+                    offline();
                     status.setTextColor(getColor(R.color.red));
                     status.setText(R.string.not_connected);
                     paymentPlans.setText(R.string.dash);

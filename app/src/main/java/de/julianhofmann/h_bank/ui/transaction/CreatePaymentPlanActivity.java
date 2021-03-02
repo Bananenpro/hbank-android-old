@@ -59,6 +59,7 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                 public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
+                            online();
                             List<CharSequence> usernames = new ArrayList<>();
                             for (UserModel user : response.body()) {
                                 if (!user.getName().equals(RetrofitService.getName())) {
@@ -67,8 +68,6 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                             }
                             receiver.setAdapter(new ArrayAdapter<>(CreatePaymentPlanActivity.this, R.layout.support_simple_spinner_dropdown_item, usernames));
                         }
-
-                        online();
                     } else if (response.code() == 403) {
                         String name = RetrofitService.getName();
                         RetrofitService.logout();
@@ -78,8 +77,8 @@ public class CreatePaymentPlanActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
-                    receiver.setEnabled(false);
                     offline();
+                    receiver.setEnabled(false);
                 }
             });
         } else {

@@ -430,16 +430,6 @@ public class MainActivity extends BaseActivity {
             editProfilePicture.setVisibility(View.INVISIBLE);
         }
 
-        Button calculator = findViewById(R.id.home_calculator_btn);
-        if (calculator != null) {
-            calculator.setVisibility(View.INVISIBLE);
-        }
-
-        Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
-        if (paymentPlansBtn != null) {
-            paymentPlansBtn.setVisibility(View.INVISIBLE);
-        }
-
         super.offline();
     }
 
@@ -447,14 +437,6 @@ public class MainActivity extends BaseActivity {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
-        }
-        Button calculator = findViewById(R.id.home_calculator_btn);
-        if (calculator != null) {
-            calculator.setVisibility(View.VISIBLE);
-        }
-        Button paymentPlansBtn = findViewById(R.id.home_payment_plans_btn);
-        if (paymentPlansBtn != null) {
-            paymentPlansBtn.setVisibility(View.VISIBLE);
         }
 
         super.online();

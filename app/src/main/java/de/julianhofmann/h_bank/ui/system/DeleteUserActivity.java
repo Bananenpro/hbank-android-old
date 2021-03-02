@@ -80,6 +80,7 @@ public class DeleteUserActivity extends BaseActivity {
                     call.enqueue(new Callback<LoginResponseModel>() {
                         @Override
                         public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
+                            online();
                             if (response.isSuccessful() && response.body() != null) {
                                 RetrofitService.login(RetrofitService.getName(), response.body().getToken());
                                 Call<Void> call2 = RetrofitService.getHbankApi().delete(RetrofitService.getName(), RetrofitService.getAuthorization());
@@ -119,6 +120,7 @@ public class DeleteUserActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
+                            offline();
                             error.setText(getString(R.string.cannot_reach_server));
                             button.setEnabled(true);
                             button.setText(getString(R.string.delete));

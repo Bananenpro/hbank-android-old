@@ -130,9 +130,11 @@ public class RegisterActivity extends BaseActivity {
                         @Override
                         public void onResponse(@NotNull Call<RegisterResponseModel> call, @NotNull Response<RegisterResponseModel> response) {
                             if (response.isSuccessful()) {
+                                online();
                                 RetrofitService.logout();
                                 switchToLoginActivity();
                             } else if (response.code() == 500 && response.errorBody() != null) {
+                                online();
                                 try {
                                     Converter<ResponseBody, RegisterResponseModel> converter = RetrofitService.getRetrofit().responseBodyConverter(RegisterResponseModel.class, new Annotation[0]);
                                     RegisterResponseModel body = converter.convert(response.errorBody());
@@ -166,6 +168,7 @@ public class RegisterActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<RegisterResponseModel> call, @NotNull Throwable t) {
+                            offline();
                             TextView text = findViewById(R.id.register_error_text);
                             text.setText(getString(R.string.cannot_reach_server));
 

@@ -234,6 +234,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onResponse(@NotNull Call<LoginResponseModel> call, @NotNull Response<LoginResponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
+                            online();
                             RetrofitService.login(name.getText().toString().trim(), response.body().getToken().trim());
 
                             PasswordCache.storePassword(password.getText().toString().trim(), sharedPreferences);
@@ -250,6 +251,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(@NotNull Call<LoginResponseModel> call, @NotNull Throwable t) {
+                        offline();
                         error_text.setText(getString(R.string.cannot_reach_server));
                         loginButton.setEnabled(true);
                         registerButton.setEnabled(true);

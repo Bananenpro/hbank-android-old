@@ -56,6 +56,7 @@ public class PaymentPlanActivity extends BaseActivity {
             @Override
             public void onResponse(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Response<List<PaymentPlanModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    online();
                     List<PaymentPlanModel> paymentPlans = response.body();
                     if (paymentPlans.size() > 0) {
                         emptyLbl.setVisibility(View.GONE);
@@ -75,6 +76,7 @@ public class PaymentPlanActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NotNull Call<List<PaymentPlanModel>> call, @NotNull Throwable t) {
+                offline();
                 emptyLbl.setVisibility(View.VISIBLE);
                 emptyLbl.setText(R.string.cannot_reach_server);
             }

@@ -88,10 +88,12 @@ public class TransferMoneyActivity extends BaseActivity {
                         @Override
                         public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                             if (response.isSuccessful()) {
+                                online();
                                 error.setText(R.string.transaction_complete);
                                 error.setTextColor(getColor(R.color.green));
                                 new Handler().postDelayed(() -> onSupportNavigateUp(), 1000);
                             } else if (response.code() == 400) {
+                                online();
                                 error.setText(R.string.not_enough_money);
                             } else if (response.code() == 403) {
                                 logout();
@@ -103,6 +105,7 @@ public class TransferMoneyActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                            offline();
                             error.setText(R.string.cannot_reach_server);
                             submit.setEnabled(true);
                             submit.setText(R.string.transfer_money_btn);
