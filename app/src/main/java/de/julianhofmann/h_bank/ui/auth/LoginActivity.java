@@ -12,6 +12,7 @@ import android.os.CancellationSignal;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,6 +90,7 @@ public class LoginActivity extends BaseActivity {
 
         String spName = sp.getString("name", "");
         String spToken = sp.getString("token", "");
+        String spTokenIv = sp.getString("token_iv", "");
 
         if (!spName.equals("")) {
             SettingsService.init(getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE), spName);
@@ -96,14 +98,19 @@ public class LoginActivity extends BaseActivity {
             nameEdit.setText(spName);
         }
 
-        if (!spName.equals("") && !spToken.equals("")) {
-            if (SettingsService.getOfflineLogin()) {
-                if (SettingsService.getAutoLogin()) {
-                    new Handler().postDelayed(() -> autoLogin(spName, spToken), 500);
-                } else if (SettingsService.getFingerprintLogin()) {
-                    biometricAuthentication(spName, spToken);
+        if (!spName.equals("") && !spToken.equals("") && !spTokenIv.equals("")) {
+            try {
+                final String token = RetrofitService.decrypt(Base64.decode(spTokenIv, Base64.NO_WRAP), Base64.decode(spToken, Base64.NO_WRAP), RetrofitService.TOKEN_KEY_ALIAS);
+                if (SettingsService.getOfflineLogin()) {
+                    if (SettingsService.getAutoLogin()) {
+                        new Handler().postDelayed(() -> autoLogin(spName, token), 500);
+                    } else if (SettingsService.getFingerprintLogin()) {
+                        biometricAuthentication(spName, token);
+                    }
+                } else {
+                    RetrofitService.logout();
                 }
-            } else {
+            } catch (Exception ignored) {
                 RetrofitService.logout();
             }
         }
