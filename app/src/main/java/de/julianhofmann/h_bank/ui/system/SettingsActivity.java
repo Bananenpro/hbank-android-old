@@ -58,7 +58,7 @@ public class SettingsActivity extends BaseActivity {
         boolean enabled = autoRefreshInterval.getText().length() > 0 && autoRefreshSwitch.isChecked();
         if (enabled) {
             int interval = Integer.parseInt(autoRefreshInterval.getText().toString());
-            enabled = interval >= 500 && interval != SettingsService.getAutoRefreshInterval();
+            enabled = interval >= 1000 && interval != SettingsService.getAutoRefreshInterval();
         }
         changeAutoRefreshInterval.setEnabled(enabled);
     }
