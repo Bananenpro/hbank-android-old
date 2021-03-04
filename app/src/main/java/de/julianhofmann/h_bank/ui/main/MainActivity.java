@@ -468,6 +468,11 @@ public class MainActivity extends BaseActivity {
             editProfilePicture.setVisibility(View.INVISIBLE);
         }
 
+        FloatingActionButton refresh = findViewById(R.id.user_refresh_button);
+        if (refresh != null) {
+            refresh.setEnabled(false);
+        }
+
         super.offline();
     }
 
@@ -475,6 +480,11 @@ public class MainActivity extends BaseActivity {
         FloatingActionButton editProfilePicture = findViewById(R.id.home_change_profile_picture_button);
         if (editProfilePicture != null) {
             editProfilePicture.setVisibility(View.VISIBLE);
+        }
+
+        FloatingActionButton refresh = findViewById(R.id.user_refresh_button);
+        if (refresh != null) {
+            refresh.setEnabled(true);
         }
 
         if (offline) {
