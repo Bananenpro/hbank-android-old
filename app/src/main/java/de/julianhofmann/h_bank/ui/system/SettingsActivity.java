@@ -81,8 +81,11 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void connectionSettings(View v) {
-        Intent i = new Intent(this, ConnectionSettingsActivity.class);
-        startActivity(i);
+        if (!gone) {
+            gone = true;
+            Intent i = new Intent(this, ConnectionSettingsActivity.class);
+            startActivity(i);
+        }
     }
 
     public void deleteUser(View v) {
