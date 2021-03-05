@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="24dp"
         android:foreground="@drawable/refresh_icon"
         android:foregroundGravity="center"
         android:onClick="loadUserInfo"
@@ -21,30 +21,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-
-    <Button
-        android:id="@+id/home_payment_plans_btn"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="paymentPlans"
-        android:text="@string/payment_plans"
-        app:layout_constraintBottom_toTopOf="@+id/home_calculator_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/home_calculator_btn"
-        android:layout_width="170dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="80dp"
-        android:onClick="calculator"
-        android:text="@string/title_activity_calculator"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -115,5 +91,29 @@
         app:layout_constraintStart_toStartOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="@+id/cardView"
         tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_calculator_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:clickable="true"
+        android:onClick="calculator"
+        android:src="@drawable/calculator_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_payment_plan_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:onClick="paymentPlans"
+        android:src="@drawable/payment_plan_icon"
+        app:layout_constraintBottom_toTopOf="@+id/home_calculator_btn"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
