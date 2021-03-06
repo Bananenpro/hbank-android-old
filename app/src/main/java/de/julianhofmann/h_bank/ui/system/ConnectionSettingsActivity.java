@@ -124,6 +124,7 @@ public class ConnectionSettingsActivity extends BaseActivity {
                             error.setTextColor(getColor(R.color.green));
                             error.setText(R.string.connection_established);
                             RetrofitService.reset();
+                            gone = true;
                             new Handler().postDelayed(switchToLoginActivity, 1000);
                         } else if (response.code() == 403) {
                             error.setText(R.string.wrong_password);
