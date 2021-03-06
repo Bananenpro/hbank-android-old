@@ -83,6 +83,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:label="@string/title_activity_main"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.auth.RegisterActivity"

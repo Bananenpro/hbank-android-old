@@ -50,13 +50,12 @@ public class LoginActivity extends BaseActivity {
         SharedPreferences sp = getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE);
 
         RetrofitService.init(sp);
+        BalanceCache.init(sp);
 
         if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
             switchToConnectionSettingsActivity();
             return;
         }
-
-        BalanceCache.init(sp);
 
         if (RetrofitService.isLoggedIn()) {
             switchToMainActivity();

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import java.util.Objects;
 
 import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
+import de.julianhofmann.h_bank.api.models.CashModel;
 import de.julianhofmann.h_bank.ui.BaseActivity;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.LogModel;
@@ -174,9 +176,7 @@ public class MainActivity extends BaseActivity {
             client.newCall(request).enqueue(new okhttp3.Callback() {
                 @Override
                 public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
-                    if (response.isSuccessful()) {
-                        reloadActivity();
-                    }
+                    online();
                 }
 
                 @Override
@@ -231,10 +231,13 @@ public class MainActivity extends BaseActivity {
 
 
             Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
-            TextView balance = findViewById(R.id.user_balance_lbl);
+            TextView balance = findViewById(R.id.user_balance);
 
-            String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(RetrofitService.getName()) + getString(R.string.currency);
+            String newBalance = BalanceCache.getBalance(RetrofitService.getName());
             balance.setText(newBalance);
+
+            TextView cash = findViewById(R.id.cash_input);
+            TextView lastCashEdit = findViewById(R.id.last_cash_edit);
 
             call.enqueue(new Callback<UserModel>() {
                 @Override
@@ -242,9 +245,14 @@ public class MainActivity extends BaseActivity {
                     online();
                     if (response.isSuccessful()) {
                         if (response.body() != null && response.body().getBalance() != null) {
-                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
+                            String newBalance = response.body().getBalance();
                             balance.setText(newBalance);
                             BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
+                            if (!cash.isFocused()) {
+                                cash.setText(response.body().getCash());
+                            }
+                            String lastEditText = getString(R.string.last_edit_lbl) + " " + response.body().getLastCashEdit();
+                            lastCashEdit.setText(lastEditText);
                         } else {
                             logout();
                         }
@@ -259,8 +267,25 @@ public class MainActivity extends BaseActivity {
 
             ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
-
             ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+        }
+    }
+
+    public void updateCash() {
+        EditText cash = findViewById(R.id.cash_input);
+        if (cash != null && cash.getText().length() > 0 && !cash.getText().toString().equals(".")) {
+            Call<Void> call = RetrofitService.getHbankApi().updateCash(new CashModel(cash.getText().toString()), RetrofitService.getAuthorization());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                    online();
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                    offline();
+                }
+            });
         }
     }
 
@@ -445,6 +470,11 @@ public class MainActivity extends BaseActivity {
             refresh.setEnabled(false);
         }
 
+        EditText cash = findViewById(R.id.cash_input);
+        if (cash != null) {
+            cash.setEnabled(false);
+        }
+
         super.offline();
     }
 
@@ -457,6 +487,11 @@ public class MainActivity extends BaseActivity {
         FloatingActionButton refresh = findViewById(R.id.user_refresh_button);
         if (refresh != null) {
             refresh.setEnabled(true);
+        }
+
+        EditText cash = findViewById(R.id.cash_input);
+        if (cash != null) {
+            cash.setEnabled(true);
         }
 
         if (offline) {

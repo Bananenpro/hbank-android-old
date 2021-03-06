@@ -3,6 +3,7 @@ package de.julianhofmann.h_bank.api;
 import java.util.List;
 
 import de.julianhofmann.h_bank.api.models.CalculateModel;
+import de.julianhofmann.h_bank.api.models.CashModel;
 import de.julianhofmann.h_bank.api.models.InfoModel;
 import de.julianhofmann.h_bank.api.models.IntIdModel;
 import de.julianhofmann.h_bank.api.models.LogModel;
@@ -21,6 +22,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -82,4 +84,7 @@ public interface HBankApi {
 
     @GET("calculate")
     Call<CalculateModel> calculate(@Query("date") String date, @Query("deltatime") String deltatime, @Query("deltaunit") String deltaunit, @Query("money") String money, @Header("Authorization") String authorization);
+
+    @PUT("cash")
+    Call<Void> updateCash(@Body CashModel cashModel, @Header("Authorization") String authorization);
 }

@@ -150,4 +150,6 @@
     <string name="auto_refresh_interval">Auffrischen Intervall</string>
     <string name="ms">ms</string>
     <string name="change_auto_refresh_interval">Auffrischen Intervall Ändern</string>
+    <string name="cash_lbl">Bargeld:</string>
+    <string name="last_edit_lbl">Stand:</string>
 </resources>

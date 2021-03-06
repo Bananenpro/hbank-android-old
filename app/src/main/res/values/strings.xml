@@ -152,4 +152,6 @@
     <string name="auto_refresh_interval">Refresh interval</string>
     <string name="ms">ms</string>
     <string name="change_auto_refresh_interval">Change Refresh Interval</string>
+    <string name="cash_lbl">Cash:</string>
+    <string name="last_edit_lbl">Last edit:</string>
 </resources>
