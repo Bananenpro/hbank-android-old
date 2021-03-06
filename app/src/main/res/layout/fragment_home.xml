@@ -83,18 +83,20 @@
             android:inputType="numberSigned|number|numberDecimal"
             android:maxLength="9"
             android:textSize="24sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/cash_lbl"
             app:layout_constraintTop_toBottomOf="@+id/user_balance" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/cash_currency_lbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:text="@string/currency"
             android:textSize="24sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/cash_input"
             app:layout_constraintEnd_toEndOf="@+id/cash_input" />
 
@@ -115,6 +117,7 @@
             android:layout_marginEnd="12dp"
             android:text="@string/cash_lbl"
             android:textSize="24sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/textView5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_balance_lbl" />
@@ -134,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
             android:textSize="12sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cash_input" />
     </androidx.constraintlayout.widget.ConstraintLayout>

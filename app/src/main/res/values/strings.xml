@@ -154,4 +154,5 @@
     <string name="change_auto_refresh_interval">Change Refresh Interval</string>
     <string name="cash_lbl">Cash:</string>
     <string name="last_edit_lbl">Last edit:</string>
+    <string name="cash_note_function">Cash note function</string>
 </resources>

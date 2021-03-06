@@ -152,4 +152,5 @@
     <string name="change_auto_refresh_interval">Auffrischen Intervall Ändern</string>
     <string name="cash_lbl">Bargeld:</string>
     <string name="last_edit_lbl">Stand:</string>
+    <string name="cash_note_function">Bargeldnotizfunktion</string>
 </resources>

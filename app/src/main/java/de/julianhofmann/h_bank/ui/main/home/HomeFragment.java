@@ -118,9 +118,21 @@ public class HomeFragment extends Fragment {
             if (SettingsService.getAutoRefresh()) {
                 refreshBalanceHandler.postDelayed(refreshBalanceRunnable, SettingsService.getAutoRefreshInterval());
             }
-            FloatingActionButton refresh = requireView().findViewById(R.id.user_refresh_button);
-            refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
+
             paused = false;
         }
+
+        FloatingActionButton refresh = requireView().findViewById(R.id.user_refresh_button);
+        refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
+
+        int visibility = SettingsService.getCashNoteFunction() ? View.VISIBLE : View.INVISIBLE;
+        TextView cashLbl = getView().findViewById(R.id.cash_lbl);
+        cashLbl.setVisibility(visibility);
+        TextView cashInput = getView().findViewById(R.id.cash_input);
+        cashInput.setVisibility(visibility);
+        TextView cashCurrency = getView().findViewById(R.id.cash_currency_lbl);
+        cashCurrency.setVisibility(visibility);
+        TextView lastCashEdit = getView().findViewById(R.id.last_cash_edit);
+        lastCashEdit.setVisibility(visibility);
     }
 }

@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.annotations.SerializedName;
+
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.ui.BaseActivity;
@@ -31,6 +33,8 @@ public class SettingsActivity extends BaseActivity {
         autoLoginSwitch.setChecked(SettingsService.getAutoLogin());
         SwitchCompat checkForUpdatesSwitch = findViewById(R.id.check_for_updates_switch);
         checkForUpdatesSwitch.setChecked(SettingsService.getCheckForUpdates());
+        SwitchCompat cashNoteFunctionSwitch = findViewById(R.id.cash_note_function_switch);
+        cashNoteFunctionSwitch.setChecked(SettingsService.getCashNoteFunction());
         SwitchCompat autoRefreshSwitch = findViewById(R.id.auto_refresh_switch);
         autoRefreshSwitch.setChecked(SettingsService.getAutoRefresh());
         EditText autoRefreshInterval = findViewById(R.id.auto_refresh_interval);
@@ -147,5 +151,11 @@ public class SettingsActivity extends BaseActivity {
         SwitchCompat sc = (SwitchCompat)v;
         boolean value = sc.isChecked();
         SettingsService.setCheckForUpdates(value);
+    }
+
+    public void setCashNoteFunction(View v) {
+        SwitchCompat sc = (SwitchCompat)v;
+        boolean value = sc.isChecked();
+        SettingsService.setCashNoteFunction(value);
     }
 }

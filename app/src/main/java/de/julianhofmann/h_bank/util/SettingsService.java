@@ -7,6 +7,7 @@ public class SettingsService {
     private static boolean fingerprintLogin;
     private static boolean autoLogin;
     private static boolean checkForUpdates;
+    private static boolean cashNoteFunction;
     private static boolean autoRefresh;
     private static int autoRefreshInterval;
 
@@ -20,6 +21,7 @@ public class SettingsService {
         fingerprintLogin = sp.getBoolean(username + "_settings_fingerprint_login", false);
         autoLogin = sp.getBoolean(username + "_settings_auto_login", false);
         checkForUpdates = sp.getBoolean(username + "_settings_check_for_updates", true);
+        cashNoteFunction = sp.getBoolean(username + "_settings_cash_note_function", false);
         autoRefresh = sp.getBoolean(username + "_settings_auto_refresh", true);
         autoRefreshInterval = sp.getInt(username + "_settings_auto_refresh_interval", 2000);
     }
@@ -32,6 +34,7 @@ public class SettingsService {
         edit.remove(username+"_settings_check_for_updates");
         edit.remove(username + "_settings_auto_refresh");
         edit.remove(username + "_settings_auto_refresh_interval");
+        edit.remove(username + "_settings_cash_note_function");
         edit.apply();
     }
 
@@ -99,5 +102,16 @@ public class SettingsService {
         edit.putInt(username + "_settings_auto_refresh_interval", autoRefreshInterval);
         edit.apply();
         SettingsService.autoRefreshInterval = autoRefreshInterval;
+    }
+
+    public static boolean getCashNoteFunction() {
+        return cashNoteFunction;
+    }
+
+    public static void setCashNoteFunction(boolean cashNoteFunction) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putBoolean(username + "_settings_cash_note_function", cashNoteFunction);
+        edit.apply();
+        SettingsService.cashNoteFunction = cashNoteFunction;
     }
 }
