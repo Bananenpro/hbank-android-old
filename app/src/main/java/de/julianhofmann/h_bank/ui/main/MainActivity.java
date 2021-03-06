@@ -271,6 +271,9 @@ public class MainActivity extends BaseActivity {
             if (cash.getText().length() == 0 || cash.getText().toString().equals(".")) {
                 cashStr = "0";
             }
+            if (cashStr.endsWith(".")) {
+                cashStr += "00";
+            }
             if (cashStr.endsWith(".0")) {
                 cashStr += "0";
             }
