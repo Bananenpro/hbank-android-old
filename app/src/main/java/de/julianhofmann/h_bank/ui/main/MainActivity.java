@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void loadUserInfo(View v) {
-        if (!spinning && !gone) {
+        if (!spinning && !gone && !offline) {
             TextView username = findViewById(R.id.user_name_lbl);
             username.setText(RetrofitService.getName());
 
@@ -261,34 +261,6 @@ public class MainActivity extends BaseActivity {
 
 
             ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
-        }
-    }
-
-    public void refreshBalance() {
-        if (!gone && !offline) {
-            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
-            TextView balance = findViewById(R.id.user_balance_lbl);
-
-            call.enqueue(new Callback<UserModel>() {
-                @Override
-                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                    online();
-                    if (response.isSuccessful()) {
-                        if (response.body() != null && response.body().getBalance() != null) {
-                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                            balance.setText(newBalance);
-                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
-                        } else {
-                            logout();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                    offline();
-                }
-            });
         }
     }
 

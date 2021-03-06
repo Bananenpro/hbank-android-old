@@ -2,9 +2,11 @@ package de.julianhofmann.h_bank.ui.main.home;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +37,7 @@ public class HomeFragment extends Fragment {
         refreshBalanceRunnable = new Runnable() {
             @Override
             public void run() {
-                ((MainActivity) requireActivity()).refreshBalance();
+                ((MainActivity) requireActivity()).loadUserInfo(null);
                 refreshBalanceHandler.postDelayed(this, SettingsService.getAutoRefreshInterval());
             }
         };
@@ -47,6 +49,12 @@ public class HomeFragment extends Fragment {
 
         FloatingActionButton refresh = requireView().findViewById(R.id.user_refresh_button);
         refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
+
+        new Handler().postDelayed(() -> {
+            if (((TextView) getView().findViewById(R.id.user_name_lbl)).getText().length() == 0) {
+                ((MainActivity) requireActivity()).loadUserInfo(null);
+            }
+        }, 200);
     }
 
     @Override
