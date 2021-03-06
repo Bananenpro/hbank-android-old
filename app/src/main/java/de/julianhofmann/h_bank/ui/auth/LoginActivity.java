@@ -53,11 +53,13 @@ public class LoginActivity extends BaseActivity {
         BalanceCache.init(sp);
 
         if (RetrofitService.getRetrofit() == null || RetrofitService.getHbankApi() == null) {
+            gone = true;
             switchToConnectionSettingsActivity();
             return;
         }
 
         if (RetrofitService.isLoggedIn()) {
+            gone = true;
             switchToMainActivity();
             return;
         }
@@ -152,6 +154,7 @@ public class LoginActivity extends BaseActivity {
     public void autoLogin(String name, String token) {
         RetrofitService.login(name, token);
         switchToMainActivity();
+        gone = true;
     }
 
     public void biometricAuthentication(String name, String token) {
@@ -177,6 +180,7 @@ public class LoginActivity extends BaseActivity {
                     super.onAuthenticationSucceeded(result);
                     RetrofitService.login(name, token);
                     switchToMainActivity();
+                    gone = true;
                 }
             });
         }
