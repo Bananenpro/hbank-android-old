@@ -56,7 +56,7 @@ public class UserInfoActivity extends BaseActivity {
         refreshBalanceRunnable = new Runnable() {
             @Override
             public void run() {
-                refreshBalance();
+                loadUserInfo();
                 refreshBalanceHandler.postDelayed(this, SettingsService.getAutoRefreshInterval());
             }
         };
@@ -98,34 +98,6 @@ public class UserInfoActivity extends BaseActivity {
         });
 
         ImageUtils.loadProfilePicture(name, profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
-    }
-
-    public void refreshBalance() {
-        if (balanceAccess && !gone) {
-            Call<UserModel> call = RetrofitService.getHbankApi().getUser(name, RetrofitService.getAuthorization());
-            TextView balance = findViewById(R.id.user_balance_lbl);
-
-            call.enqueue(new Callback<UserModel>() {
-                @Override
-                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                    online();
-                    if (response.isSuccessful()) {
-                        if (response.body() != null && response.body().getBalance() != null) {
-                            String newBalance = getString(R.string.balance) + " " + response.body().getBalance() + getString(R.string.currency);
-                            balance.setText(newBalance);
-                            BalanceCache.update(name, response.body().getBalance());
-                        } else {
-                            balanceAccess = false;
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                    offline();
-                }
-            });
-        }
     }
 
     public void transferMoney(View v) {
