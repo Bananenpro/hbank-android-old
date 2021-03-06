@@ -136,6 +136,21 @@ public class HomeFragment extends Fragment {
             set.connect(R.id.home_payment_plan_btn, ConstraintSet.BOTTOM, R.id.home_constraint_layout, ConstraintSet.BOTTOM);
             set.clear(R.id.home_payment_plan_btn, ConstraintSet.END);
             set.applyTo(layout);
+        } else {
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(toDp(0), toDp(0), toDp(24), toDp(16));
+            paymentPlanBtn.setLayoutParams(params);
+
+            ConstraintLayout layout = getView().findViewById(R.id.home_constraint_layout);
+            ConstraintSet set = new ConstraintSet();
+            set.clone(layout);
+            set.connect(R.id.home_payment_plan_btn, ConstraintSet.END, R.id.home_constraint_layout, ConstraintSet.END);
+            set.connect(R.id.home_payment_plan_btn, ConstraintSet.BOTTOM, R.id.home_calculator_btn, ConstraintSet.TOP);
+            set.clear(R.id.home_payment_plan_btn, ConstraintSet.START);
+            set.applyTo(layout);
         }
     }
 }
