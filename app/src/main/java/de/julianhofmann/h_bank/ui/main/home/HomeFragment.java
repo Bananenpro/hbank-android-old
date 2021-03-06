@@ -75,28 +75,6 @@ public class HomeFragment extends Fragment {
                 ((MainActivity) requireActivity()).loadUserInfo(null);
             }
         }, 200);
-
-        FloatingActionButton paymentPlanBtn = getView().findViewById(R.id.home_payment_plan_btn);
-
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-
-        if (SettingsService.getCashNoteFunction() && metrics.heightPixels / metrics.density < 715) {
-            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(toDp(24), toDp(0), toDp(0), toDp(80));
-            paymentPlanBtn.setLayoutParams(params);
-
-            ConstraintLayout layout = getView().findViewById(R.id.home_constraint_layout);
-            ConstraintSet set = new ConstraintSet();
-            set.clone(layout);
-            set.connect(R.id.home_payment_plan_btn, ConstraintSet.START, R.id.home_constraint_layout, ConstraintSet.START);
-            set.connect(R.id.home_payment_plan_btn, ConstraintSet.BOTTOM, R.id.home_constraint_layout, ConstraintSet.BOTTOM);
-            set.clear(R.id.home_payment_plan_btn, ConstraintSet.END);
-            set.applyTo(layout);
-        }
     }
 
     private int toDp(int px) {
@@ -137,5 +115,27 @@ public class HomeFragment extends Fragment {
         cashCurrency.setVisibility(visibility);
         TextView lastCashEdit = getView().findViewById(R.id.last_cash_edit);
         lastCashEdit.setVisibility(visibility);
+
+        FloatingActionButton paymentPlanBtn = getView().findViewById(R.id.home_payment_plan_btn);
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+
+        if (SettingsService.getCashNoteFunction() && metrics.heightPixels / metrics.density < 715) {
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(toDp(24), toDp(0), toDp(0), toDp(80));
+            paymentPlanBtn.setLayoutParams(params);
+
+            ConstraintLayout layout = getView().findViewById(R.id.home_constraint_layout);
+            ConstraintSet set = new ConstraintSet();
+            set.clone(layout);
+            set.connect(R.id.home_payment_plan_btn, ConstraintSet.START, R.id.home_constraint_layout, ConstraintSet.START);
+            set.connect(R.id.home_payment_plan_btn, ConstraintSet.BOTTOM, R.id.home_constraint_layout, ConstraintSet.BOTTOM);
+            set.clear(R.id.home_payment_plan_btn, ConstraintSet.END);
+            set.applyTo(layout);
+        }
     }
 }
