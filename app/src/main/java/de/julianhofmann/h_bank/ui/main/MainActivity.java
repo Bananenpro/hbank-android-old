@@ -192,74 +192,76 @@ public class MainActivity extends BaseActivity {
     public void loadUserInfo(View v) {
         if (!spinning && !gone && !offline) {
             TextView username = findViewById(R.id.user_name_lbl);
-            username.setText(RetrofitService.getName());
+            if (username != null) {
+                username.setText(RetrofitService.getName());
 
-            FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
-            AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
-            if (v != null) {
-                spinning = true;
-                ViewCompat.animate(refreshBtn).
-                        rotation(720).
-                        withLayer().
-                        setDuration(1125).
-                        setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
+                FloatingActionButton refreshBtn = findViewById(R.id.user_refresh_button);
+                AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+                if (v != null) {
+                    spinning = true;
+                    ViewCompat.animate(refreshBtn).
+                            rotation(720).
+                            withLayer().
+                            setDuration(1125).
+                            setInterpolator(interpolator).setListener(new ViewPropertyAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(View view) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(View view) {
+                            view.setRotation(0);
+                            spinning = false;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(View view) {
+                            view.setRotation(0);
+                            spinning = false;
+                        }
+                    }).start();
+                }
+
+
+                Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
+                TextView balance = findViewById(R.id.user_balance);
+
+                String newBalance = BalanceCache.getBalance(RetrofitService.getName());
+                balance.setText(newBalance);
+
+                TextView cash = findViewById(R.id.cash_input);
+                TextView lastCashEdit = findViewById(R.id.last_cash_edit);
+
+                call.enqueue(new Callback<UserModel>() {
                     @Override
-                    public void onAnimationStart(View view) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(View view) {
-                        view.setRotation(0);
-                        spinning = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(View view) {
-                        view.setRotation(0);
-                        spinning = false;
-                    }
-                }).start();
-            }
-
-
-            Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
-            TextView balance = findViewById(R.id.user_balance);
-
-            String newBalance = BalanceCache.getBalance(RetrofitService.getName());
-            balance.setText(newBalance);
-
-            TextView cash = findViewById(R.id.cash_input);
-            TextView lastCashEdit = findViewById(R.id.last_cash_edit);
-
-            call.enqueue(new Callback<UserModel>() {
-                @Override
-                public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
-                    online();
-                    if (response.isSuccessful()) {
-                        if (response.body() != null && response.body().getBalance() != null) {
-                            String newBalance = response.body().getBalance();
-                            balance.setText(newBalance);
-                            BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
-                            if (!cash.isFocused()) {
-                                cash.setText(response.body().getCash());
+                    public void onResponse(@NotNull Call<UserModel> call, @NotNull Response<UserModel> response) {
+                        online();
+                        if (response.isSuccessful()) {
+                            if (response.body() != null && response.body().getBalance() != null) {
+                                String newBalance = response.body().getBalance();
+                                balance.setText(newBalance);
+                                BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
+                                if (!cash.isFocused()) {
+                                    cash.setText(response.body().getCash());
+                                }
+                                String lastEditText = getString(R.string.last_edit_lbl) + " " + response.body().getLastCashEdit();
+                                lastCashEdit.setText(lastEditText);
+                            } else {
+                                logout();
                             }
-                            String lastEditText = getString(R.string.last_edit_lbl) + " " + response.body().getLastCashEdit();
-                            lastCashEdit.setText(lastEditText);
-                        } else {
-                            logout();
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
-                    offline();
-                }
-            });
+                    @Override
+                    public void onFailure(@NotNull Call<UserModel> call, @NotNull Throwable t) {
+                        offline();
+                    }
+                });
 
-            ImageView profilePicture = findViewById(R.id.user_profile_picture);
+                ImageView profilePicture = findViewById(R.id.user_profile_picture);
 
-            ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+                ImageUtils.loadProfilePicture(RetrofitService.getName(), profilePicture, profilePicture.getDrawable(), getSharedPreferences(BuildConfig.APPLICATION_ID, MODE_PRIVATE));
+            }
         }
     }
 
