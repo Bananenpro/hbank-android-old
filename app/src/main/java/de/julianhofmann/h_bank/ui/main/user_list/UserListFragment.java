@@ -28,7 +28,7 @@ public class UserListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((MainActivity) requireActivity()).loadUsers();
         new Handler().postDelayed(() -> {
-            if (((LinearLayout) getView().findViewById(R.id.user_list_layout)).getChildCount() == 0) {
+            if (((LinearLayout) requireView().findViewById(R.id.user_list_layout)).getChildCount() == 0) {
                 ((MainActivity) requireActivity()).loadUsers();
             }
         }, 200);

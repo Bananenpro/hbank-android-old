@@ -1,16 +1,13 @@
 package de.julianhofmann.h_bank.ui.main.home;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,8 +18,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Arrays;
 
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.ui.main.MainActivity;
@@ -71,7 +66,7 @@ public class HomeFragment extends Fragment {
         });
 
         new Handler().postDelayed(() -> {
-            if (((TextView) getView().findViewById(R.id.user_name_lbl)).getText().length() == 0) {
+            if (((TextView) requireView().findViewById(R.id.user_name_lbl)).getText().length() == 0) {
                 ((MainActivity) requireActivity()).loadUserInfo(null);
             }
         }, 200);
@@ -86,7 +81,6 @@ public class HomeFragment extends Fragment {
         super.onPause();
         paused = true;
         refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
-        ((MainActivity) requireActivity()).updateCash();
     }
 
     @Override
@@ -105,31 +99,31 @@ public class HomeFragment extends Fragment {
         refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
 
         int visibility = SettingsService.getCashNoteFunction() ? View.VISIBLE : View.INVISIBLE;
-        TextView balanceCurrency = getView().findViewById(R.id.balance_currency);
+        TextView balanceCurrency = requireView().findViewById(R.id.balance_currency);
         balanceCurrency.setVisibility(visibility);
-        TextView cashLbl = getView().findViewById(R.id.cash_lbl);
+        TextView cashLbl = requireView().findViewById(R.id.cash_lbl);
         cashLbl.setVisibility(visibility);
-        TextView cashInput = getView().findViewById(R.id.cash_input);
+        TextView cashInput = requireView().findViewById(R.id.cash_input);
         cashInput.setVisibility(visibility);
-        TextView cashCurrency = getView().findViewById(R.id.cash_currency_lbl);
+        TextView cashCurrency = requireView().findViewById(R.id.cash_currency_lbl);
         cashCurrency.setVisibility(visibility);
-        TextView lastCashEdit = getView().findViewById(R.id.last_cash_edit);
+        TextView lastCashEdit = requireView().findViewById(R.id.last_cash_edit);
         lastCashEdit.setVisibility(visibility);
 
-        FloatingActionButton paymentPlanBtn = getView().findViewById(R.id.home_payment_plan_btn);
+        FloatingActionButton paymentPlanBtn = requireView().findViewById(R.id.home_payment_plan_btn);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
 
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
         if (SettingsService.getCashNoteFunction() && metrics.heightPixels / metrics.density < 715) {
-            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-            );
             params.setMargins(toDp(24), toDp(0), toDp(0), toDp(80));
             paymentPlanBtn.setLayoutParams(params);
 
-            ConstraintLayout layout = getView().findViewById(R.id.home_constraint_layout);
+            ConstraintLayout layout = requireView().findViewById(R.id.home_constraint_layout);
             ConstraintSet set = new ConstraintSet();
             set.clone(layout);
             set.connect(R.id.home_payment_plan_btn, ConstraintSet.START, R.id.home_constraint_layout, ConstraintSet.START);
@@ -137,14 +131,10 @@ public class HomeFragment extends Fragment {
             set.clear(R.id.home_payment_plan_btn, ConstraintSet.END);
             set.applyTo(layout);
         } else {
-            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-            );
             params.setMargins(toDp(0), toDp(0), toDp(24), toDp(16));
             paymentPlanBtn.setLayoutParams(params);
 
-            ConstraintLayout layout = getView().findViewById(R.id.home_constraint_layout);
+            ConstraintLayout layout = requireView().findViewById(R.id.home_constraint_layout);
             ConstraintSet set = new ConstraintSet();
             set.clone(layout);
             set.connect(R.id.home_payment_plan_btn, ConstraintSet.END, R.id.home_constraint_layout, ConstraintSet.END);
