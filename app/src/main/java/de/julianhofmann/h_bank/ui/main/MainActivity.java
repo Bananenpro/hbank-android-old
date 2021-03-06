@@ -275,6 +275,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
                     online();
+                    loadUserInfo(null);
                 }
 
                 @Override

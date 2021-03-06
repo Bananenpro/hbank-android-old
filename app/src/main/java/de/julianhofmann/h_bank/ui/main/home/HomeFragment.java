@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment {
         cash.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 ((MainActivity) requireActivity()).updateCash();
+                cash.clearFocus();
             }
 
             return false;
@@ -80,7 +81,7 @@ public class HomeFragment extends Fragment {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
 
-        if (metrics.heightPixels / metrics.density < 700) {
+        if (SettingsService.getCashNoteFunction() && metrics.heightPixels / metrics.density < 715) {
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT
