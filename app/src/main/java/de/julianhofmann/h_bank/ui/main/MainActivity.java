@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity {
                 Call<UserModel> call = RetrofitService.getHbankApi().getUser(RetrofitService.getName(), RetrofitService.getAuthorization());
                 TextView balance = findViewById(R.id.user_balance);
 
-                String newBalance = BalanceCache.getBalance(RetrofitService.getName());
+                String newBalance = BalanceCache.getBalance(RetrofitService.getName()) + (SettingsService.getCashNoteFunction() ? "" : getString(R.string.currency));
                 balance.setText(newBalance);
 
                 TextView cash = findViewById(R.id.cash_input);
@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity {
                         online();
                         if (response.isSuccessful()) {
                             if (response.body() != null && response.body().getBalance() != null) {
-                                String newBalance = response.body().getBalance();
+                                String newBalance = response.body().getBalance() + (SettingsService.getCashNoteFunction() ? "" : getString(R.string.currency));
                                 balance.setText(newBalance);
                                 BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
                                 if (!cash.isFocused()) {

@@ -127,6 +127,8 @@ public class HomeFragment extends Fragment {
         refresh.setVisibility(SettingsService.getAutoRefresh() ? View.GONE : View.VISIBLE);
 
         int visibility = SettingsService.getCashNoteFunction() ? View.VISIBLE : View.INVISIBLE;
+        TextView balanceCurrency = getView().findViewById(R.id.balance_currency);
+        balanceCurrency.setVisibility(visibility);
         TextView cashLbl = getView().findViewById(R.id.cash_lbl);
         cashLbl.setVisibility(visibility);
         TextView cashInput = getView().findViewById(R.id.cash_input);
