@@ -189,14 +189,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void reloadActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        overridePendingTransition(0, 0);
-        finish();
-        overridePendingTransition(0, 0);
-    }
-
     public void loadUserInfo(View v) {
         if (!spinning && !gone && !offline) {
             TextView username = findViewById(R.id.user_name_lbl);
@@ -273,8 +265,12 @@ public class MainActivity extends BaseActivity {
 
     public void updateCash() {
         EditText cash = findViewById(R.id.cash_input);
-        if (cash != null && cash.getText().length() > 0 && !cash.getText().toString().equals(".")) {
-            Call<Void> call = RetrofitService.getHbankApi().updateCash(new CashModel(cash.getText().toString()), RetrofitService.getAuthorization());
+        if (cash != null) {
+            String cashStr = cash.getText().toString();
+            if (cash.getText().length() == 0 || cash.getText().toString().equals(".")) {
+                cashStr = "0";
+            }
+            Call<Void> call = RetrofitService.getHbankApi().updateCash(new CashModel(cashStr), RetrofitService.getAuthorization());
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
