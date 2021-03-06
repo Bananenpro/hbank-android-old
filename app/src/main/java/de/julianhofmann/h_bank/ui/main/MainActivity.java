@@ -295,6 +295,8 @@ public class MainActivity extends BaseActivity {
                         offline();
                     }
                 });
+            } else {
+                loadUserInfo(null);
             }
         }
     }
