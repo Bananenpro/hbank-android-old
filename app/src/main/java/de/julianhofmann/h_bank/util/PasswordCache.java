@@ -1,6 +1,7 @@
 package de.julianhofmann.h_bank.util;
 
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.util.Log;
 
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +13,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import de.julianhofmann.h_bank.api.RetrofitService;
 import kotlin.text.Charsets;
 
 public class PasswordCache {
@@ -58,8 +60,12 @@ public class PasswordCache {
                 String passwordHash = sp.getString("password_hash", null);
 
                 if (passwordHash != null && new String(secretKey.getEncoded(), Charsets.ISO_8859_1).equals(passwordHash)) {
-                    return sp.getString("token", null);
-
+                    String token = sp.getString("token", null);
+                    String tokenIv = sp.getString("token_iv", null);
+                    if (token != null && tokenIv != null) {
+                        return RetrofitService.decrypt(Base64.decode(tokenIv, Base64.NO_WRAP), Base64.decode(token, Base64.NO_WRAP), RetrofitService.TOKEN_KEY_ALIAS);
+                    }
+                    return null;
                 }
             }
         } catch (InvalidKeySpecException | NoSuchAlgorithmException ignored) {
