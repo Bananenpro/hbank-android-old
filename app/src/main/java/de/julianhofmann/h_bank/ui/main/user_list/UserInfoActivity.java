@@ -3,6 +3,7 @@ package de.julianhofmann.h_bank.ui.main.user_list;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,6 +72,7 @@ public class UserInfoActivity extends BaseActivity {
 
         Call<UserModel> call = RetrofitService.getHbankApi().getUser(name, RetrofitService.getAuthorization());
         TextView balance = findViewById(R.id.user_balance_lbl);
+        TextView cash = findViewById(R.id.user_cash_lbl);
 
         String newBalance = getString(R.string.balance) + " " + BalanceCache.getBalance(name) + getString(R.string.currency);
         balance.setText(newBalance);
@@ -85,6 +87,10 @@ public class UserInfoActivity extends BaseActivity {
                         balance.setText(newBalance);
                         balance.setVisibility(View.VISIBLE);
                         BalanceCache.update(name, response.body().getBalance());
+
+                        String newCash = getString(R.string.cash_lbl) + " " + response.body().getCash() + getString(R.string.currency);
+                        cash.setText(newCash);
+                        cash.setVisibility(View.VISIBLE);
                     } else {
                         balanceAccess = false;
                     }

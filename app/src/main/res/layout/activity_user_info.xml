@@ -64,11 +64,23 @@
     <Button
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:onClick="transferMoney"
         android:text="@string/transfer_money"
         app:layout_constraintBottom_toTopOf="@+id/payment_plan_btn"
         app:layout_constraintEnd_toEndOf="@+id/payment_plan_btn"
         app:layout_constraintStart_toStartOf="@+id/payment_plan_btn" />
+
+    <TextView
+        android:id="@+id/user_cash_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/cash_lbl"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/user_balance_lbl"
+        app:layout_constraintStart_toStartOf="@+id/user_balance_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/user_balance_lbl" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
