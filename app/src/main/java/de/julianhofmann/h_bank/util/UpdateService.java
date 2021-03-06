@@ -21,7 +21,6 @@ import de.julianhofmann.h_bank.BuildConfig;
 import de.julianhofmann.h_bank.R;
 import de.julianhofmann.h_bank.api.RetrofitService;
 import de.julianhofmann.h_bank.api.models.VersionModel;
-import de.julianhofmann.h_bank.ui.system.SettingsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
