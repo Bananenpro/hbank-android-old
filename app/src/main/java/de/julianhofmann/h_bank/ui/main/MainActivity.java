@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity {
     private boolean loadingLog = false;
     private boolean spinning = false;
     private String currentFragment = "";
+    private String serverCash = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +243,7 @@ public class MainActivity extends BaseActivity {
                                 balance.setText(newBalance);
                                 BalanceCache.update(RetrofitService.getName(), response.body().getBalance());
                                 if (!cash.isFocused()) {
+                                    serverCash = response.body().getCash();
                                     cash.setText(response.body().getCash());
                                 }
                                 String lastEditText = getString(R.string.last_edit_lbl) + " " + response.body().getLastCashEdit();
@@ -272,19 +274,28 @@ public class MainActivity extends BaseActivity {
             if (cash.getText().length() == 0 || cash.getText().toString().equals(".")) {
                 cashStr = "0";
             }
-            Call<Void> call = RetrofitService.getHbankApi().updateCash(new CashModel(cashStr), RetrofitService.getAuthorization());
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                    online();
-                    loadUserInfo(null);
-                }
+            if (cashStr.endsWith(".0")) {
+                cashStr += "0";
+            }
+            if (!cashStr.contains(".")) {
+                cashStr += ".00";
+            }
 
-                @Override
-                public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
-                    offline();
-                }
-            });
+            if (!cashStr.equals(serverCash)) {
+                Call<Void> call = RetrofitService.getHbankApi().updateCash(new CashModel(cashStr), RetrofitService.getAuthorization());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
+                        online();
+                        loadUserInfo(null);
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<Void> call, @NotNull Throwable t) {
+                        offline();
+                    }
+                });
+            }
         }
     }
 
