@@ -175,10 +175,12 @@ public class CreatePaymentPlanActivity extends BaseActivity {
                                 } else if (response.code() == 400) {
                                     error.setTextColor(getColor(R.color.red));
                                     error.setText(R.string.user_does_not_exist);
+                                    gone = false;
+                                } else {
+                                    gone = false;
                                 }
                                 submit.setEnabled(true);
                                 submit.setText(R.string.create);
-                                gone = false;
                             }
 
                             @Override

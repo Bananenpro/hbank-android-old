@@ -93,10 +93,11 @@ public class DeleteUserActivity extends BaseActivity {
                                             switchToLoginActivity("");
                                         } else if (response.code() == 403) {
                                             logout();
+                                        } else {
+                                            gone = false;
                                         }
                                         button.setEnabled(true);
                                         button.setText(R.string.delete);
-                                        gone = false;
                                         button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.red)));
                                     }
 

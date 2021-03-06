@@ -252,11 +252,11 @@ public class LoginActivity extends BaseActivity {
                             switchToMainActivity();
                         } else {
                             error_text.setText(getString(R.string.wrong_credentials));
+                            gone = false;
                         }
                         loginButton.setEnabled(true);
                         registerButton.setEnabled(true);
                         loginButton.setText(getString(R.string.login_btn));
-                        gone = false;
                     }
 
                     @Override

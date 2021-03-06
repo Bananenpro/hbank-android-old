@@ -95,12 +95,14 @@ public class TransferMoneyActivity extends BaseActivity {
                             } else if (response.code() == 400) {
                                 online();
                                 error.setText(R.string.not_enough_money);
+                                gone = false;
                             } else if (response.code() == 403) {
                                 logout();
+                            } else {
+                                gone = false;
                             }
                             submit.setEnabled(true);
                             submit.setText(R.string.transfer_money_btn);
-                            gone = false;
                         }
 
                         @Override

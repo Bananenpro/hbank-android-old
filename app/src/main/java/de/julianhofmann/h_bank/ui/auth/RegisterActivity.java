@@ -159,11 +159,12 @@ public class RegisterActivity extends BaseActivity {
                                 } catch (IOException e) {
                                     Log.e("ERROR", e.getMessage());
                                 }
-
+                                gone = false;
+                            } else {
+                                gone = false;
                             }
                             registerButton.setEnabled(true);
                             registerButton.setText(getString(R.string.register_btn));
-                            gone = false;
                         }
 
                         @Override

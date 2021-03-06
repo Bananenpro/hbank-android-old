@@ -89,6 +89,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void connectionSettings() {
+        gone = true;
         Intent i = new Intent(this, ConnectionSettingsActivity.class);
         startActivity(i);
         if (this instanceof ConnectionSettingsActivity) {
@@ -99,6 +100,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void settings() {
+        gone = true;
         Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
         if (this instanceof SettingsActivity) {
@@ -109,6 +111,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void serverInfo() {
+        gone = true;
         Intent i = new Intent(this, InfoActivity.class);
         startActivity(i);
         if (this instanceof InfoActivity) {
@@ -131,12 +134,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void logout() {
+        gone = true;
         String name = RetrofitService.getName();
         RetrofitService.logout();
         switchToLoginActivity(name);
     }
 
     protected void switchToLoginActivity(String name) {
+        gone = true;
         Intent i = new Intent(this, LoginActivity.class);
         i.putExtra("logout", true);
         i.putExtra("name", name);
@@ -212,6 +217,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void switchToConnectionSettingsActivity() {
+        gone = true;
         Intent i = new Intent(this, ConnectionSettingsActivity.class);
         i.putExtra("hide_back_arrow", true);
         startActivity(i);
@@ -220,6 +226,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        gone = true;
         onBackPressed();
         finish();
         return true;
