@@ -31,7 +31,6 @@ public class UserInfoActivity extends BaseActivity {
     private Runnable refreshBalanceRunnable;
     private String name;
     private boolean paused = false;
-    private boolean balanceAccess = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,8 @@ public class UserInfoActivity extends BaseActivity {
                         cash.setText(newCash);
                         cash.setVisibility(View.VISIBLE);
                     } else {
-                        balanceAccess = false;
+                        balance.setVisibility(View.INVISIBLE);
+                        cash.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -142,12 +142,13 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
         super.onPause();
+        refreshBalanceHandler.removeCallbacks(refreshBalanceRunnable);
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         if (paused) {
             loadUserInfo();
             if (SettingsService.getAutoRefresh()) {
@@ -155,6 +156,5 @@ public class UserInfoActivity extends BaseActivity {
             }
             paused = false;
         }
-        super.onResume();
     }
 }

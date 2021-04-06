@@ -233,17 +233,17 @@ public class InfoActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         if (paused) {
             if (SettingsService.getAutoRefresh()) {
                 refreshInfoHandler.postDelayed(refreshInfoRunnable, SettingsService.getAutoRefreshInterval());
             }
         }
-        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        refreshInfoHandler.removeCallbacks(refreshInfoRunnable);
         super.onPause();
+        refreshInfoHandler.removeCallbacks(refreshInfoRunnable);
     }
 }
