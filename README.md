@@ -1,11 +1,10 @@
 # H-Bank Android App Old
 
-**IMPORTANT:** A new version of the H-Bank written from scratch is in the works. This repository won't receive any updates anymore and contains a lot of bugs.
+**IMPORTANT:** H-Bank was rewritten from scratch. This version contains a lot of bugs and won't receive any updates. Please use the [new version](https://github.com/Bananenpro/hbank-web).
 
 ## Description
 
 The Android app for the original H-Bank application.
-[More details...](https://bananenpro05.duckdns.org/projects/hbank)
 
 ## License
 
